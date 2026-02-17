@@ -1,0 +1,4300 @@
+<!doctypehtml><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1"name=viewport><title>Case Citation Graph (3D)</title><link href=https://fonts.googleapis.com rel=preconnect><link href=https://fonts.gstatic.com rel=preconnect crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"rel=stylesheet><link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"rel=stylesheet><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap"rel=stylesheet><style>:root{--bg:#ffffff;--panel:#ffffff;--border:#e6e6e6;--text:#111111;--muted:#666666;--shadow:0 8px 18px rgba(0,0,0,.06);--timelineBottom:148px}body,html{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}#app{position:fixed;inset:0;overflow:hidden;background:var(--bg)}#canvasWrap{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,248,250,.96))}canvas{display:block}#loadingOverlay{position:absolute;inset:0;z-index:50;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;padding:20px}#loadingOverlay.hidden{display:none}.startCard{width:min(560px,95vw);border:1px solid var(--border);background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:16px}.startTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.startTitle{font-size:14px;font-weight:600;margin:0}.startSub{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.4}.startActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.dropArea{margin-top:14px;border:1px dashed #cfcfcf;border-radius:16px;padding:14px;background:#fbfbfb}.dropArea.drag{background:#f0f6ff;border-color:#9dbbff}.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:11px;padding:2px 6px;border:1px solid #ddd;border-bottom-width:2px;border-radius:8px;background:#fff}#uiToggle{position:absolute;top:14px;left:14px;z-index:20;width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow);display:grid;place-items:center;cursor:pointer;user-select:none}#uiToggle:hover{background:#fafafa;border-color:#d0d0d0}#uiToggle svg{width:18px;height:18px}.panel{position:absolute;top:64px;left:14px;width:420px;max-height:calc(100% - 78px);overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:12px 12px 10px;z-index:10}.detail{position:absolute;top:14px;right:14px;width:440px;max-height:calc(100% - 28px);overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:12px 12px 10px;z-index:11}.detail.hidden{display:none}body.ui-hidden .panel{display:none}body.ui-hidden .stats{display:none}.row{display:flex;gap:10px;align-items:center;margin:8px 0}.row>label{flex:0 0 170px;font-size:12px;color:var(--muted)}.row>input[type=range]{flex:1}.row>input[type=number]{width:96px}.row>select{flex:1}.row>input[type=checkbox]{transform:translateY(1px)}h1{font-size:14px;margin:0 0 8px;letter-spacing:.2px}h3{font-size:12px;margin:14px 0 8px;color:var(--muted);font-weight:600}.sub{font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.35}.btn{appearance:none;border:1px solid var(--border);background:#fff;color:var(--text);border-radius:10px;padding:8px 10px;font-size:12px;cursor:pointer}.btn:hover{border-color:#d0d0d0;background:#fafafa}.btn.primary{border-color:#c7d7ff;background:#f3f7ff}.filebox{border:1px dashed #cfcfcf;border-radius:12px;padding:10px;background:#fbfbfb;display:flex;flex-direction:column;gap:8px}.filebox.drag{background:#f0f6ff;border-color:#9dbbff}#fileInput{width:100%}.stats{position:absolute;left:14px;bottom:14px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 10px;box-shadow:var(--shadow);font-size:12px;color:var(--text);display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:12}.pill{padding:3px 8px;border-radius:999px;background:#f5f5f5;border:1px solid #ededed;color:#222}.pill b{font-weight:600}.legend{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}.legendHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.legendHead h2{font-size:12px;margin:0;color:var(--muted);font-weight:600}.legendList{display:flex;flex-direction:column;gap:6px}.legItem{display:flex;align-items:flex-start;gap:8px;font-size:12px}.swatch{width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.15)}.legName{flex:1;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}.legCount{color:var(--muted);font-variant-numeric:tabular-nums}.colorGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.colorRow{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:12px;background:#fff}.colorRow .cName{flex:1;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.colorRow input[type=color]{width:34px;height:26px;border:none;background:0 0;padding:0;cursor:pointer}.colorRow button{width:34px;height:30px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:12px;line-height:1}.colorRow button:hover{background:#fafafa;border-color:#d0d0d0}.hint{font-size:11px;color:var(--muted);line-height:1.35;margin-top:8px}details{border-top:1px solid var(--border);margin-top:10px;padding-top:10px}summary{cursor:pointer;font-size:12px;color:var(--muted);user-select:none}.toast{position:absolute;right:14px;top:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);font-size:12px;max-width:520px;z-index:30}.toast.hidden{display:none}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}.detailHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}.titleBlock{min-width:0}.titleLine{display:flex;align-items:center;gap:10px;min-width:0}.titleLine .swatch{flex:0 0 auto}#detailTitle{font-weight:600;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#detailCluster{font-size:11px;color:var(--muted);margin-top:4px}.closeX{width:34px;height:34px;border-radius:12px;border:1px solid #ffd0d0;background:#fff5f5;cursor:pointer;display:grid;place-items:center;flex:0 0 auto}.closeX:hover{background:#ffecec;border-color:#ffb8b8}.closeX svg{width:16px;height:16px}.kmeta{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 4px}.kmeta .pill{background:#f7f7f7}.listWrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff}.listHead{display:flex;gap:8px;padding:10px;border-bottom:1px solid var(--border);align-items:center}.listHead input{flex:1;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:12px;outline:0;background:#fff}.list{max-height:280px;overflow:auto}.item{padding:10px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:filter .12s ease,transform .08s ease}.item:hover{filter:brightness(.98);transform:translateY(-1px)}.item:last-child{border-bottom:none}.item .name{font-size:12px;line-height:1.25;font-weight:600}.rec-positive{background:#e9fff3;border-left:5px solid #1b8a5a}.rec-neutral{background:#f1f3f4;border-left:5px solid #9aa0a6}.rec-mixed{background:#fff2e6;border-left:5px solid #f39c12}.rec-negative{background:#ffecec;border-left:5px solid #d23f31}#searchBox{position:fixed;left:14px;bottom:var(--timelineBottom);z-index:14;width:420px;max-width:calc(100vw - 28px);display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:8px}#searchBox input{flex:1;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:12px;outline:0;background:#fff}#searchBox button{width:44px;height:40px;border-radius:12px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:14px}#searchBox button:hover{background:#fafafa;border-color:#d0d0d0}#searchResults{position:absolute;left:8px;right:8px;bottom:56px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;max-height:280px}#searchResults.hidden{display:none}.sItem{padding:10px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;gap:10px;align-items:flex-start}.sItem:hover{background:#fafafa}.sItem:last-child{border-bottom:none}.sName{font-size:12px;font-weight:600;line-height:1.2;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sMeta{font-size:11px;color:var(--muted);white-space:nowrap}.pieWrap{margin:8px 0 10px;border:1px solid var(--border);border-radius:14px;background:#fff;padding:10px}.pieWrap canvas{width:100%;height:46px;display:block}.pieWrap{display:flex;justify-content:center;align-items:center}.pieWrap canvas{max-width:none}.item .sub{margin-top:6px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.timeline{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:25;display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 26px rgba(0,0,0,.08);width:min(920px,calc(100vw - 28px));pointer-events:auto}.timeline.hidden{display:none}.playBtn{width:42px;height:42px;border-radius:14px;border:1px solid var(--border);background:#fff;box-shadow:0 8px 18px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600;color:#111}.playBtn:active{transform:translateY(1px)}.timeMain{flex:1;min-width:0}.timeTop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}.timeLabel{font-size:12px;color:var(--muted);font-weight:600}.timeYear{font-size:14px;font-weight:600;color:#111}#yearSlider{width:100%}body.cinematic #yearSlider{accent-color:#fff;filter:drop-shadow(0 6px 18px rgba(0,0,0,.25))}.tourCaseLabel{position:absolute;max-width:360px;padding:10px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,248,250,.96));border:1px solid rgba(0,0,0,.1);box-shadow:0 18px 44px rgba(0,0,0,.1);opacity:0;transform:translate(-9999px,-9999px) scale(.985);transition:opacity 420ms ease,transform 420ms ease;pointer-events:none}.tourCaseTitle{font-size:13px;font-weight:600;letter-spacing:.1px;color:#0f0f10}.tourCaseSub{margin-top:2px;font-size:12px;font-weight:500;color:rgba(17,17,17,.7)}#closeNodeLabel{position:fixed;inset:0;pointer-events:none;z-index:28;display:none}.closeNodeTag{position:absolute;padding:4px 8px;border-radius:10px;background:rgba(255,255,255,.88);border:1px solid rgba(0,0,0,.1);box-shadow:0 8px 18px rgba(0,0,0,.08);backdrop-filter:blur(6px);font:12px/1.2 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#111;white-space:nowrap;transform:translate(-50%,-110%);opacity:.95}body.cinematic #detailPanel,body.cinematic #dropZone,body.cinematic #searchBox,body.cinematic #statsBar,body.cinematic #toast,body.cinematic #uiToggle{display:none!important}body.cinematic #timelineBar{display:none!important}body.cinematic #timeYear{color:#fff;opacity:.95;letter-spacing:.02em}body.cinematic .playBtn{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18)}body.cinematic .playBtn:hover{background:rgba(255,255,255,.16)}body.cinematic input[type=range]{accent-color:#fff}body.cinematic #timeSlider{filter:drop-shadow(0 8px 16px rgba(0,0,0,.25))}#barTip{position:fixed;z-index:40;display:none;pointer-events:none;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.96);border:1px solid rgba(0,0,0,.12);box-shadow:0 12px 26px rgba(0,0,0,.1);font:12px/1.2 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#111}body.cinematic #playBtn{display:none!important}#timelineBar{position:fixed;left:50%;transform:translateX(-50%);bottom:120px;z-index:32;width:min(1120px,96vw);padding:10px 14px;background:rgba(255,255,255,.94);border:1px solid rgba(0,0,0,.1);box-shadow:0 18px 50px rgba(0,0,0,.1);backdrop-filter:blur(10px)}body.cinematic{--timelineBottom:148px}.hlLabel{position:absolute;transform:translate(-50%,-50%);min-width:286px;max-width:468px;padding:12px 13px 11px 13px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.1);border-top:3px solid var(--hlAccent,rgba(0,0,0,.3));border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.1);pointer-events:none;opacity:0;animation:hlFade 9s ease-in-out forwards;color:#111;text-align:center;backdrop-filter:blur(6px);will-change:left,top}.hlTitle{font-size:18px;font-weight:650;letter-spacing:.06px;margin-bottom:4px}.hlMeta{display:flex;align-items:baseline;justify-content:center;margin-bottom:5px}.hlYear{font-size:18px;font-weight:400;color:rgba(0,0,0,.7)}.hlCat{font-size:18px;font-weight:400;color:rgba(0,0,0,.7)}.hlCat::before{content:"•";margin:0 8px;color:rgba(0,0,0,.28)}.hlDesc{font-size:18px;line-height:1.35;color:rgba(0,0,0,.76)}#hlArrowLayer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.hlArrow{stroke:rgba(120,120,120,.85);stroke-width:2.6;fill:none;opacity:0;animation:hlArrowFade 9s ease-in-out forwards;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}@keyframes hlArrowFade{0%{opacity:0}18%{opacity:.92}82%{opacity:.92}100%{opacity:0}}@keyframes hlFade{0%{opacity:0;transform:translate(-50%,-50%) scale(.992)}18%{opacity:.92;transform:translate(-50%,-50%) scale(1)}82%{opacity:.92;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.996)}}#tourCallout.tourFade{animation:tourFade 5s ease-in-out forwards;transition:none!important}#tourDot.tourFade,#tourLine.tourFade{animation:tourFade 5s ease-in-out forwards}@keyframes tourFade{0%{opacity:0}10%{opacity:1}90%{opacity:1}100%{opacity:0}}#tourCallout .tourDesc,#tourCallout .tourSub{display:none}#tourCallout,#tourSvg{display:none!important}#clusterLabelLayer{position:fixed;inset:0;pointer-events:none;z-index:15}.clusterFloatLabel{position:fixed;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.08);box-shadow:0 12px 34px rgba(0,0,0,.08);backdrop-filter:blur(6px);color:rgba(0,0,0,.88);font-size:12px;font-weight:600;letter-spacing:.02em;left:-9999px;top:-9999px;transform:translate(-50%,-50%);opacity:0;transition:opacity 420ms ease;will-change:left,top,opacity,transform;user-select:none;pointer-events:none}.clusterFloatLabel.on{opacity:.92}.clusterFloatLabel .sw{width:11px;height:11px;border-radius:3px;flex:0 0 11px;box-shadow:0 0 0 1px rgba(0,0,0,.1) inset}#cinBtn{position:fixed;top:14px;left:62px;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.1);box-shadow:0 10px 22px rgba(0,0,0,.1);display:grid;place-items:center;cursor:pointer;z-index:15;user-select:none}#cinBtn:hover{box-shadow:0 12px 28px rgba(0,0,0,.14)}#cinBtn svg{width:22px;height:22px}#bottomDock>*{pointer-events:auto}#searchBox{position:relative!important;left:auto!important;bottom:auto!important;grid-column:1;justify-self:start}#timelineBar{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:var(--timelineBottom)!important;top:auto!important;z-index:14!important}#searchBox{position:fixed!important;left:14px!important;bottom:var(--timelineBottom)!important;z-index:14!important}#timelineBar{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:var(--timelineBottom)!important;top:auto!important;z-index:32!important}#searchBox{position:fixed!important;left:14px!important;bottom:var(--timelineBottom)!important;top:auto!important;z-index:32!important}#tourCaseLayer{position:fixed;inset:0;pointer-events:none;z-index:40}body.cinematic #tourCaseLayer{display:block!important}#cinemaCounter{position:fixed;left:50%;bottom:clamp(24px,calc(182px - 10vh),182px);transform:translateX(-50%);z-index:999999;font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;font-size:128px;font-weight:700;letter-spacing:.02em;color:#fff;opacity:0;pointer-events:none;user-select:none;display:block;will-change:opacity;transition:opacity 260ms ease;-webkit-text-stroke:3px #000;text-stroke:3px #000;-webkit-text-fill-color:#fff;text-shadow:none}body.cinematic #cinemaCounter{opacity:1}.cinematic #cinemaCounter{opacity:1}body:not(.cinematic) #cinemaCounter{display:none!important}body.counter-hidden #cinemaCounter{opacity:0!important}#cinemaCounter.tick{animation:yearTick .9s ease-in-out}@keyframes yearTick{0%{opacity:.82}40%{opacity:1}70%{opacity:.9}100%{opacity:1}}#legendBar{font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;position:fixed;left:50%;top:calc(18px + 2vh + env(safe-area-inset-top));bottom:auto;transform:translateX(-50%);z-index:999998;width:min(92vw,980px);padding:12px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.42),rgba(245,245,245,.22));border:1px solid rgba(0,0,0,.14);box-shadow:0 18px 50px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.65);backdrop-filter:blur(18px) saturate(1.25);display:none;gap:14px;align-items:center;justify-content:center;overflow:hidden;pointer-events:auto}#legendBar::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(1200px 80px at 20% 0,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),radial-gradient(900px 70px at 80% 100%,rgba(255,255,255,.22),rgba(255,255,255,0) 62%);opacity:.9;pointer-events:none}body.legend-on #legendBar{font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:center;align-items:flex-start;max-height:min(42vh,360px);overflow:auto;padding-right:10px}.legendItem{display:flex;align-items:flex-start;gap:9px;white-space:normal;font:14px/1.15 "Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#000;user-select:none;position:relative;z-index:1;max-width:min(240px,42vw);overflow-wrap:anywhere}.legendSw{width:14px;height:14px;border-radius:3px;border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);flex:0 0 14px;background:#000;position:relative;z-index:1}body.cinematic #legendToggle{display:none!important}.panel{display:none!important}#cinBtn,#cinemaCounter,#tourCaseLayer,#tourOverlay,#uiToggle{display:none!important}.spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:rgba(255,255,255,.85);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loadbar{width:260px;max-width:70vw;height:10px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);margin-top:10px}.loadbarFill{height:100%;width:35%;border-radius:999px;background:rgba(255,255,255,.85);animation:loadbar 1.15s ease-in-out infinite}@keyframes loadbar{0%{transform:translateX(-140%);opacity:.6}45%{opacity:.95}100%{transform:translateX(340%);opacity:.6}}</style><script type=importmap>{
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/examples/jsm/controls/OrbitControls.js": "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js",
+      "three/examples/jsm/renderers/CSS2DRenderer.js": "https://unpkg.com/three@0.160.0/examples/jsm/renderers/CSS2DRenderer.js"
+    }
+  }</script><script>window.docs_final=window.docs_final||[]</script><div id=app><div id=canvasWrap></div><div id=loadingOverlay><div class=startCard><div class=startTop><div><p class=startTitle>Loading case graph…<p class=startSub style=margin:0>Preparing viewer…<div class=loadbar aria-label=Loading role=progressbar><div class=loadbarFill></div></div></div></div><div class=startSub style=margin-top:14px;color:var(--muted);font-size:12px;line-height:1.4><div><b>Controls</b>: drag rotate • scroll zoom • double‑click node focus • double‑click empty reset</div></div></div></div><div class=panel><h1>Case Citation Graph (3D)</h1><p class=sub>Double‑click a node to <b>zoom + isolate its neighborhood</b>. Double‑click the <b>same node again</b> to return to the full graph.<div class=row><label>Hide isolates</label> <input id=hideIsolates type=checkbox> <span style=font-size:12px;color:var(--muted)>Drop cases with 0 in/out links</span></div><div class=row><label>Show neutral links</label> <input id=showNeutral type=checkbox checked> <span style=font-size:12px;color:var(--muted)>Neutral uses same opacity</span></div><div class=row><label>Position scale</label> <input id=posScale type=range max=15000 min=100 step=10 value=4500> <input id=posScaleNum type=number max=15000 min=100 step=10 value=4500></div><div class=row><label>Jitter</label> <input id=jitter type=range max=80 min=0 step=1 value=50> <input id=jitterNum type=number max=80 min=0 step=1 value=50></div><div class=row><label>Node size scale</label> <input id=nodeScale type=range max=5 min=0.6 step=0.1 value=1.3> <input id=nodeScaleNum type=number max=5 min=0.6 step=0.1 value=1.3></div><div class=row><label>Link width</label> <input id=linkWidth type=range max=10 min=0.2 step=0.2 value=1> <input id=linkWidthNum type=number max=10 min=0.2 step=0.2 value=1></div><div class=row><label>Link opacity</label> <input id=linkOpacity type=range max=1 min=0.01 step=0.01 value=0.3> <input id=linkOpacityNum type=number max=1 min=0.01 step=0.01 value=0.3></div><div class=row><label>Arrow size</label> <input id=arrowSize type=range max=40 min=4 step=1 value=15> <input id=arrowSizeNum type=number max=40 min=4 step=1 value=15></div><div class=row><label>Arrow opacity</label> <input id=arrowOpacity type=range max=1 min=0.01 step=0.01 value=0.5> <input id=arrowOpacityNum type=number max=1 min=0.01 step=0.01 value=0.5></div><details open><summary>Advanced layout & direction cues</summary><div class=row><label>Cluster separation</label> <input id=clusterSep type=range max=2600 min=0 step=20 value=0> <input id=clusterSepNum type=number max=2600 min=0 step=20 value=0></div><div class=row><label>IP offset X</label> <input id=ipOffsetX type=range max=10000 min=-10000 step=50 value=0> <input id=ipOffsetXNum type=number max=10000 min=-10000 step=50 value=0></div><div class=row><label>IP offset Y</label> <input id=ipOffsetY type=range max=10000 min=-10000 step=50 value=0> <input id=ipOffsetYNum type=number max=10000 min=-10000 step=50 value=0></div><div class=row><label>IP offset Z</label> <input id=ipOffsetZ type=range max=10000 min=-10000 step=50 value=0> <input id=ipOffsetZNum type=number max=10000 min=-10000 step=50 value=0></div><div class=row><label>Close-up node labels</label> <input id=closeLabels type=checkbox checked></div><div class=row><label>Animated flow dots</label> <input id=flowOn type=checkbox checked> <span style=font-size:12px;color:var(--muted)>Direction cue</span></div><div class=row><label>Flow dot size</label> <input id=flowSize type=range max=10 min=1 step=1 value=10> <input id=flowSizeNum type=number max=10 min=1 step=1 value=10></div><div class=row><label>Flow speed</label> <input id=flowSpeed type=range max=2.5 min=0.05 step=0.05 value=0.05> <input id=flowSpeedNum type=number max=2.5 min=0.05 step=0.05 value=0.05></div><div class=row><label>Flow cap</label> <input id=flowCap type=range max=80000 min=2000 step=1000 value=80000> <input id=flowCapNum type=number max=80000 min=2000 step=1000 value=80000></div></details><details open><summary>Guided tour animation</summary><div class=row><label>Rotation speed</label> <input id=tourRotSpeed type=range max=0.8 min=0 step=0.01 value=0.16> <input id=tourRotSpeedNum type=number max=0.8 min=0 step=0.01 value=0.16></div><div class=row><label>Zoom in/out</label> <input id=tourZoomAmp type=range max=0.8 min=0 step=0.01 value=0.35> <input id=tourZoomAmpNum type=number max=0.8 min=0 step=0.01 value=0.35></div><div class=row><label>Tilt</label> <input id=tourTilt type=range max=0.5 min=0 step=0.01 value=0.16> <input id=tourTiltNum type=number max=0.5 min=0 step=0.01 value=0.16></div><div class=row><label>Wobble</label> <input id=tourWobble type=range max=0.25 min=0 step=0.01 value=0.07> <input id=tourWobbleNum type=number max=0.25 min=0 step=0.01 value=0.07></div><div class=row><label>Roll</label> <input id=tourRollAmp type=range max=0.8 min=0 step=0.01 value=0.30> <input id=tourRollAmpNum type=number max=0.8 min=0 step=0.01 value=0.30></div><div class=row><label>Year steps/sec</label> <input id=tourYearRate type=range max=6 min=0.5 step=0.1 value=2.0> <input id=tourYearRateNum type=number max=6 min=0.5 step=0.1 value=2.0></div><div class=row><label>Post‑roll (sec)</label> <input id=tourPostRoll type=range max=20 min=0 step=0.5 value=10> <input id=tourPostRollNum type=number max=20 min=0 step=0.5 value=10></div><div class=hint>These affect the guided tour/cinematic camera motion.</div></details><div class=row><label>Link rendering</label> <select id=linkMode><option value=all selected>All links<option value=local>Local (selected + neighbors)<option value=sampled>Sampled cap</select></div><div class=row><label>Sample cap</label> <input id=sampleCap type=range max=80000 min=2000 step=1000 value=80000> <input id=sampleCapNum type=number max=80000 min=2000 step=1000 value=80000></div><div class=legend><div class=legendHead><h2>Cluster groups</h2><div style=display:flex;gap:8px><button class=btn id=allOnBtn type=button>All on</button> <button class=btn id=allOffBtn type=button>All off</button></div></div><div class=legendList id=legendList></div><div class=colorTools id=colorTools><div class=legendHead style=margin-top:10px><h2 style=font-size:12px;margin:0;color:var(--muted);font-weight:600>Cluster colors</h2><div style=display:flex;gap:8px><button class=btn id=colorsRandomizeBtn type=button>Randomise</button> <button class=btn id=colorsResetBtn type=button>Reset</button></div></div><div class=colorGrid id=clusterColorEditor></div><div class=hint style=margin-top:8px>Pick colors per cluster name, or Randomise for a fresh high-contrast set. Saved locally in this browser.</div></div></div></div><div class="hidden detail"id=detailPanel><div class=detailHeader><div class=titleBlock><div class=titleLine><div class=swatch id=detailSwatch></div><div id=detailTitle>—</div></div><div style=display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap><div class=swatch id=detailClusterSwatch></div><div id=detailCluster>—</div><div style=color:var(--muted);font-size:12px>•</div><div id=detailYear style=color:var(--muted);font-size:12px>—</div></div></div><button class=closeX id=closeDetailBtn type=button title=Close><svg fill=none stroke=#d23f31 stroke-linecap=round stroke-width=2.4 viewbox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div><div class=kmeta><span class=pill>In: <b id=detailIn>0</b></span> <span class=pill>Out: <b id=detailOut>0</b></span> <span class=pill>Neighbors: <b id=detailNbr>0</b></span></div><h3>Cites (outgoing)</h3><div class=listWrap><div class=listHead><input id=outFilter placeholder="Filter outgoing by name or key…"></div><div class=list id=outList></div></div><h3>Cited by (incoming)</h3><div class=listWrap><div class=listHead><input id=inFilter placeholder="Filter incoming by name or key…"></div><div class=list id=inList></div></div><h3>Nearest semantic neighbours</h3><div class=listWrap><div class=listHead><input id=semSearchInput placeholder="Search a case to view neighbours (name or key)…"></div><div class=list id=semList></div></div></div><div class=stats id=statsBar><span class=pill><b id=statVisibleCases>0</b>/<span id=statTotalCases>0</span> cases visible</span> <span class=pill><b id=statVisibleLinks>0</b>/<span id=statTotalLinks>0</span> links (visible endpoints)</span> <span class=pill><b id=statDrawnLinks>0</b> drawn</span> <span class=pill><b id=statRawCitations>0</b> raw citations</span> <span class=pill><b id=statUnresolved>0</b> unresolved</span></div><div class="hidden toast"id=toast></div></div><script type=module>import * as THREE from 'three';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+  import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+
+
+  window.addEventListener('DOMContentLoaded', () => {
+  const $ = (id)=>document.getElementById(id);
+  // Compatibility helpers (avoid optional chaining / nullish coalescing)
+  function nvl(a,b){ return (a === null || a === undefined) ? b : a; }
+  function oc(o,k){ return (o === null || o === undefined) ? undefined : o[k]; }
+  function hasLen(a){ return !!(a && a.length); }
+  function colorHex(meta, fallback){
+    try{
+      return (meta && meta.color && typeof meta.color.getHexString === 'function') ? meta.color.getHexString() : fallback;
+    }catch(e){ return fallback; }
+  }
+  function firstDefined(){
+    for (var i=0;i<arguments.length;i++){
+      var v = arguments[i];
+      if (v !== null && v !== undefined) return v;
+    }
+    return undefined;
+  }
+
+  function bindRange(rangeEl, numEl, onChange){
+    // Keep the *other* control in sync without overwriting the actively-edited input.
+    // This prevents the cursor/focus from jumping while typing into the number box.
+    rangeEl.addEventListener('input', ()=>{
+      const v = parseFloat(rangeEl.value);
+      if (!Number.isFinite(v)) return;
+      numEl.value = rangeEl.value;
+      if (onChange) onChange(v);
+    });
+    numEl.addEventListener('input', ()=>{
+      const v = parseFloat(numEl.value);
+      if (!Number.isFinite(v)) return;
+      rangeEl.value = numEl.value;
+      if (onChange) onChange(v);
+    });
+  }
+  function setRangeValue(rangeEl, numEl, v){
+    rangeEl.value = v; numEl.value = v;
+  }
+  function toast(msg){
+    const el = $('toast');
+    el.innerHTML = msg;
+    el.classList.remove('hidden');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(()=>el.classList.add('hidden'), 5500);
+  }
+  function escapeHtml(s){
+    return nvl(s,'').toString().replace(/[&<>"']/g, (c)=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  function getClusterMetaForKey(caseKey){
+    const n = nodesByKey.get(caseKey);
+    const g = nvl(oc(n,'cluster_group'), 'Unclustered');
+    const meta = clusterMeta.get(g);
+    return { group: g, color: nvl(oc(meta,'color'), new THREE.Color('#b5bbc2')) };
+  }
+
+  function drawClusterPie(canvas, items){
+    // Compact stacked bar (replaces donut chart)
+    if (!canvas) return;
+
+    const tip = document.getElementById('barTip');
+
+    const dpr = Math.max(1, Math.min(2.5, window.devicePixelRatio || 1));
+    const rect = canvas.getBoundingClientRect();
+    const cssW = Math.max(220, rect.width || 320);
+    const cssH = Math.max(36, rect.height || 46);
+    const pxW = Math.floor(cssW * dpr);
+    const pxH = Math.floor(cssH * dpr);
+    if (canvas.width !== pxW || canvas.height !== pxH){
+      canvas.width = pxW;
+      canvas.height = pxH;
+    }
+
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0,0,cssW,cssH);
+
+    if (!items || !items.length){
+      ctx.fillStyle = '#666';
+      ctx.font = "12px Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
+      ctx.fillText('No links', 10, Math.min(cssH-8, 22));
+      canvas._barData = null;
+      return;
+    }
+
+    const counts = new Map();
+    for (const it of items){
+      const { group } = getClusterMetaForKey(it.key);
+      counts.set(group, (counts.get(group)||0) + 1);
+    }
+
+    let arr = Array.from(counts.entries()).sort((a,b)=>b[1]-a[1]);
+    const top = arr.slice(0, 18);
+    const rest = arr.slice(18);
+    let otherCount = 0;
+    for (const [,c] of rest) otherCount += c;
+    if (otherCount > 0) top.push(['Other', otherCount]);
+
+    const total = top.reduce((s,x)=>s+x[1], 0);
+
+    const padX = 10;
+    const barH = Math.min(16, Math.max(12, cssH - 16));
+    const barY = (cssH - barH)/2;
+    const barX0 = padX;
+    const barW = Math.max(10, cssW - padX*2);
+
+    ctx.fillStyle = 'rgba(0,0,0,.04)';
+    ctx.fillRect(barX0, barY, barW, barH);
+    ctx.strokeStyle = 'rgba(0,0,0,.10)';
+    ctx.strokeRect(barX0, barY, barW, barH);
+
+    let x = barX0;
+    const segs = [];
+    for (const [gName, c] of top){
+      const frac = c / total;
+      let w = frac * barW;
+      if (w < 1.2) w = 1.2;
+
+      const col = (gName === 'Other') ? '#c9c9c9' : ('#' + colorHex(clusterMeta.get(gName), '9aa0a6'));
+
+      const isActive = !pieClusterFilter || gName === pieClusterFilter;
+      ctx.globalAlpha = isActive ? 1 : 0.18;
+      ctx.fillStyle = col;
+      ctx.fillRect(x, barY, w, barH);
+
+      if (pieClusterFilter && gName === pieClusterFilter){
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = 'rgba(0,0,0,.35)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x+0.5, barY+0.5, Math.max(0,w-1), Math.max(0,barH-1));
+        ctx.lineWidth = 1;
+      }
+
+      segs.push({ name:gName, count:c, x0:x, x1:x+w });
+      x += w;
+      if (x > barX0 + barW) break;
+    }
+    ctx.globalAlpha = 1;
+
+    canvas._barData = { segs, total, barX0, barY, barW, barH };
+
+    if (!canvas._barBound){
+      canvas.addEventListener('mousemove', (e)=>{
+        const data = canvas._barData;
+        if (!data){ if (tip) tip.style.display='none'; return; }
+
+        const r = canvas.getBoundingClientRect();
+        const mx = e.clientX - r.left;
+        const my = e.clientY - r.top;
+
+        if (mx < data.barX0 || mx > data.barX0 + data.barW || my < data.barY-6 || my > data.barY + data.barH + 6){
+          if (tip) tip.style.display='none';
+          canvas.style.cursor = '';
+          return;
+        }
+        const seg = data.segs.find(s => mx >= s.x0 && mx <= s.x1);
+        if (!seg){
+          if (tip) tip.style.display='none';
+          canvas.style.cursor = '';
+          return;
+        }
+        if (tip){
+          tip.textContent = seg.name;
+          tip.style.left = (e.clientX + 12) + 'px';
+          tip.style.top = (e.clientY + 12) + 'px';
+          tip.style.display = 'block';
+        }
+        canvas.style.cursor = 'pointer';
+      });
+      canvas.addEventListener('mouseleave', ()=>{
+        if (tip) tip.style.display='none';
+        canvas.style.cursor = '';
+      });
+      canvas._barBound = true;
+    }
+  }
+
+
+  
+  
+// Cluster labels (data-driven).
+// Avoid hardcoding cluster names: prefer fields provided in the data.
+function deriveClusterGroup(clusterId, rawName, explicitGroup){
+  if (explicitGroup !== null && explicitGroup !== undefined){
+    const g = String(explicitGroup).trim();
+    if (g) return g;
+  }
+  if (rawName !== null && rawName !== undefined){
+    const s = String(rawName).trim();
+    if (s) return s;
+  }
+  const cid = Number(clusterId);
+  if (Number.isFinite(cid)) return `Cluster ${cid}`;
+  return 'Unclustered';
+}
+
+// No hardcoded special groups.
+function isIPGroup(_groupName){ return false; }
+
+
+// Legend (bottom bar). Toggle in normal mode; persists into cinematic mode.
+let legendEnabled = false;
+let legendReady = false;
+try{ legendEnabled = (localStorage.getItem('legendOn') === '1'); }catch(e){ legendEnabled = false; }
+
+function applyLegendVisibility(){
+  const show = !!legendEnabled && !!legendReady;
+  document.body.classList.toggle('legend-on', show);
+  const lb = document.getElementById('legendBar');
+  if (lb) lb.setAttribute('aria-hidden', show ? 'false' : 'true');
+  try{ localStorage.setItem('legendOn', legendEnabled ? '1' : '0'); }catch(e){}
+}
+
+function buildLegendItems(){
+  const lb = document.getElementById('legendBar');
+  if (!lb) return;
+  lb.innerHTML = '';
+
+  if (!clusterMeta || !clusterMeta.size) return;
+
+  const items = Array.from(clusterMeta.values()).map(m=>{
+    const name = displayClusterName(m.name || m.key);
+    let col = '#000000';
+    if (m.color){
+      try{ col = '#' + m.color.getHexString(); }catch(e){}
+    } else {
+      try{ col = '#' + colorForClusterKey(m.key).getHexString(); }catch(e){}
+    }
+    return { key: m.key, name, col, count: (m.countTotal||0) };
+  });
+
+  items.sort((a,b)=>{
+    const na = /^\s*cluster\s+(\d+)\s*$/i.exec(a.name);
+    const nb = /^\s*cluster\s+(\d+)\s*$/i.exec(b.name);
+    if (na && nb) return Number(na[1]) - Number(nb[1]);
+    if (na) return -1;
+    if (nb) return 1;
+    // Prefer larger clusters first, then alpha
+    if ((b.count||0) !== (a.count||0)) return (b.count||0) - (a.count||0);
+    return a.name.localeCompare(b.name);
+  });
+
+  for (const it of items){
+    const item = document.createElement('div');
+    item.className = 'legendItem';
+
+    const sw = document.createElement('span');
+    sw.className = 'legendSw';
+    sw.style.backgroundColor = it.col;
+
+    const nm = document.createElement('span');
+    nm.textContent = it.name;
+
+    item.appendChild(sw);
+    item.appendChild(nm);
+    lb.appendChild(item);
+  }
+}
+
+
+const legendBtn = document.getElementById('legendToggle');
+if (legendBtn){
+  legendBtn.addEventListener('click', ()=>{
+    legendEnabled = !legendEnabled;
+    applyLegendVisibility();
+  });
+}
+applyLegendVisibility();
+
+  
+  function setPieClusterFilter(group){
+    // Toggle
+    if (pieClusterFilter === group) pieClusterFilter = null;
+    else pieClusterFilter = group;
+
+    rebuildMeshes();
+    updateStats();
+    updateDetailPanel();
+  }
+
+  function onPieClick(ev){
+    const canvas = ev.currentTarget;
+    const data = canvas ? canvas._barData : undefined;
+    if (!canvas || !data || !hasLen(data.segs)) return;
+
+    const r = canvas.getBoundingClientRect();
+    const mx = ev.clientX - r.left;
+    const my = ev.clientY - r.top;
+    if (mx < data.barX0 || mx > data.barX0 + data.barW || my < data.barY-6 || my > data.barY + data.barH + 6) return;
+
+    const seg = data.segs.find(s => mx >= s.x0 && mx <= s.x1);
+    if (!seg) return;
+    const name = seg.name;
+    if (name !== 'Other') setPieClusterFilter(name);
+  }
+
+
+  function attachPieInteractivity(){
+    const out = $('outPie');
+    const inn = $('inPie');
+    if (out && !out._clickBound){
+      out.addEventListener('click', onPieClick);
+      out.style.cursor = 'pointer';
+      out._clickBound = true;
+    }
+    if (inn && !inn._clickBound){
+      inn.addEventListener('click', onPieClick);
+      inn.style.cursor = 'pointer';
+      inn._clickBound = true;
+    }
+  }
+
+  // Guided tour (orbit + one cluster label at a time)
+  let tourActive = false;
+  let tourPaused = false;
+
+  const HIGHLIGHT_CASES = new Map();
+
+  
+  // Human-friendly labels for the 13 clusters (cluster_group 0..12)
+
+  function displayClusterName(group){
+    if (group === null || group === undefined) return 'Unclustered';
+    const s = String(group).trim();
+    return s ? s : 'Unclustered';
+  }
+
+// Normalize highlight keys: also index base key without trailing [YYYY], and attach year/base to spec
+  (function normalizeHighlightKeys(){
+    const extra = [];
+    for (const [k, v] of HIGHLIGHT_CASES){
+      const base = k.replace(/\[\d{4}\]$/, '');
+      const ym = k.match(/\[(\d{4})\]$/);
+      if (v && ym && v.year === undefined) v.year = Number(ym[1]);
+      if (v && base && v.base === undefined) v.base = base;
+      if (base && !HIGHLIGHT_CASES.has(base)) extra.push([base, v]);
+    }
+    for (const [k,v] of extra) HIGHLIGHT_CASES.set(k, v);
+  })();
+let highlightByYear = new Map();
+let activeHighlightLabels = [];
+let shownHighlightKeys = new Set();
+let hlSideByKey = new Map();
+let hlNextDir = 1; // 1=right, -1=left; alternates for each *new* highlighted case
+
+let lastHighlightYear = -Infinity;
+const hlProjTmp = new THREE.Vector3();
+let hlLabelLastUpdate = 0;
+
+  let tourYearTimer = null;
+  let tourPostRollUntil = 0;
+  let tourFreezeYears = false;
+  let tourRAF = null;
+  let tourAngle = 0;
+  let tourLastT = 0;
+  let tourBaseOffset = null;
+  let tourBaseFov = null;
+  let tourTilt = 0.16; // radians
+  let tourWobble = 0.07; // radians
+
+  // Guided tour animation settings (editable in the left panel).
+  let TOUR_ANIM = {
+    rotSpeed: 0.16,     // radians/sec
+    zoomAmp: 0.35,      // multiplier amplitude
+    tilt: 0.16,         // radians
+    wobble: 0.07,       // radians
+    rollAmp: 0.30,      // radians
+    yearRate: 2.0,      // case-years per second
+    postRollSec: 10.0   // seconds after final year
+  };
+
+  function loadTourAnim(){
+    try{
+      const raw = localStorage.getItem('tourAnimSettings_v1');
+      if (!raw) return;
+      const o = JSON.parse(raw);
+      const num = (v, d)=>{ v = Number(v); return Number.isFinite(v) ? v : d; };
+      TOUR_ANIM.rotSpeed   = num(o.rotSpeed, TOUR_ANIM.rotSpeed);
+      TOUR_ANIM.zoomAmp    = num(o.zoomAmp, TOUR_ANIM.zoomAmp);
+      TOUR_ANIM.tilt       = num(o.tilt, TOUR_ANIM.tilt);
+      TOUR_ANIM.wobble     = num(o.wobble, TOUR_ANIM.wobble);
+      TOUR_ANIM.rollAmp    = num(o.rollAmp, TOUR_ANIM.rollAmp);
+      TOUR_ANIM.yearRate   = num(o.yearRate, TOUR_ANIM.yearRate);
+      TOUR_ANIM.postRollSec= num(o.postRollSec, TOUR_ANIM.postRollSec);
+    }catch(e){}
+    // keep legacy vars in sync
+    tourTilt = TOUR_ANIM.tilt;
+    tourWobble = TOUR_ANIM.wobble;
+  }
+
+  function saveTourAnim(){
+    try{ localStorage.setItem('tourAnimSettings_v1', JSON.stringify(TOUR_ANIM)); }catch(e){}
+  }
+
+  loadTourAnim();
+
+  let tourLabelIdx = 0;
+  let tourClusters = [];
+  let tourFirstYear = new Map();
+  let tourLabelOffset = { ox: 22, oy: -18 };
+  let tourLabelTimer = null;
+  let tourLabelHoldUntil = 0;
+  let tourLabelCluster = null;
+  let tourCaseLabels = [];
+  let tourLabelAnchor = null; // fixed world-space centroid for current label
+  let tourOverlaySmooth = { ax:null, ay:null, x:null, y:null, t:null };
+  const tourProjTmp = new THREE.Vector3();
+
+
+const _tourTargetTmp = new THREE.Vector3();
+const _tourVecTmp = new THREE.Vector3();
+const _tourYAxis = new THREE.Vector3(0,1,0);
+const _tourXAxis = new THREE.Vector3(1,0,0);
+const _tourZAxis = new THREE.Vector3(0,0,1);
+
+
+  
+
+  // Guided tour: permanent floating cluster labels
+  let clusterLabelLayer = null;
+  let clusterLabelEls = new Map();       // group -> element
+  let clusterLabelAnchors = new Map();   // group -> Vector3 (stable between year steps)
+  let clusterLabelSmooth = new Map();    // group -> {x,y,ax,ay,t}
+  let clusterLabelPhase = new Map();     // group -> phase
+  let clusterLabelAnchorKey = new Map(); // group -> caseKey (fixed per tour run)
+  let clusterKeepSet = new Set();
+  let clusterKeepLastChange = 0;
+  const clusterProjTmp = new THREE.Vector3();
+
+  
+function ensureClusterFloatLabels(){
+  // Cluster float labels disabled (replaced by optional legend bar).
+  if (clusterLabelLayer){
+    try{ clusterLabelLayer.remove(); }catch(e){}
+    clusterLabelLayer = null;
+  }
+  clusterLabelEls = new Map();
+  clusterLabelAnchors = new Map();
+  clusterLabelSmooth = new Map();
+  clusterLabelPhase = new Map();
+  clusterLabelAnchorKey = new Map();
+  return;
+}
+
+  function setClusterFloatLabelsVisible(on){
+    if (!clusterLabelLayer) return;
+    clusterLabelLayer.style.display = on ? '' : 'none';
+    if (!on){
+      for (const el of clusterLabelEls.values()){
+        el.classList.remove('on');
+        el.style.left = '-9999px';
+        el.style.top = '-9999px';
+      }
+    }
+  }
+
+  function refreshClusterFloatAnchors(){
+    // Seed anchor keys once per cluster (fixed per tour run).
+    // We anchor to the most central *visible* node in that cluster the first time it becomes visible,
+    // then keep that anchor key to avoid label jumping/jitter between years.
+    if (!tourActive) return;
+
+    for (const g of clusterLabelEls.keys()){
+      const current = clusterLabelAnchorKey.get(g);
+      if (current && visibleKeys.has(current)) continue;
+
+      const rk = clusterRepKey.get(g);
+      if (rk && visibleKeys.has(rk)){
+        clusterLabelAnchorKey.set(g, rk);
+        // reset smoothing for this label so it doesn't drift from an old position
+        clusterLabelSmooth.delete(g);
+      }
+    }
+  }
+
+  function updateClusterFloatLabels(t){
+    if (!tourActive || !clusterLabelLayer) return;
+    const rect = getCanvasRectCached();
+
+    // Try to seed anchors for newly-visible clusters
+    refreshClusterFloatAnchors();
+
+    // Build candidates from currently-anchored & visible nodes
+    const candidates = [];
+    for (const [g, k] of clusterLabelAnchorKey){
+      if (!k || !visibleKeys.has(k)) continue;
+      const idx = keyToIndex.get(k);
+      if (idx === undefined) continue;
+      const p = nodePos[idx];
+      if (!p) continue;
+
+      // project-check
+      clusterProjTmp.set(p.x, p.y, p.z).project(camera);
+      if (clusterProjTmp.z < -1 || clusterProjTmp.z > 1) continue;
+
+      candidates.push([g, camera.position.distanceToSquared(p)]);
+    }
+
+    // Keep the 4 FURTHEST clusters (stable selection with a small cooldown to prevent rapid swapping)
+    candidates.sort((a,b)=>b[1]-a[1]);
+    const nextKeep = new Set();
+    for (let i=0; i<Math.min(4, candidates.length); i++) nextKeep.add(candidates[i][0]);
+
+    const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+    let changed = false;
+    if (nextKeep.size !== clusterKeepSet.size) changed = true;
+    else {
+      for (const g of nextKeep){ if (!clusterKeepSet.has(g)) { changed = true; break; } }
+    }
+    if (changed && (now - clusterKeepLastChange) > 400){
+      clusterKeepSet = nextKeep;
+      clusterKeepLastChange = now;
+    }
+
+    const alpha = 0.18; // smoothing factor (lower = smoother)
+    for (const [g, el] of clusterLabelEls){
+      if (!clusterKeepSet.has(g)){
+        el.classList.remove('on');
+        continue;
+      }
+
+      const k = clusterLabelAnchorKey.get(g);
+      if (!k || !visibleKeys.has(k)){ el.classList.remove('on'); continue; }
+      const idx = keyToIndex.get(k);
+      if (idx === undefined){ el.classList.remove('on'); continue; }
+      const p = nodePos[idx];
+      if (!p){ el.classList.remove('on'); continue; }
+
+      clusterProjTmp.set(p.x, p.y, p.z).project(camera);
+      if (clusterProjTmp.z < -1 || clusterProjTmp.z > 1){
+        el.classList.remove('on');
+        continue;
+      }
+
+      let tx = rect.left + (clusterProjTmp.x * 0.5 + 0.5) * rect.width;
+      let ty = rect.top  + (-clusterProjTmp.y * 0.5 + 0.5) * rect.height;
+
+      const dx = parseFloat(el.dataset.dx || '0');
+      const dy = parseFloat(el.dataset.dy || '0');
+      tx += dx; ty += dy;
+
+      // Screen-space smoothing to remove projection jitter while orbiting
+      let s = clusterLabelSmooth.get(g);
+      if (!s){
+        s = {x: tx, y: ty};
+        clusterLabelSmooth.set(g, s);
+      } else {
+        s.x += (tx - s.x) * alpha;
+        s.y += (ty - s.y) * alpha;
+      }
+
+      el.style.left = (Math.round(s.x * 2) / 2).toFixed(0) + 'px';
+      el.style.top  = (Math.round(s.y * 2) / 2).toFixed(0) + 'px';
+      el.classList.add('on');
+    }
+  }
+
+function setTourOverlayOpacity(a){
+    const call = $('tourCallout');
+    const line = $('tourLine');
+    const dot = $('tourDot');
+    const v = String(a);
+    if (call) call.style.opacity = v;
+    if (line) line.style.opacity = v;
+    if (dot) dot.style.opacity = v;
+  }
+
+
+  
+  function hash32(str){
+    let h = 2166136261 >>> 0;
+    const s = String(nvl(str,''));
+    for (let i=0; i<s.length; i++){
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  // Deterministic per-cluster screen-space offset to reduce overlap (stable across frames)
+  function stableLabelOffset(group){
+    const h = hash32(group);
+    const ang = ((h % 360) / 360) * Math.PI * 2;
+    const r = 18 + ((h >>> 8) % 9); // 18–26 px
+    const dx = Math.cos(ang) * r;
+    const dy = Math.sin(ang) * r - 10; // slight upward bias
+    return { dx, dy };
+  }
+
+  function buildTourClusterSequence(){
+    tourFirstYear = new Map();
+    for (const n of nodesByKey.values()){
+      const g = n.cluster_group || 'Unclustered';
+      if (!Number.isFinite(n.year)) continue;
+      const y = n.year;
+      const cur = tourFirstYear.get(g);
+      if (!Number.isFinite(cur) || y < cur) tourFirstYear.set(g, y);
+    }
+
+    // Collect cluster names
+    const uniq = new Set();
+    for (const g of clusterMeta.keys()) uniq.add(g);
+    for (const g of tourFirstYear.keys()) uniq.add(g);
+
+    const arr = Array.from(uniq.values());
+    const hasUn = arr.includes('Unclustered');
+    const others = arr.filter(g=>g!=='Unclustered');
+
+    others.sort((a,b)=>{
+      const ya = tourFirstYear.get(a); const yb = tourFirstYear.get(b);
+      if (Number.isFinite(ya) && Number.isFinite(yb) && ya !== yb) return ya - yb;
+      if (Number.isFinite(ya) && !Number.isFinite(yb)) return -1;
+      if (!Number.isFinite(ya) && Number.isFinite(yb)) return 1;
+      return String(a).localeCompare(String(b));
+    });
+
+    tourClusters = others;
+    if (hasUn) tourClusters.push('Unclustered');
+    tourLabelIdx = 0;
+  }
+
+  function nextTourLabelCluster(){
+    while (tourLabelIdx < tourClusters.length){
+      const g = tourClusters[tourLabelIdx];
+      const fy = tourFirstYear.get(g);
+      if (!Number.isFinite(fy) || yearMax >= fy) return g;
+      break; // not yet present
+    }
+    return null;
+  }
+
+  function scheduleTourLabelCycle(){
+    if (!tourActive) return;
+
+    if (!tourClusters || tourClusters.length === 0){
+      buildTourClusterSequence();
+    }
+    if (!tourClusters || tourClusters.length === 0) return;
+
+    // pick next cluster that currently has visible nodes
+    let tries = 0;
+    let g = null;
+    while (tries < tourClusters.length){
+      const cand = tourClusters[tourLabelIdx % tourClusters.length];
+      tourLabelIdx = (tourLabelIdx + 1) % tourClusters.length;
+      const cen = computeClusterCentroid(cand);
+      if (cen){ g = cand; break; }
+      tries++;
+    }
+    if (!g){
+      if (tourLabelTimer) clearTimeout(tourLabelTimer);
+      tourLabelTimer = setTimeout(scheduleTourLabelCycle, 300);
+      return;
+    }
+
+    showTourLabel(g);
+
+    if (tourLabelTimer) clearTimeout(tourLabelTimer);
+    tourLabelTimer = setTimeout(()=>{
+      if (!tourActive) return;
+      const call = $('tourCallout');
+      setTourOverlayOpacity(0);
+      setTimeout(()=>{
+        if (!tourActive) return;
+        scheduleTourLabelCycle();
+      }, 1200);
+    }, 250);
+  }
+
+// Precomputed: year -> cluster -> new node count
+  let yearNewByCluster = new Map();
+
+  function buildYearNewByCluster(){
+    yearNewByCluster = new Map();
+    for (const n of nodesByKey.values()){
+      if (!Number.isFinite(n.year)) continue;
+      const y = n.year;
+      const g = n.cluster_group || 'Unclustered';
+      if (!yearNewByCluster.has(y)) yearNewByCluster.set(y, new Map());
+      const mm = yearNewByCluster.get(y);
+      mm.set(g, (mm.get(g)||0) + 1);
+    }
+  }
+
+  function pickClusterForYear(y){
+    // Prefer the cluster with most NEW cases in this year.
+    const m = yearNewByCluster.get(y);
+    if (m && m.size){
+      let bestG = null;
+      let bestC = -1;
+      for (const [g,c] of m.entries()){
+        if (c > bestC){ bestC = c; bestG = g; }
+      }
+      if (bestG) return bestG;
+    }
+    // Fallback: most common visible cluster right now.
+    const counts = new Map();
+    for (let i=0; i<nodeKey.length; i++){
+      const k = nodeKey[i];
+      const g = oc(nodesByKey.get(k),'cluster_group') || 'Unclustered';
+      counts.set(g, (counts.get(g)||0) + 1);
+    }
+    let bestG = null, bestC = -1;
+    for (const [g,c] of counts.entries()){
+      if (c > bestC){ bestC = c; bestG = g; }
+    }
+    return bestG || 'Unclustered';
+  }
+
+
+function updateTourCalloutContent(groupName, y){
+  const meta = clusterMeta.get(groupName);
+  const sub = $('tourSub');
+  const desc = $('tourDesc');
+  const ym = yearNewByCluster.get(y); const newCount = (ym && ym.get(groupName)) || 0;
+
+  if (sub){
+    const yTxt = Number.isFinite(y) ? String(y) : '—';
+    const ncTxt = newCount ? `• ${newCount} new case${newCount===1?'':'s'}` : '';
+    sub.textContent = `Year ${yTxt} ${ncTxt}`.trim();
+  }
+  if (desc){
+    desc.textContent = (meta && meta.example) ? `Themes: ${meta.example}` : '';
+  }
+}
+
+function showTourLabelForYear(y){ /* cluster labels are now permanent during the tour */ }
+
+
+  function computeClusterCentroid(groupName){
+    return clusterCentroids.get(groupName) || null;
+  }
+
+  function hideTourLabel(){
+    const call = $('tourCallout');
+    if (!call) return;
+    call.style.opacity = '0';
+    call.style.transform = 'translate(-9999px,-9999px)';
+    const line = $('tourLine');
+    const dot = $('tourDot');
+    if (line){ line.setAttribute('x1', -9999); line.setAttribute('y1', -9999); line.setAttribute('x2', -9999); line.setAttribute('y2', -9999); }
+    if (dot){ dot.setAttribute('cx', -9999); dot.setAttribute('cy', -9999); }
+    tourLabelCluster = null;
+  }
+
+  function restartTourFade(){
+    const call = $('tourCallout');
+    const line = $('tourLine');
+    const dot  = $('tourDot');
+    for (const el of [call, line, dot]){
+      if (!el) continue;
+      el.classList.remove('tourFade');
+      // force reflow to restart animation
+      el.getBoundingClientRect();
+      el.classList.add('tourFade');
+    }
+  }
+
+  function showTourLabel(groupName, reuseIfSame=false){
+    if (!groupName) return;
+    const same = (tourLabelCluster === groupName);
+    tourLabelCluster = groupName;
+
+    // Fix centroid at the moment the label starts; keep anchor stable if unchanged and reuse requested
+    if (!(reuseIfSame && same && tourLabelAnchor)){
+      const cen = computeClusterCentroid(groupName);
+      if (!cen) return;
+      tourLabelAnchor = cen.clone();
+
+      // reset smoothing for this label
+      tourOverlaySmooth = { ax:null, ay:null, x:null, y:null, t:null };
+    }
+
+    const meta = clusterMeta.get(groupName);
+    const sw = $('tourSwatch');
+    const txt = $('tourText');
+    if (sw) sw.style.background = meta ? ('#' + meta.color.getHexString()) : '#9e9e9e';
+    if (txt) txt.textContent = groupName;
+
+    // Stable offset to reduce edge-clamp jitter
+    tourLabelOffset = { ox: 18, oy: -18 };
+
+    // Fade in/out like case highlights
+    restartTourFade();
+  }
+
+
+  function updateTourOverlay(){
+    if (!tourActive || !tourLabelCluster) return;
+    if (!tourLabelAnchor){
+      const cen = computeClusterCentroid(tourLabelCluster);
+      if (!cen) return;
+      tourLabelAnchor = cen.clone();
+    }
+
+    // Project world -> NDC -> viewport pixels (account for canvas position)
+    tourProjTmp.copy(tourLabelAnchor).project(camera);
+    const v = tourProjTmp;
+    if (v.z < -1 || v.z > 1) return;
+
+    const rect = getCanvasRectCached();
+    const axT = rect.left + (v.x * 0.5 + 0.5) * rect.width;
+    const ayT = rect.top  + (-v.y * 0.5 + 0.5) * rect.height;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    const call = $('tourCallout');
+    if (!call) return;
+
+    const pad = 14;
+    const ox = nvl(tourLabelOffset && tourLabelOffset.ox, 22), oy = nvl(tourLabelOffset && tourLabelOffset.oy, -18);
+    const bw = call.offsetWidth || 260;
+    const bh = call.offsetHeight || 48;
+
+    let xT = axT + ox;
+    let yT = ayT + oy;
+
+    xT = Math.min(vw - pad - bw, Math.max(pad, xT));
+    yT = Math.min(vh - pad - bh, Math.max(pad, yT));
+
+    // smoothing
+    const now = performance.now();
+    const dt = Math.min(48, Math.max(0, now - nvl(tourOverlaySmooth.t, now)));
+    tourOverlaySmooth.t = now;
+    const kA = 1 - Math.pow(0.001, dt / 16.67);
+    const kB = 1 - Math.pow(0.001, dt / 12.0);
+
+    if (tourOverlaySmooth.ax == null){
+      tourOverlaySmooth.ax = axT; tourOverlaySmooth.ay = ayT;
+      tourOverlaySmooth.x = xT;   tourOverlaySmooth.y  = yT;
+    } else {
+      tourOverlaySmooth.ax += (axT - tourOverlaySmooth.ax) * kA;
+      tourOverlaySmooth.ay += (ayT - tourOverlaySmooth.ay) * kA;
+      tourOverlaySmooth.x  += (xT  - tourOverlaySmooth.x ) * kB;
+      tourOverlaySmooth.y  += (yT  - tourOverlaySmooth.y ) * kB;
+    }
+
+    const ax = tourOverlaySmooth.ax;
+    const ay = tourOverlaySmooth.ay;
+    const x  = tourOverlaySmooth.x;
+    const y  = tourOverlaySmooth.y;
+
+    call.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+
+    const line = $('tourLine');
+    const dot = $('tourDot');
+    if (line){
+      const sx = (ax < x) ? x : (ax > x + bw) ? (x + bw) : ax;
+      const sy = (ay < y) ? y : (ay > y + bh) ? (y + bh) : ay;
+      line.setAttribute('x1', sx);
+      line.setAttribute('y1', sy);
+      line.setAttribute('x2', ax);
+      line.setAttribute('y2', ay);
+    }
+    if (dot){
+      dot.setAttribute('cx', ax);
+      dot.setAttribute('cy', ay);
+    }
+  }
+
+  function clearTourCaseLabels(){
+    const layer = $('tourCaseLayer');
+    if (!layer) { tourCaseLabels = []; return; }
+
+    // Preserve the arrow SVG layer (so we don't lose it when clearing).
+    const svg = $('hlArrowLayer');
+    // Remove highlight label DOM nodes
+    const labels = layer.querySelectorAll('.hlLabel');
+    for (const el of labels){ try{ el.remove(); }catch(e){} }
+
+    // Clear arrows
+    if (svg){
+      while (svg.firstChild){ svg.removeChild(svg.firstChild); }
+    }
+
+    tourCaseLabels = [];
+  }
+
+
+
+  function spawnHighlightLabelsForYear(year){
+    // If the tour is restarted/rewound (year goes backwards), allow highlight labels to appear again.
+    if (Number.isFinite(year) && year < lastHighlightYear){
+      shownHighlightKeys = new Set();
+      lastHighlightYear = -Infinity;
+      clearHighlightLabels();
+      // Reset alternation when rewinding the tour
+      hlSideByKey.clear();
+      hlNextDir = 1;
+    }
+    if (Number.isFinite(year)) lastHighlightYear = year;
+
+    const list = highlightByYear.get(year);
+    if (!list || list.length === 0) return;
+    for (const key of list){
+      if (shownHighlightKeys.has(key)) continue;
+      spawnHighlightLabelForKey(key);
+      shownHighlightKeys.add(key);
+    }
+  }
+
+  function spawnHighlightLabelForKey(key){
+    const lc = keyLower(key);
+    const spec = HIGHLIGHT_CASES.get(lc);
+    if (!spec) return;
+    const idx = keyToIndex.get(key);
+    if (idx === undefined) return;
+
+    const n = nodesByKey.get(key);
+    if (!n) return;
+
+    const layer = $('tourCaseLayer');
+    if (!layer) return;
+
+    const el = document.createElement('div');
+    el.className = 'hlLabel';
+
+    // Accent color based on the case's cluster
+    let accent = 'rgba(0,0,0,0.55)';
+    try{
+      const cm = getClusterMetaForKey(key);
+      accent = '#' + cm.color.getHexString();
+      el.style.setProperty('--hlAccent', accent);
+    }catch(e){}
+
+    const title = document.createElement('div');
+    title.className = 'hlTitle';
+    title.textContent = (n.name && n.name.trim().length) ? n.name : key;
+
+    const meta = document.createElement('div');
+    meta.className = 'hlMeta';
+    const yearEl = document.createElement('div');
+    yearEl.className = 'hlYear';
+    yearEl.textContent = Number.isFinite(n.year) ? String(n.year) : '—';
+    const catEl = document.createElement('div');
+    catEl.className = 'hlCat';
+    catEl.textContent = displayClusterName(nvl(n.cluster_group, 'Unclustered'));
+    meta.appendChild(yearEl); meta.appendChild(catEl);
+
+    const desc = document.createElement('div');
+    desc.className = 'hlDesc';
+    desc.textContent = spec.desc || '';
+
+    el.appendChild(title);
+    el.appendChild(meta);
+    el.appendChild(desc);
+    layer.appendChild(el);
+
+    // Create arrow in the SVG overlay (so it can fade in/out in sync).
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const svg = $('hlArrowLayer');
+    let arrowPath = null, arrowG = null;
+    if (svg){
+      arrowG = document.createElementNS(SVG_NS, 'g');
+      // Arrow color is fixed grey (no head)
+      arrowPath = document.createElementNS(SVG_NS, 'path');
+      arrowPath.setAttribute('class', 'hlArrow');
+      arrowG.appendChild(arrowPath);
+      svg.appendChild(arrowG);
+    }
+
+    const now = performance.now();
+    activeHighlightLabels.push({
+      key, idx, el,
+      arrowG, arrowPath,
+      dir: null,
+      t1: now + 9000,
+      w: null, h: null,
+      lx: null, ly: null, nx: null, ny: null
+    });
+    updateHighlightLabels();
+
+    setTimeout(()=>{ 
+      try{ el.remove(); }catch(e){} 
+      try{ if (arrowG) arrowG.remove(); }catch(e){}
+    }, 9300);
+}
+
+  function updateHighlightLabels(){
+    if (!activeHighlightLabels.length) return;
+
+    const now = performance.now();
+    const last = hlLabelLastUpdate || now;
+    const dt = Math.min(48, Math.max(0, now - last));
+    hlLabelLastUpdate = now;
+
+    // Exponential smoothing factor (stable across varying frame times)
+    const k = 1 - Math.pow(0.001, dt / 16.67);
+
+    const rect = getCanvasRectCached();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    activeHighlightLabels = activeHighlightLabels.filter(h => now < h.t1 && h.el && h.el.isConnected);
+
+    for (const h of activeHighlightLabels){
+      const idx = keyToIndex.get(h.key);
+      if (idx === undefined) continue;
+      const p = nodePos[idx];
+      if (!p) continue;
+
+      // Project to screen
+      hlProjTmp.set(p.x, p.y, p.z).project(camera);
+      if (hlProjTmp.z < -1 || hlProjTmp.z > 1) continue;
+
+      const nxT = rect.left + (hlProjTmp.x * 0.5 + 0.5) * rect.width;
+      const nyT = rect.top  + (-hlProjTmp.y * 0.5 + 0.5) * rect.height;
+
+      // Measure label once (avoid per-frame layout reads)
+      if (h.w === null || h.h === null){
+        const r = h.el.getBoundingClientRect();
+        h.w = r.width;
+        h.h = r.height;
+      }
+
+      const hw = (h.w || 320) * 0.5;
+      const hh = (h.h || 160) * 0.5;
+      const margin = 18;
+
+      // Place label to the side (alternate left/right; stable per case)
+      const sideOff = 620; // push labels further to the side
+      // Choose a side once per highlight so it never flips while orbiting
+      if (h.dir === null){
+        // Persist side per case key so the same case never flips left/right
+        if (hlSideByKey.has(h.key)){
+          h.dir = hlSideByKey.get(h.key);
+        } else {
+          h.dir = hlNextDir;
+          hlSideByKey.set(h.key, h.dir);
+          hlNextDir *= -1;
+        }
+      }
+      const dir = h.dir;
+
+      let lxT = nxT + dir * sideOff;
+      let lyT = nyT - 26; // slightly above the node
+
+      // Clamp to viewport so it never goes off-screen
+      lxT = Math.max(margin + hw, Math.min(vw - margin - hw, lxT));
+      lyT = Math.max(margin + hh, Math.min(vh - margin - hh, lyT));
+
+      // Smooth label + node screen positions to prevent jitter
+      if (h.lx === null){
+        h.lx = lxT; h.ly = lyT;
+        h.nx = nxT; h.ny = nyT;
+      } else {
+        h.lx += (lxT - h.lx) * k;
+        h.ly += (lyT - h.ly) * k;
+        h.nx += (nxT - h.nx) * k;
+        h.ny += (nyT - h.ny) * k;
+      }
+
+      h.el.style.left = h.lx.toFixed(1) + 'px';
+      h.el.style.top  = h.ly.toFixed(1) + 'px';
+
+      // Update arrow (label -> node), inset a little so it hits the box edge cleanly
+      if (h.arrowPath && h.w && h.h){
+        const lx = h.lx, ly = h.ly, nx = h.nx, ny = h.ny;
+        const dx = nx - lx;
+        const dy = ny - ly;
+        const len = Math.max(1e-6, Math.hypot(dx, dy));
+        const ux = dx / len;
+        const uy = dy / len;
+
+        // Intersection point on label rectangle boundary (ray from label center to node)
+        const t = 1 / Math.max(Math.abs(dx) / hw, Math.abs(dy) / hh);
+        let sx = lx + dx * t;
+        let sy = ly + dy * t;
+
+        // Inset start/end so the arrowhead sits exactly on the node point cleanly
+        sx += ux * 6; sy += uy * 6;
+        const ex = nx; 
+        const ey = ny;
+
+        h.arrowPath.setAttribute('d', `M ${sx.toFixed(1)} ${sy.toFixed(1)} L ${ex.toFixed(1)} ${ey.toFixed(1)}`);
+}
+    }
+  }
+
+  function clearHighlightLabels(){
+    for (const h of activeHighlightLabels){
+      try{ if (h.el) h.el.remove(); }catch(e){}
+      try{ if (h.arrowG) h.arrowG.remove(); }catch(e){}
+    }
+    activeHighlightLabels = [];
+  }
+
+  function spawnTourCaseLabelForYear(y){
+    return; // disabled (no case labels during guided tour)
+  }
+
+  function updateTourCaseLabels(){ return; }
+
+  function tourOrbitStep(t){
+    if (!tourActive || tourPaused) return;
+    if (!tourLastT) tourLastT = t;
+    const dt = Math.min(0.05, (t - tourLastT) / 1000);
+    tourLastT = t;
+
+
+// Advance the guided tour years (time-based; avoids timer jitter)
+if (yearsWithCases.length && !tourFreezeYears){
+  tourYearAccMs += dt * 1000;
+  const steps = Math.floor(tourYearAccMs / tourYearStepMs);
+  if (steps > 0){
+    tourYearAccMs -= steps * tourYearStepMs;
+    advanceTourYears(steps);
+    if (!tourActive) return;
+  }
+}
+
+// End-of-timeline post-roll: keep orbiting for a bit after the final year
+if (tourPostRollUntil && t >= tourPostRollUntil){
+  stopGuidedTour();
+  return;
+}
+
+    _tourTargetTmp.copy(controls.target);
+    const target = _tourTargetTmp;
+    if (!tourBaseOffset){
+      tourBaseOffset = camera.position.clone().sub(target);
+    }
+
+    const speed = TOUR_ANIM.rotSpeed; // slow orbit
+    tourAngle += speed * dt;
+
+    _tourVecTmp.copy(tourBaseOffset);
+    const v = _tourVecTmp;
+    v.applyAxisAngle(_tourYAxis, tourAngle);
+    v.applyAxisAngle(_tourXAxis, TOUR_ANIM.tilt);
+    v.applyAxisAngle(_tourZAxis, TOUR_ANIM.wobble * Math.sin(tourAngle * 0.7));
+
+    // subtle zoom that respects the user's starting distance
+    const zoomAmp = TOUR_ANIM.zoomAmp;
+    const zoom = 1 + zoomAmp * Math.sin(tourAngle * 1.10);
+    v.multiplyScalar(zoom);
+
+    camera.position.copy(target).add(v);
+    camera.lookAt(target);
+
+    // subtle roll around view axis
+    const rollAmp = TOUR_ANIM.rollAmp;
+    camera.rotateZ(rollAmp * Math.sin(tourAngle * 1.10));
+
+    controls.update();
+
+    updateClusterFloatLabels(t);
+
+    updateTourCaseLabels();
+    tourRAF = requestAnimationFrame(tourOrbitStep);
+  }
+
+  function startGuidedTour(){
+    // If no year metadata, we still run the orbit + cluster callouts (no year stepping)
+    if (yearsWithCases.length === 0){
+      yearIdx = 0;
+      yearMax = Infinity;
+      updateTimelineUI();
+      applyFiltersAndRender(false);
+    }
+
+    pieClusterFilter = null;
+    if (focusState.active) exitFocus();
+    selectedKey = null;
+    if (yearsWithCases.length){
+      yearIdx = 0;
+      yearMax = yearsWithCases[yearIdx];
+      updateTimelineUI();
+      applyFiltersAndRender(false);
+    }
+
+    clearTourCaseLabels();
+
+    // Reset highlight labels for a fresh tour run
+    shownHighlightKeys = new Set();
+    lastHighlightYear = -Infinity;
+    clearHighlightLabels();
+    // Alternate highlight sides left/right per *new* case, stable for that case
+    hlSideByKey.clear();
+    hlNextDir = 1;
+
+    controls.enabled = false;
+    tourActive = true;
+    tourPaused = false;
+    updateCinematicCounterVisibility();
+    tourLabelCluster = null;
+    tourLabelAnchor = null;
+    const ti = $('tourIcon');
+    if (ti) ti.textContent = '❚❚';
+
+    const off = camera.position.clone().sub(controls.target);
+    tourBaseOffset = off.clone();
+    tourBaseFov = camera.fov;
+    tourAngle = Math.atan2(off.z, off.x);
+    tourLastT = 0;
+
+    if (yearsWithCases.length){
+      spawnHighlightLabelsForYear(yearMax);
+    }
+        if (yearsWithCases.length){
+      restartTourYearTimer();
+    }
+
+    if (tourRAF) cancelAnimationFrame(tourRAF);
+    tourRAF = requestAnimationFrame(tourOrbitStep);
+  }
+
+
+  function stopGuidedTour(){
+    tourActive = false;
+    tourPaused = false;
+    updateCinematicCounterVisibility();
+    const ti = $('tourIcon');
+    if (ti) ti.textContent = '▶';
+    if (tourYearTimer) clearInterval(tourYearTimer);
+    if (tourLabelTimer) clearTimeout(tourLabelTimer);
+    tourLabelTimer = null;
+    tourLabelIdx = 0;
+    tourClusters = [];
+    tourFirstYear = new Map();
+    if (tourBaseFov != null){ camera.fov = tourBaseFov; camera.updateProjectionMatrix(); }
+    tourBaseFov = null;
+    tourBaseOffset = null;
+    tourYearTimer = null;
+    tourPostRollUntil = 0;
+    tourFreezeYears = false;
+    if (tourRAF) cancelAnimationFrame(tourRAF);
+    tourRAF = null;
+    tourLastT = 0;
+
+    controls.enabled = true;
+    clusterLabelAnchorKey = new Map();
+    clusterLabelSmooth = new Map();
+    clusterKeepSet = new Set();
+    clusterKeepLastChange = 0;
+    clearHighlightLabels();
+    // Clear per-case side assignments for next run
+    hlSideByKey.clear();
+    hlNextDir = 1;
+    shownHighlightKeys = new Set();
+    lastHighlightYear = -Infinity;
+    clearTourCaseLabels();
+  }
+
+  function toggleGuidedTour(ev){
+    if (!tourActive){ startGuidedTour(); return; }
+    if (ev && ev.shiftKey){ stopGuidedTour(); return; }
+    if (tourPaused) resumeGuidedTour();
+    else pauseGuidedTour();
+  }
+
+  
+// Guided tour year stepping is driven by requestAnimationFrame for smoothness.
+let tourYearStepMs = 1000/4;   // will be set by restartTourYearTimer()
+let tourYearAccMs = 0;
+
+function restartTourYearTimer(){
+  if (!yearsWithCases.length) return;
+  // 3 case-years per second
+  tourYearStepMs = 1000 / Math.max(0.25, TOUR_ANIM.yearRate);
+  tourYearAccMs = 0;
+  tourYearTimer = null; // no setInterval
+  // Reset end-of-timeline post-roll state
+  tourPostRollUntil = 0;
+  tourFreezeYears = false;
+}
+
+
+// Advance multiple steps at once, applying filters once (reduces jank)
+
+// Return true if advancing from prevYear -> nextYear would reveal any new dated cases.
+// (We only rebuild meshes when something actually changes; years without cases won't cause a hitch.)
+function tourYearRangeHasNewNodes(prevYear, nextYear){
+  if (!keysByYear || !keysByYear.size) return false;
+  const a = (Number.isFinite(prevYear) ? prevYear : (TIMELINE_START_YEAR - 1));
+  const b = (Number.isFinite(nextYear) ? nextYear : a);
+  if (b <= a) return false;
+  for (let y = a + 1; y <= b; y++){
+    if (keysByYear.has(y)) return true;
+  }
+  return false;
+}
+
+function advanceTourYears(steps){
+  if (!tourActive || tourPaused) return;
+  if (!Number.isFinite(steps) || steps <= 0) return;
+  if (tourFreezeYears) return;
+
+  yearIdx += steps;
+
+  const lastIndex = yearsWithCases.length - 1;
+  if (yearIdx >= lastIndex){
+    // Clamp to the final year and then let the camera keep moving for a bit.
+    yearIdx = lastIndex;
+    yearMax = yearsWithCases[lastIndex];
+    updateTimelineUI();
+    applyFiltersAndRender(false);
+    setCinematicYear(yearMax);
+    spawnHighlightLabelsForYear(yearMax);
+
+    if (!tourPostRollUntil){
+      tourFreezeYears = true;
+      tourPostRollUntil = performance.now() + (TOUR_ANIM.postRollSec * 1000);
+    }
+    return;
+  }
+
+  const prevY = yearMax;
+  yearMax = yearsWithCases[yearIdx];
+  updateTimelineUI();
+  // Only rebuild meshes on years that actually introduce new cases (prevents periodic stutter).
+  if (tourYearRangeHasNewNodes(prevY, yearMax)){
+    applyFiltersAndRender(false);
+  }
+  setCinematicYear(yearMax);
+  spawnHighlightLabelsForYear(yearMax);
+}
+
+
+
+  function pauseGuidedTour(){
+    if (!tourActive || tourPaused) return;
+    tourPaused = true;
+    updateCinematicCounterVisibility();
+    const ti = $('tourIcon');
+    if (ti) ti.textContent = '▶';
+    controls.enabled = true;    if (tourRAF) { cancelAnimationFrame(tourRAF); tourRAF = null; }
+  }
+
+  function resumeGuidedTour(){
+    if (!tourActive || !tourPaused) return;
+    tourPaused = false;
+    updateCinematicCounterVisibility();
+    const ti = $('tourIcon');
+    if (ti) ti.textContent = '❚❚';
+    controls.enabled = false;
+    // Re-sync orbit parameters to the current view (prevents a jump after manual orbit while paused)
+    {
+      const off = camera.position.clone().sub(controls.target);
+      tourBaseOffset = off.clone();
+      tourAngle = Math.atan2(off.z, off.x);
+    }
+    tourLastT = 0;
+    if (yearsWithCases.length) restartTourYearTimer();
+    if (tourRAF) cancelAnimationFrame(tourRAF);
+    tourRAF = requestAnimationFrame(tourOrbitStep);
+  }
+
+  function toggleGuidedTourPause(){
+    if (!tourActive) return;
+    if (tourPaused) resumeGuidedTour();
+    else pauseGuidedTour();
+  }
+
+
+  // Cinematic mode: fullscreen + hide side UI (toggle with 'C')
+  // Timeline UI (years)
+  function hideTimelineUI(){
+    const tb = $('timelineBar');
+    if (tb) tb.classList.add('hidden');
+  }
+
+
+  // Keep bottom-left search and timeline vertically aligned (center-to-center)
+  function syncSearchTimelineCenter(){
+    const sb = $('searchBox');
+    const tb = $('timelineBar');
+    if (!sb || !tb || tb.classList.contains('hidden')) return;
+    const tr = tb.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    const centerY = tr.top + tr.height/2;
+    const bh = (sb.getBoundingClientRect().height || sb.offsetHeight || 0);
+    const bottom = Math.max(8, (vh - centerY) - bh/2);
+    sb.style.bottom = bottom + 'px';
+  }
+
+function initTimelineUI(){
+  const tb = $('timelineBar');
+  if (!tb) return;
+  tb.classList.remove('hidden');
+
+  const slider = $('yearSlider');
+  if (!slider) return;
+  slider.min = 0;
+  slider.max = Math.max(0, yearsWithCases.length - 1);
+  slider.step = 1;
+
+  slider.addEventListener('input', ()=>{
+    // manual scrub: jump immediately (keeps playing if currently playing)
+    yearIdx = Number(slider.value);
+    yearMax = yearsWithCases[yearIdx];
+    updateTimelineUI();
+    applyFiltersAndRender(false);
+  });
+
+  const pb = $('playBtn');
+  if (pb && !pb._bound){
+    pb.addEventListener('click', (ev)=>{
+      if (!yearModeHasData || yearsWithCases.length === 0) return;
+
+      // Shift+click resets to the beginning and stops.
+      if (ev && ev.shiftKey){
+        stopYearPlayback();
+        yearIdx = 0;
+        yearMax = yearsWithCases[yearIdx];
+        updateTimelineUI();
+        applyFiltersAndRender(false);
+        return;
+      }
+
+      if (isPlaying){ stopYearPlayback(); return; }
+
+      // If at the end, restart from beginning
+      if (yearIdx >= yearsWithCases.length - 1){
+        yearIdx = 0;
+        yearMax = yearsWithCases[yearIdx];
+        updateTimelineUI();
+        applyFiltersAndRender(false);
+      }
+      startYearPlayback();
+    });
+    pb._bound = true;
+  }
+
+  // Prevent timeline interaction from affecting orbit controls
+  tb.addEventListener('pointerdown', (e)=>e.stopPropagation());
+  tb.addEventListener('wheel', (e)=>e.stopPropagation(), { passive:false });
+  requestAnimationFrame(syncSearchTimelineCenter);
+}
+
+
+  function updateTimelineUI(){
+  if (!yearModeHasData) return;
+  const y = yearsWithCases[yearIdx];
+  $('timeYear').textContent = nvl(y, '—');
+  const slider = $('yearSlider');
+  if (slider) slider.value = String(yearIdx);
+  const pi = $('playIcon');
+  if (pi) pi.textContent = isPlaying ? '❚❚' : '▶';
+}
+
+
+function setCinematicYear(y){
+  const cc = document.getElementById('cinemaCounter');
+  if (!cc) return;
+  const txt = nvl(y, '—');
+  if (cc.textContent !== String(txt)){
+    cc.textContent = String(txt);
+    cc.classList.remove('tick');
+    void cc.offsetWidth;
+    cc.classList.add('tick');
+  }
+}
+
+function updateCinematicCounterVisibility(){
+  const b = document.body;
+  if (!b) return;
+  // Only manage the big year counter in cinematic mode
+  if (!b.classList.contains('cinematic')){
+    // Outside cinematic mode, keep the big year counter hidden entirely.
+    b.classList.add('counter-hidden');
+    return;
+  }
+  const shouldShow = (isPlaying === true) || (tourActive && !tourPaused);
+  b.classList.toggle('counter-hidden', !shouldShow);
+}
+
+
+
+  function startYearPlayback(){
+    stopYearPlayback();
+    isPlaying = true;
+    updateTimelineUI();
+
+    playTimer = setInterval(()=>{
+      yearIdx += 1;
+      if (yearIdx >= yearsWithCases.length){
+        stopYearPlayback();
+        return;
+      }
+      yearMax = yearsWithCases[yearIdx];
+      updateTimelineUI();
+      applyFiltersAndRender(false);
+    }, 250); // 4 year-steps per second
+  }
+
+  function stopYearPlayback(){
+    if (playTimer) clearInterval(playTimer);
+    playTimer = null;
+    isPlaying = false;
+    updateTimelineUI();
+  }
+
+  // Loading overlay (waits for docs_final injection)
+  function hideLoadingOverlay(){
+    const el = $('loadingOverlay');
+    if (el) el.classList.add('hidden');
+  }
+
+  // Bottom-left search
+  const searchInput = $('searchInput');
+  const searchGo = $('searchGo');
+  const searchResults = $('searchResults');
+
+  function hideSearchResults(){ searchResults.classList.add('hidden'); searchResults.innerHTML=''; }
+
+  function renderSearchResults(items){
+    if (!items.length){ hideSearchResults(); return; }
+    searchResults.classList.remove('hidden');
+    searchResults.innerHTML = '';
+    for (const it of items){
+      const div = document.createElement('div');
+      div.className = 'sItem';
+      div.innerHTML = `
+        <div class="sName">${escapeHtml(it.name || it.key)}</div>
+        <div class="sMeta">${escapeHtml(it.cluster || '')}</div>
+      `;
+      div.addEventListener('click', ()=>{
+        hideSearchResults();
+        if (focusState.active && focusState.key === it.key) return;
+        enterFocus(it.key);
+      });
+      searchResults.appendChild(div);
+    }
+  }
+
+  function searchCases(q){
+    const s = (q || '').trim().toLowerCase();
+    if (!s){ hideSearchResults(); return []; }
+    // Prefer exact key match
+    const exact = searchIndex.find(x => x.keyLc === s);
+    if (exact){
+      const n = nodesByKey.get(exact.key);
+      return [{ key: exact.key, name: oc(n,'name') || exact.key, cluster: oc(n,'cluster_group') || '' }];
+    }
+    // Otherwise top matches by name then key
+    const res = [];
+    for (const it of searchIndex){
+      if (it.nameLc.includes(s) || it.keyLc.includes(s)){
+        const n = nodesByKey.get(it.key);
+        res.push({ key: it.key, name: oc(n,'name') || it.key, cluster: oc(n,'cluster_group') || '' });
+        if (res.length >= 10) break;
+      }
+    }
+    return res;
+  }
+
+
+  // Match helper without side-effects (used by the semantic-neighbours search bar)
+  function findCaseMatches(q, limit=10){
+    const s = (q || '').trim().toLowerCase();
+    if (!s) return [];
+    // Prefer exact key match
+    const exact = searchIndex.find(x => x.keyLc === s);
+    if (exact) return [{ key: exact.key }];
+    const res = [];
+    for (const it of searchIndex){
+      if (it.nameLc.includes(s) || it.keyLc.includes(s)){
+        res.push({ key: it.key });
+        if (res.length >= (limit||10)) break;
+      }
+    }
+    return res;
+  }
+
+  // Build a lightweight datalist for quick key selection (label shows the case name).
+  function rebuildCaseDatalist(){
+    const dl = document.getElementById('caseKeyDatalist');
+    if (!dl) return;
+    dl.innerHTML = '';
+    // Datalists can get heavy with huge corpora; cap suggestions but search still scans full index.
+    const cap = 5000;
+    let i = 0;
+    for (const it of searchIndex){
+      const opt = document.createElement('option');
+      opt.value = it.key;
+      opt.label = (it.name || it.key);
+      dl.appendChild(opt);
+      i++;
+      if (i >= cap) break;
+    }
+  }
+
+  // Semantic neighbours search bar (inside the right detail panel)
+  const semSearchInput = $('semSearchInput');
+  if (semSearchInput){
+    semSearchInput.addEventListener('keydown', (e)=>{
+      if (e.key === 'Enter'){
+        e.preventDefault();
+        if (!nodesByKey.size) return;
+        const q = semSearchInput.value || '';
+        const matches = findCaseMatches(q, 10);
+        if (matches.length){
+          enterFocus(matches[0].key);
+        } else {
+          toast(`No match for <span class="mono">${escapeHtml(q)}</span>.`);
+        }
+      } else if (e.key === 'Escape'){
+        semSearchInput.value = '';
+        semSearchInput.blur();
+      }
+    });
+  }
+
+  function runSearchGo(){
+    const q = searchInput.value;
+    const matches = searchCases(q);
+    if (matches.length){
+      hideSearchResults();
+      enterFocus(matches[0].key);
+    } else {
+      toast(`No match for <span class="mono">${escapeHtml(q)}</span>.`);
+    }
+  }
+
+  searchInput.addEventListener('input', ()=>{
+    if (!nodesByKey.size) return;
+    const matches = searchCases(searchInput.value);
+    renderSearchResults(matches);
+  });
+  searchInput.addEventListener('keydown', (e)=>{
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      runSearchGo();
+    } else if (e.key === 'Escape'){
+      hideSearchResults();
+      searchInput.blur();
+    }
+  });
+  if (searchGo) searchGo.addEventListener('click', runSearchGo);
+  // Click outside closes results
+  window.addEventListener('pointerdown', (e)=>{
+    if (!searchResults.classList.contains('hidden')){
+      const box = $('searchBox');
+      if (box && !box.contains(e.target)) hideSearchResults();
+    }
+  });
+
+
+  // Scene
+  const wrap = $('canvasWrap');
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setClearColor(0xffffff, 1);
+  renderer.sortObjects = true;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.22;
+  wrap.appendChild(renderer.domElement);
+
+  // Cache canvas rect to avoid forcing layout every frame during the guided tour (prevents periodic jank)
+  let _canvasRectCache = null;
+  let _canvasRectCacheT = 0;
+  let _canvasRectDirty = true;
+  function markCanvasRectDirty(){ _canvasRectDirty = true; }
+  window.addEventListener('resize', markCanvasRectDirty, { passive:true });
+  window.addEventListener('scroll', markCanvasRectDirty, { passive:true });
+  document.addEventListener('fullscreenchange', markCanvasRectDirty);
+  function getCanvasRectCached(){
+    try{
+      if (!renderer || !renderer.domElement) return {left:0, top:0, width:1, height:1};
+      const now = performance.now();
+      if (_canvasRectDirty || !_canvasRectCache || (now - _canvasRectCacheT) > 250){
+        _canvasRectCache = renderer.domElement.getBoundingClientRect();
+        _canvasRectCacheT = now;
+        _canvasRectDirty = false;
+      }
+      return _canvasRectCache;
+    }catch(e){
+      return {left:0, top:0, width:1, height:1};
+    }
+  }
+
+
+  const labelRenderer = new CSS2DRenderer();
+  labelRenderer.setSize(1,1);
+  labelRenderer.domElement.style.position='absolute';
+  labelRenderer.domElement.style.inset='0';
+  labelRenderer.domElement.style.pointerEvents='none';
+  wrap.appendChild(labelRenderer.domElement);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xffffff);
+
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 300000);
+  camera.position.set(0, 0, 2600);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+
+  // Softer lighting for nicer node shading
+  const hemi = new THREE.HemisphereLight(0xffffff, 0xf2f2f2, 0.98);
+  scene.add(hemi);
+  const dir = new THREE.DirectionalLight(0xffffff, 1.05);
+  dir.position.set(900, 1200, 800);
+  scene.add(dir);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.45);
+  rim.position.set(-900, -400, -1000);
+  scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.28);
+  fill.position.set(400, 200, -900);
+  scene.add(fill);
+
+
+  // Selection marker
+  const markerGeom = new THREE.TorusGeometry(1, 0.12, 10, 64);
+  const markerMat = new THREE.MeshBasicMaterial({ color: 0x111111, transparent:true, opacity:0.24 });
+  const marker = new THREE.Mesh(markerGeom, markerMat);
+  marker.visible = false;
+  marker.renderOrder = 2000;
+  scene.add(marker);
+
+  // Selected highlight (shiny overlay + halo)
+  const selectedGeom = new THREE.SphereGeometry(1, 28, 28);
+  const selectedMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    roughness: 0.18,
+    metalness: 0.35,
+    clearcoat: 0.9,
+    clearcoatRoughness: 0.2,
+    emissive: new THREE.Color(0xffffff),
+    emissiveIntensity: 0.05
+  });
+  const selectedMesh = new THREE.Mesh(selectedGeom, selectedMat);
+  selectedMesh.visible = false;
+  selectedMesh.renderOrder = 2100;
+  scene.add(selectedMesh);
+
+  function makeHaloTexture(){
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 256;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(128,128,10, 128,128,120);
+    g.addColorStop(0.0, 'rgba(255,255,255,0.65)');
+    g.addColorStop(0.45,'rgba(255,255,255,0.18)');
+    g.addColorStop(1.0, 'rgba(255,255,255,0.0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,256,256);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.needsUpdate = true;
+    return tex;
+  }
+  const haloTex = makeHaloTexture();
+  const haloMat = new THREE.SpriteMaterial({
+    map: haloTex,
+    transparent: true,
+    depthWrite: false,
+    opacity: 0.55,
+    blending: THREE.AdditiveBlending
+  });
+  const haloSprite = new THREE.Sprite(haloMat);
+  haloSprite.visible = false;
+  haloSprite.renderOrder = 2050;
+  scene.add(haloSprite);
+
+  function updateSelectedHighlight(globalIndex){
+    if (globalIndex == null || globalIndex < 0 || globalIndex >= nodeKey.length){
+      selectedMesh.visible = false;
+      haloSprite.visible = false;
+      return;
+    }
+    const k = nodeKey[globalIndex];
+    const n = nodesByKey.get(k);
+    const g = nvl(oc(n,'cluster_group'), 'Unclustered');
+    const baseCol = nvl(oc(clusterMeta.get(g),'color'), new THREE.Color('#9aa0a6'));
+      const col = (pieClusterFilter && g !== pieClusterFilter) ? new THREE.Color('#d6d6d6') : baseCol;
+
+    selectedMat.color.copy(col).lerp(new THREE.Color(0xffffff), 0.18);
+    selectedMat.emissive.copy(col);
+    selectedMat.emissiveIntensity = 0.12;
+
+    selectedMesh.position.copy(nodePos[globalIndex]);
+    const r = nodeRadius[globalIndex];
+    selectedMesh.scale.setScalar(r * 1.04);
+    selectedMesh.visible = true;
+
+    haloSprite.position.copy(nodePos[globalIndex]);
+    const haloSize = r * 4.0;
+    haloSprite.scale.set(haloSize, haloSize, 1);
+    haloSprite.visible = true;
+  }
+
+  // Palette (explicit, highly distinct; avoid green/cyan for clusters)
+  // NOTE: We allow at most ONE dark green + ONE lime cluster color.
+  // Cluster colors
+  // Reserve specific colors for key clusters; everything else is assigned randomly
+  // from a strong, high-contrast pool (unique per cluster).
+  
+  // Cluster colors (editable in the left panel).
+// Rule: assign each cluster a random color from a fixed high-contrast palette ONCE,
+// then only change a cluster’s color when the user edits it. No other clusters update automatically.
+
+let CLUSTER_COLOR_MAP = {};
+
+function normClusterKeyName(name){
+  // Normalize cluster names so minor punctuation/whitespace variants map to the same key.
+  // (Does not change colors automatically; just avoids accidental duplicates due to punctuation or spacing)
+  let s = String(nvl(name,'')).trim().toLowerCase();
+  s = s.replace(/[\s\u00A0]+/g,' ').trim();
+  s = s.replace(/[\.,;:]+$/,'').trim();
+  return s;
+}
+
+function sanitizeHexColor(v){
+  let s = String(nvl(v,'')).trim();
+  if (!s) return null;
+  if (s[0] !== '#') s = '#'+s;
+  // Accept #RGB or #RRGGBB
+  if (/^#[0-9a-fA-F]{3}$/.test(s)){
+    const r=s[1], g=s[2], b=s[3];
+    s = '#'+r+r+g+g+b+b;
+  }
+  if (!/^#[0-9a-fA-F]{6}$/.test(s)) return null;
+  return s.toUpperCase();
+}
+// Persist cluster color overrides (do not auto-update other clusters).
+const CLUSTER_COLOR_LS_KEY = 'ccg_cluster_color_map_v1';
+
+function loadClusterColorMap(){
+  try{
+    if (!window.localStorage) return;
+    const raw = localStorage.getItem(CLUSTER_COLOR_LS_KEY);
+    if (!raw) return;
+    const obj = JSON.parse(raw);
+    if (!obj || typeof obj !== 'object') return;
+    const cleaned = {};
+    for (const k in obj){
+      const nk = normClusterKeyName(k);
+      const hv = sanitizeHexColor(obj[k]);
+      if (nk && hv) cleaned[nk] = hv;
+    }
+    CLUSTER_COLOR_MAP = cleaned;
+  }catch(e){ /* ignore */ }
+}
+
+function saveClusterColorMap(){
+  try{
+    if (!window.localStorage) return;
+    localStorage.setItem(CLUSTER_COLOR_LS_KEY, JSON.stringify(CLUSTER_COLOR_MAP || {}));
+  }catch(e){ /* ignore */ }
+}
+
+
+
+function hslToHex(h, s, l){
+  // h: 0..360, s/l: 0..1
+  h = ((h % 360) + 360) % 360;
+  s = Math.max(0, Math.min(1, s));
+  l = Math.max(0, Math.min(1, l));
+  const a = s * Math.min(l, 1 - l);
+  const f = (n)=>{
+    const k = (n + h / 30) % 12;
+    const col = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * col);
+  };
+  return '#' + [f(0), f(8), f(4)].map(v => v.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+
+function mulberry32(a){
+  return function(){
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hexToRgb(hex){
+  const h = sanitizeHexColor(hex);
+  if (!h) return null;
+  return [
+    parseInt(h.slice(1,3), 16),
+    parseInt(h.slice(3,5), 16),
+    parseInt(h.slice(5,7), 16)
+  ];
+}
+function srgbToLinear(c){
+  c = c / 255;
+  return (c <= 0.04045) ? (c / 12.92) : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+function rgbToLab(rgb){
+  const r = srgbToLinear(rgb[0]);
+  const g = srgbToLinear(rgb[1]);
+  const b = srgbToLinear(rgb[2]);
+
+  // sRGB D65 -> XYZ
+  let x = r*0.4124 + g*0.3576 + b*0.1805;
+  let y = r*0.2126 + g*0.7152 + b*0.0722;
+  let z = r*0.0193 + g*0.1192 + b*0.9505;
+
+  // D65 reference white
+  x /= 0.95047; y /= 1.00000; z /= 1.08883;
+
+  const f = (t)=> (t > 0.008856) ? Math.cbrt(t) : (7.787 * t + 16/116);
+  const fx = f(x), fy = f(y), fz = f(z);
+
+  const L = 116 * fy - 16;
+  const a = 500 * (fx - fy);
+  const b2 = 200 * (fy - fz);
+  return [L, a, b2];
+}
+function labDist2(a, b){
+  const d0 = a[0] - b[0];
+  const d1 = a[1] - b[1];
+  const d2 = a[2] - b[2];
+  return d0*d0 + d1*d1 + d2*d2;
+}
+
+function generateDistinctColors(n){
+  // Greedy max-min selection in Lab space: random but maximally separated.
+  n = Math.max(0, Math.floor(n || 0));
+  if (!n) return [];
+
+  const seed = (Math.random() * 4294967296) >>> 0;
+  const rng = mulberry32(seed);
+
+  const C = Math.max(900, n * 25);
+  const candidates = [];
+  for (let i=0;i<C;i++){
+    const h = rng() * 360;
+    const s = 0.92;
+    const l = 0.48 + 0.10 * (rng() - 0.5); // keep mid-light for contrast on white
+    const hex = hslToHex(h, s, l);
+    const rgb = hexToRgb(hex);
+    if (!rgb) continue;
+    candidates.push({ hex, lab: rgbToLab(rgb) });
+  }
+  if (!candidates.length) return [hslToHex(Math.random()*360, 0.92, 0.48)];
+
+  const chosen = [];
+  let idx = Math.floor(rng() * candidates.length);
+  chosen.push(candidates[idx]);
+  candidates.splice(idx, 1);
+
+  const minD = candidates.map(c => labDist2(c.lab, chosen[0].lab));
+
+  while (chosen.length < n && candidates.length){
+    let bestI = 0;
+    let bestScore = -1;
+    for (let i=0;i<candidates.length;i++){
+      const score = minD[i];
+      if (score > bestScore){
+        bestScore = score;
+        bestI = i;
+      }
+    }
+    const pick = candidates[bestI];
+    chosen.push(pick);
+    candidates.splice(bestI, 1);
+    minD.splice(bestI, 1);
+
+    for (let i=0;i<candidates.length;i++){
+      const d = labDist2(candidates[i].lab, pick.lab);
+      if (d < minD[i]) minD[i] = d;
+    }
+  }
+
+  return chosen.map(c => c.hex);
+}
+
+function pickHighContrastColorAvoiding(used){
+  // Pick a single color that is far from all existing colors (Lab max-min).
+  const usedSet = used || new Set();
+  const usedLabs = [];
+  for (const hx of usedSet){
+    const rgb = hexToRgb(hx);
+    if (rgb) usedLabs.push(rgbToLab(rgb));
+  }
+
+  let bestHex = null;
+  let bestScore = -1;
+
+  const tries = 260;
+  for (let i=0;i<tries;i++){
+    const h = Math.random() * 360;
+    const hex = hslToHex(h, 0.92, 0.48 + 0.10 * (Math.random() - 0.5));
+    if (usedSet.has(hex)) continue;
+
+    const rgb = hexToRgb(hex);
+    if (!rgb) continue;
+    const lab = rgbToLab(rgb);
+
+    let minD = Infinity;
+    for (const ul of usedLabs){
+      const d = labDist2(lab, ul);
+      if (d < minD) minD = d;
+    }
+    if (!usedLabs.length) minD = 1e9;
+    if (minD > bestScore){
+      bestScore = minD;
+      bestHex = hex;
+    }
+  }
+
+  return bestHex || hslToHex(Math.random()*360, 0.92, 0.48);
+}
+
+function randomizeClusterColors(){
+  // Assign a fresh set of highly distinct colors to the currently-loaded clusters.
+  if (!clusterMeta || !clusterMeta.size){
+    toast('Load data first to randomize cluster colors.');
+    return;
+  }
+
+  const labels = Array.from(clusterMeta.keys());
+  const cols = generateDistinctColors(labels.length);
+
+  for (let i=0;i<labels.length;i++){
+    const k = normClusterKeyName(labels[i]);
+    if (!k) continue;
+    CLUSTER_COLOR_MAP[k] = cols[i];
+  }
+  saveClusterColorMap();
+
+  // Update any loaded meta immediately.
+  for (let i=0;i<labels.length;i++){
+    const name = labels[i];
+    const meta = clusterMeta.get(name);
+    if (meta){
+      try{ meta.color = new THREE.Color(CLUSTER_COLOR_MAP[normClusterKeyName(name)] || meta.color); }catch(e){}
+    }
+  }
+  scheduleClusterColorRefresh();
+  try{ buildClusterColorEditor(); }catch(e){}
+  try{ buildLegendItems(); }catch(e){}
+}
+
+
+function ensureClusterColorKey(k){
+  if (!k) return '#444444';
+  if (k === 'unclustered' || k === 'unknown') return '#444444';
+
+  const existing = sanitizeHexColor(CLUSTER_COLOR_MAP[k]);
+  if (existing) return existing;
+
+  // Assign a new random high-contrast color, preferring unused ones.
+  const used = new Set();
+  for (const kk in CLUSTER_COLOR_MAP){
+    const hv = sanitizeHexColor(CLUSTER_COLOR_MAP[kk]);
+    if (hv) used.add(hv);
+  }
+  const hex = pickHighContrastColorAvoiding(used);
+  CLUSTER_COLOR_MAP[k] = hex;
+  saveClusterColorMap();
+  return hex;
+}
+
+function seedClusterColorsFromConfiguredLabels(){
+  // Seed stable colors for the currently-loaded clusters (data-driven).
+  if (!clusterMeta || !clusterMeta.size) return;
+
+  const labels = Array.from(clusterMeta.keys());
+  const keys = Object.keys(CLUSTER_COLOR_MAP || {});
+  if (!keys.length){
+    // First run: seed with a fully distinct set.
+    const cols = generateDistinctColors(labels.length);
+    for (let i=0;i<labels.length;i++){
+      const k = normClusterKeyName(labels[i]);
+      if (k) CLUSTER_COLOR_MAP[k] = cols[i];
+    }
+    saveClusterColorMap();
+    return;
+  }
+
+  // Ensure each label has a color (preserve existing mappings).
+  for (let i=0;i<labels.length;i++){
+    const k = normClusterKeyName(labels[i]);
+    if (!k) continue;
+    if (!sanitizeHexColor(CLUSTER_COLOR_MAP[k])){
+      ensureClusterColorKey(k);
+    }
+  }
+}
+
+
+
+// Seed once at startup (moved below clusterMeta declaration).
+
+function colorForClusterKey(key){
+  const k = normClusterKeyName(nvl(key, 'unclustered'));
+  const hex = ensureClusterColorKey(k);
+  return new THREE.Color(hex);
+}
+
+// Cluster color editor UI (left panel)
+let _colorRefreshT = null;
+
+function refreshLegendSwatchesInPlace(){
+  const listEl = $('legendList');
+  if (!listEl) return;
+  const rows = listEl.querySelectorAll('.legItem');
+  for (const row of rows){
+    const nameEl = row.querySelector('.legName');
+    const sw = row.querySelector('.swatch');
+    if (!nameEl || !sw) continue;
+    const name = String(nameEl.textContent || '').trim();
+    const meta = clusterMeta && clusterMeta.get(name);
+    if (!meta) continue;
+    sw.style.background = '#'+meta.color.getHexString();
+  }
+}
+
+function scheduleClusterColorRefresh(){
+  clearTimeout(_colorRefreshT);
+  _colorRefreshT = setTimeout(()=>{
+    // Update meta colors if loaded
+    if (clusterMeta && clusterMeta.size){
+      for (const meta of clusterMeta.values()){
+        meta.color = colorForClusterKey(meta.name);
+      }
+    }
+    // Update swatches in-place to avoid stealing focus while editing inputs.
+    try{ refreshLegendSwatchesInPlace(); }catch(e){}
+    // Re-render bottom legend strip + meshes
+    try{ buildLegendItems(); }catch(e){}
+    try{ rebuildMeshes(); }catch(e){}
+    try{ updateDetailPanel(); }catch(e){}
+  }, 80);
+}
+
+
+function buildClusterColorEditor(){
+  const grid = document.getElementById('clusterColorEditor');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (!clusterMeta || !clusterMeta.size){
+    const msg = document.createElement('div');
+    msg.style.color = 'var(--muted)';
+    msg.style.fontSize = '12px';
+    msg.style.padding = '8px 0';
+    msg.textContent = 'Load data to edit cluster colors.';
+    grid.appendChild(msg);
+    return;
+  }
+
+  const names = Array.from(clusterMeta.keys());
+
+  // Dedup + stable sort
+  const seen = new Set();
+  const uniq = [];
+  for (let i=0;i<names.length;i++){
+    const nn = String(names[i]||'').trim();
+    if (!nn) continue;
+    const k = normClusterKeyName(nn);
+    if (!k || seen.has(k)) continue;
+    seen.add(k);
+    uniq.push(nn);
+  }
+  uniq.sort((a,b)=>a.localeCompare(b));
+
+  for (let i=0;i<uniq.length;i++){
+    const name = uniq[i];
+    const key = normClusterKeyName(name);
+
+    const row = document.createElement('div');
+    row.className = 'colorRow';
+
+    const nm = document.createElement('div');
+    nm.className = 'cName';
+    nm.title = name;
+    nm.textContent = name;
+
+    const input = document.createElement('input');
+    input.type = 'color';
+
+    // Ensure a stable assigned color exists (does not affect other clusters).
+    let hex = ensureClusterColorKey(key);
+    input.value = sanitizeHexColor(hex) || '#808080';
+
+    input.addEventListener('input', ()=>{
+      const v = sanitizeHexColor(input.value);
+      if (!v) return;
+      CLUSTER_COLOR_MAP[key] = v;
+      saveClusterColorMap();
+      scheduleClusterColorRefresh();
+      buildLegendItems();
+    });
+
+    row.appendChild(nm);
+    row.appendChild(input);
+    grid.appendChild(row);
+  }
+}
+
+
+const colorsResetBtn = document.getElementById('colorsResetBtn');
+if (colorsResetBtn){
+  colorsResetBtn.addEventListener('click', ()=>{
+    CLUSTER_COLOR_MAP = {};
+    saveClusterColorMap();
+    seedClusterColorsFromConfiguredLabels();
+    scheduleClusterColorRefresh();
+    try{ buildClusterColorEditor(); }catch(e){}
+  });
+}
+
+const colorsRandomizeBtn = document.getElementById('colorsRandomizeBtn');
+if (colorsRandomizeBtn){
+  colorsRandomizeBtn.addEventListener('click', ()=>{
+    randomizeClusterColors();
+  });
+}
+
+  // Stable hash (used for deterministic jitter / unexpected cluster fallback)
+  function hashStrToInt(s){
+    let h = 0x811c9dc5;
+    for (let i=0;i<s.length;i++){
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return h >>> 0;
+  }
+
+  
+
+  const RECEPTION_COLORS = {
+    positive: new THREE.Color('#1b8a5a'),
+    negative: new THREE.Color('#d23f31'),
+    mixed:    new THREE.Color('#f39c12'),
+    neutral:  new THREE.Color('#7a7a7a')
+  };
+  function receptionNorm(x){
+    const r = nvl(x, 'neutral').toString().trim().toLowerCase();
+    if (r === 'pos' || r === 'positive') return 'positive';
+    if (r === 'neg' || r === 'negative') return 'negative';
+    if (r === 'mixed') return 'mixed';
+    return 'neutral';
+  }
+
+  function rand01FromKey(key, salt){
+    const h = hashStrToInt(String(key)+'|'+String(salt));
+    // 0..1
+    return (h % 1000000) / 1000000;
+  }
+
+  // Cluster offset
+  function clusterUnitVector(key){
+    const s = String(key);
+    const h = hashStrToInt(s);
+    const a = ((h & 0xfff) / 0xfff) * 2 - 1;
+    const b = (((h >> 12) & 0xfff) / 0xfff) * 2 - 1;
+    const c = (((h >> 24) & 0xff) / 0xff) * 2 - 1;
+    const v = new THREE.Vector3(a, b, c);
+    if (v.lengthSq() < 1e-6) v.set(1,0,0);
+    return v.normalize();
+  }
+
+  // Focus toggle state (double-click same node to detoggle)
+  const focusState = {
+    active: false,
+    key: null,
+    prevCam: null,
+    prevTgt: null
+  };
+
+  function setDefaultLinkOpacity(v){
+    setRangeValue($('linkOpacity'), $('linkOpacityNum'), v);
+  }
+
+  // Graph state
+  let RAW_LINES=0, DUP_KEYS=0;
+  let nodesByKey = new Map();
+  let keysCanonical = new Map();
+  let edgesAll = [];
+  let rawCitationCount=0, unresolvedCitationCount=0;
+
+  let clusterMeta = new Map();          // keyed by group label
+  let enabledClusters = new Set();      // group labels enabled
+  let clusterOffsets = new Map();       // group label -> vec3
+
+  // Seed once at startup (safe even if empty).
+  loadClusterColorMap();
+  seedClusterColorsFromConfiguredLabels();
+
+  // Stable coordinate frame (prevents global jumps when year-filtering reveals new nodes)
+  let globalCoordCenter = new THREE.Vector3(0,0,0);
+  let globalCoordHasCenter = false;
+
+
+  let visibleKeys = new Set();
+  let visibleEdges = [];
+  let selectedKey = null;
+
+  let searchIndex = [];
+
+  let yearsWithCases = [];
+  let keysByYear = new Map();
+  let yearIdx = 0;
+  let yearMax = Infinity;
+  let yearModeHasData = false;
+  let playTimer = null;
+  let isPlaying = false;
+
+  let pieClusterFilter = null;
+
+  // Subtle fade-in for newly appearing nodes (timeline)
+  const NODE_FADE_MS = 700;
+  let nodeBornMs = new Map();
+  let prevVisibleKeys = new Set();
+  let fadeEntries = [];
+
+  // Subtle fade-in for newly appearing edges (timeline)
+  const EDGE_FADE_MS = 420;
+  let edgeFadeEntries = [];
+  let edgeFadeStart = 0;
+  let lastEdgeFadeYear = null;
+
+  let cinematicMode = false;
+  let cinematicTransition = false;
+
+  let adjVisible = new Map();
+
+  let nodeKey = [];
+  let nodePos = [];
+  let nodeRadius = [];
+  let clusterCentroids = new Map();
+  let clusterRepPos = new Map();
+  
+  let clusterRepKey = new Map();
+let keyToIndex = new Map();
+
+  let nodeMeshes = [];
+  let linkMeshes = [];
+  let arrowMeshes = [];
+  let flowPoints = null;
+  let flowMat = null;
+  let labelObj = null;
+
+  // Parse helpers
+  function safeKey(k){ return nvl(k,'').toString().trim(); }
+  function keyLower(k){ return safeKey(k).toLowerCase(); }
+  function mergeNode(existing, incoming){
+    if (!existing.name && incoming.name) existing.name = incoming.name;
+    if (!existing.raw_cluster_name && incoming.raw_cluster_name) existing.raw_cluster_name = incoming.raw_cluster_name;
+    if (!existing.coords && Array.isArray(incoming.coords) && incoming.coords.length === 3) existing.coords = incoming.coords;
+
+    // year (keep first, else choose min if conflict)
+    if (!Number.isFinite(existing.year) && Number.isFinite(incoming.year)) existing.year = incoming.year;
+    else if (Number.isFinite(existing.year) && Number.isFinite(incoming.year) && existing.year !== incoming.year){
+      existing.year = Math.min(existing.year, incoming.year);
+    }
+
+    const c = incoming._citations || [];
+    if (Array.isArray(c) && c.length) existing._citations.push(...c);
+    return existing;
+  }
+
+  function buildClusterOffsets(){
+    clusterOffsets = new Map();
+    const sep = Number($('clusterSep').value);
+    const ipX = Number($('ipOffsetX').value);
+    const ipY = Number($('ipOffsetY').value);
+    const ipZ = Number($('ipOffsetZ').value);
+    const ipV = new THREE.Vector3(ipX, ipY, ipZ);
+
+    for (const c of clusterMeta.values()){
+      const u = clusterUnitVector(c.key);
+      const v = u.multiplyScalar(sep);
+      if (c.isIP) v.add(ipV);
+      clusterOffsets.set(c.key, v);
+    }
+  }
+
+
+
+  function buildFromJsonl(text){
+    legendReady = false;
+    nodesByKey = new Map();
+    keysCanonical = new Map();
+    edgesAll = [];
+    clusterMeta = new Map();
+    enabledClusters = new Set();
+    rawCitationCount = 0;
+    unresolvedCitationCount = 0;
+    selectedKey = null;
+    marker.visible = false;
+    closeDetail();
+    focusState.active = false;
+    focusState.key = null;
+    $('linkMode').value = 'all';
+    setDefaultLinkOpacity(0.3);
+
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length);
+    RAW_LINES = lines.length;
+
+    const seenKeyCounts = new Map();
+
+    for (const line of lines){
+      let obj;
+      try { obj = JSON.parse(line); } catch { continue; }
+      const k = safeKey(obj.key);
+      if (!k) continue;
+
+      const lc = keyLower(k);
+      if (!keysCanonical.has(lc)) keysCanonical.set(lc, k);
+      seenKeyCounts.set(k, (seenKeyCounts.get(k)||0)+1);
+
+      const rawClusterName = (obj.cluster_name || (typeof obj.cluster === 'object' && obj.cluster ? (obj.cluster.name || '') : '') || '').toString();
+      const rawClusterId = firstDefined(obj.cluster_id, obj.clusterId, (typeof obj.cluster === 'object' && obj.cluster ? firstDefined(obj.cluster.id, obj.cluster.cluster_id) : undefined), (obj.metadata ? obj.metadata.cluster_id : undefined), (obj.meta ? obj.meta.cluster_id : undefined));
+      const clusterId = (rawClusterId === null || rawClusterId === undefined || rawClusterId === '') ? NaN : Number(rawClusterId);
+      const explicitGroup = firstDefined(obj.cluster_group, obj.clusterGroup, (obj.metadata ? obj.metadata.cluster_group : undefined), (obj.meta ? obj.meta.cluster_group : undefined), (typeof obj.cluster === 'object' && obj.cluster ? firstDefined(obj.cluster.group, obj.cluster.cluster_group) : undefined));
+      const groupName = deriveClusterGroup(clusterId, rawClusterName, explicitGroup);
+      const yrRaw = firstDefined(obj.year, obj.Year, (obj.metadata ? obj.metadata.year : undefined), (obj.meta ? obj.meta.year : undefined));
+      let yr = (yrRaw === null || yrRaw === undefined) ? NaN : Number(yrRaw);
+      // Fallback: extract year from case name like "[1903]" if explicit year is missing
+      if (!Number.isFinite(yr)){
+        const nm = (obj.name || obj.title || obj.case_name || '').toString();
+        const mm = nm.match(/\[(\d{4})\]/);
+        if (mm) yr = Number(mm[1]);
+      }
+      const incoming = {
+        key: k,
+        name: obj.name || obj.title || obj.case_name || '',
+        year: Number.isFinite(yr) ? yr : NaN,
+        coords: Array.isArray(obj.coords) && obj.coords.length===3 ? obj.coords : null,
+        raw_cluster_name: rawClusterName,
+        cluster_id: Number.isFinite(clusterId) ? clusterId : NaN,
+        cluster_group: groupName,
+        _citations: []
+      };
+      if (Array.isArray(obj.citations)) incoming._citations.push(...obj.citations);
+
+      if (nodesByKey.has(k)) mergeNode(nodesByKey.get(k), incoming);
+      else nodesByKey.set(k, incoming);
+    }
+
+    DUP_KEYS = 0;
+    for (const [,ct] of seenKeyCounts) if (ct>1) DUP_KEYS += (ct-1);
+
+    // Compute a stable coordinate center across the full dataset (prevents year-step "jumps")
+    {
+      let min = new THREE.Vector3( Infinity, Infinity, Infinity );
+      let max = new THREE.Vector3( -Infinity, -Infinity, -Infinity );
+      let any = false;
+      for (const n of nodesByKey.values()){
+        if (Array.isArray(n.coords) && n.coords.length===3 && n.coords.every(x=>Number.isFinite(x))){
+          const v = new THREE.Vector3(n.coords[0], n.coords[1], n.coords[2]);
+          min.min(v); max.max(v); any = true;
+        }
+      }
+      if (any){
+        globalCoordCenter = min.clone().add(max).multiplyScalar(0.5);
+        globalCoordHasCenter = true;
+      } else {
+        globalCoordCenter = new THREE.Vector3(0,0,0);
+        globalCoordHasCenter = false;
+      }
+    }
+
+
+    // Cluster groups
+    for (const n of nodesByKey.values()){
+      if (!n.cluster_group) n.cluster_group = 'Unclustered';
+      if (!clusterMeta.has(n.cluster_group)){
+        clusterMeta.set(n.cluster_group, {
+          key: n.cluster_group,
+          name: n.cluster_group,
+          color: colorForClusterKey(n.cluster_group),
+          isIP: isIPGroup(n.cluster_group),
+          countTotal: 0,
+          rawNameCounts: new Map(),
+          example: ''
+        });
+      }
+      clusterMeta.get(n.cluster_group).countTotal++;
+      const rc = (n.raw_cluster_name || '').toString().trim();
+      if (rc){
+        const mm = clusterMeta.get(n.cluster_group).rawNameCounts;
+        mm.set(rc, (mm.get(rc)||0) + 1);
+      }
+    }
+// Derive simple “themes” per cluster from raw cluster labels (used in the guided tour callout)
+for (const meta of clusterMeta.values()){
+  const mm = meta.rawNameCounts;
+  if (mm && mm.size){
+    const top = Array.from(mm.entries())
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0,2)
+      .map(([s]) => (s.length > 64 ? (s.slice(0,61) + '…') : s));
+    meta.example = top.join(' • ');
+  } else {
+    meta.example = '';
+  }
+}
+
+    // Seed a maximally-separated random palette for all clusters (fresh each load).
+    // This intentionally does NOT persist to localStorage: refresh the page to reshuffle.
+    try{
+      if (clusterMeta && clusterMeta.size){
+        CLUSTER_COLOR_MAP = {};
+        const labels = Array.from(clusterMeta.keys());
+        const cols = generateDistinctColors(labels.length);
+        for (let i=0;i<labels.length;i++){
+          const kk = normClusterKeyName(labels[i]);
+          if (kk) CLUSTER_COLOR_MAP[kk] = cols[i];
+        }
+        // Apply immediately so the first render uses the new palette.
+        for (const [name, meta] of clusterMeta){
+          try{
+            const hv = CLUSTER_COLOR_MAP[normClusterKeyName(name)];
+            if (hv) meta.color = new THREE.Color(hv);
+          }catch(e){}
+        }
+      }
+    }catch(e){}
+    scheduleClusterColorRefresh();
+
+    for (const k of clusterMeta.keys()) enabledClusters.add(k);
+    buildClusterOffsets();
+    buildLegendItems();
+
+    // Pre-index highlight cases by year (for guided tour)
+    highlightByYear = new Map();
+    for (const [kLower, spec] of HIGHLIGHT_CASES){
+      const base = (((spec && spec.base) || kLower).toString().toLowerCase());
+      const canon = keysCanonical.get(base) || keysCanonical.get(kLower) || null;
+      if (!canon) continue;
+      const n = nodesByKey.get(canon);
+      if (!n) continue;
+      const y = Number.isFinite(n.year) ? n.year : NaN;
+      const target = Number(spec && spec.year);
+      if (!Number.isFinite(y) || !Number.isFinite(target) || y !== target) continue;
+      if (!highlightByYear.has(y)) highlightByYear.set(y, new Set());
+      highlightByYear.get(y).add(canon);
+    }
+    // Convert sets to arrays
+    for (const [y,set] of highlightByYear) highlightByYear.set(y, Array.from(set));
+
+    // Edges
+    const keysSet = new Set(nodesByKey.keys());
+    const edgeMap = new Map();
+    for (const n of nodesByKey.values()){
+      const s = n.key;
+      const citations = Array.isArray(n._citations) ? n._citations : [];
+      for (const c of citations){
+        rawCitationCount++;
+        const tkRaw = safeKey(c && c.key);
+        if (!tkRaw){ unresolvedCitationCount++; continue; }
+
+        let t = null;
+        if (keysSet.has(tkRaw)) t = tkRaw;
+        else{
+          const cand = keysCanonical.get(keyLower(tkRaw));
+          if (cand && keysSet.has(cand)) t = cand;
+        }
+        if (!t){ unresolvedCitationCount++; continue; }
+        if (t === s) continue;
+
+        const rec = receptionNorm(c && c.reception);
+        const id = s + '|' + t;
+        if (!edgeMap.has(id)) edgeMap.set(id, { s, t, recSet: new Set([rec]) });
+        else edgeMap.get(id).recSet.add(rec);
+      }
+    }
+
+    edgesAll = [];
+    for (const e of edgeMap.values()){
+      const set = e.recSet;
+      const hasPos = set.has('positive');
+      const hasNeg = set.has('negative');
+      const hasMix = set.has('mixed');
+      let rec = 'neutral';
+      if (hasMix || (hasPos && hasNeg)) rec = 'mixed';
+      else if (hasNeg) rec = 'negative';
+      else if (hasPos) rec = 'positive';
+      edgesAll.push({ s:e.s, t:e.t, reception: rec });
+    }
+
+    // Degrees
+    const indeg = new Map();
+    const outdeg = new Map();
+    for (const {s,t} of edgesAll){
+      outdeg.set(s, (outdeg.get(s)||0)+1);
+      indeg.set(t, (indeg.get(t)||0)+1);
+    }
+    for (const n of nodesByKey.values()){
+      n._in = indeg.get(n.key) || 0;
+      n._out = outdeg.get(n.key) || 0;
+    }
+
+
+    // Search index (for bottom-left search)
+    searchIndex = [];
+    for (const n of nodesByKey.values()){
+      const name = (n.name || '').toString();
+      searchIndex.push({
+        key: n.key,
+        name,
+        nameLc: name.toLowerCase(),
+        keyLc: n.key.toLowerCase()
+      });
+    }
+
+    try{ rebuildCaseDatalist(); }catch(e){}
+
+    // Years (timeline)
+const _finiteYears = Array.from(nodesByKey.values())
+  .map(n => n.year)
+  .filter(y => Number.isFinite(y));
+
+yearsWithCases = [];
+if (_finiteYears.length){
+  const minY = Math.min(..._finiteYears);
+  const maxY = Math.max(..._finiteYears);
+  for (let y = minY; y <= maxY; y++) yearsWithCases.push(y);
+}
+
+// Index keys by year (kept for optional internal utilities)
+
+    keysByYear = new Map();
+    for (const n of nodesByKey.values()){
+      if (!Number.isFinite(n.year)) continue;
+      if (!keysByYear.has(n.year)) keysByYear.set(n.year, []);
+      keysByYear.get(n.year).push(n.key);
+    }
+
+    buildYearNewByCluster();
+
+    legendReady = (nodesByKey.size > 0);
+    applyLegendVisibility();
+
+    yearModeHasData = yearsWithCases.length > 0;
+    if (yearModeHasData){
+      // Default: show ALL years (fully populated), but Play will restart from the beginning if already at the end.
+      yearIdx = yearsWithCases.length - 1;
+      yearMax = yearsWithCases[yearIdx];
+      initTimelineUI();
+      updateTimelineUI();
+    } else {
+      hideTimelineUI();
+      yearIdx = 0;
+      yearMax = Infinity;
+    }
+
+buildLegends();
+    applyFiltersAndRender(true);
+
+    toast(
+      `<div><b>Loaded</b> ${nodesByKey.size.toLocaleString()} unique cases (from ${RAW_LINES.toLocaleString()} lines; ${DUP_KEYS.toLocaleString()} duplicates merged).</div>
+       <div style="margin-top:6px;">
+         <span class="mono">${rawCitationCount.toLocaleString()}</span> raw citations → 
+         <span class="mono">${edgesAll.length.toLocaleString()}</span> linkable edges.
+         Unresolved: <span class="mono">${unresolvedCitationCount.toLocaleString()}</span>.
+       </div>`
+    );
+
+    // Once loaded, hide the start overlay
+    hideLoadingOverlay();
+  }
+
+  // Legends (left panel + bottom-right)
+  function buildLegends(){
+    const clusters = Array.from(clusterMeta.values()).sort((a,b)=>{
+      const dc = (b.countTotal - a.countTotal);
+      if (dc) return dc;
+      return a.name.localeCompare(b.name);
+    });
+
+    function renderLegend(listEl){
+      listEl.innerHTML = '';
+      for (const c of clusters){
+        const row = document.createElement('div');
+        row.className = 'legItem';
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = enabledClusters.has(c.key);
+        cb.addEventListener('change', ()=>{
+          if (cb.checked) enabledClusters.add(c.key);
+          else enabledClusters.delete(c.key);
+          buildLegends();
+          applyFiltersAndRender(false);
+        });
+
+        const sw = document.createElement('div');
+        sw.className = 'swatch';
+        sw.style.background = '#'+c.color.getHexString();
+
+        const name = document.createElement('div');
+        name.className = 'legName';
+        name.title = c.name;
+        name.textContent = c.name;
+
+        const count = document.createElement('div');
+        count.className = 'legCount';
+        count.textContent = c.countTotal.toLocaleString();
+
+        row.appendChild(cb); row.appendChild(sw); row.appendChild(name); row.appendChild(count);
+        listEl.appendChild(row);
+      }
+    }
+
+    renderLegend($('legendList'));
+    try{ buildClusterColorEditor(); }catch(e){}
+  }
+
+  function allOn(){
+    enabledClusters = new Set(clusterMeta.keys());
+    buildLegends();
+    applyFiltersAndRender(false);
+  }
+  function allOff(){
+    enabledClusters = new Set();
+    buildLegends();
+    applyFiltersAndRender(false);
+  }
+  $('allOnBtn').addEventListener('click', allOn);
+  $('allOffBtn').addEventListener('click', allOff);
+
+  
+  function kickEdgeFade(){
+    edgeFadeStart = performance.now();
+  }
+
+  function edgeFadeAlpha(now){
+    if (!edgeFadeStart) return 1;
+    const t = Math.min(1, Math.max(0, (now - edgeFadeStart) / EDGE_FADE_MS));
+    return 1 - Math.pow(1 - t, 2); // easeOutQuad
+  }
+
+  function updateEdgeBirthFades(now){
+    if (!edgeFadeEntries || edgeFadeEntries.length === 0) return;
+    const remaining = [];
+    for (const e of edgeFadeEntries){
+      const t = Math.min(1, Math.max(0, (now - e.born) / EDGE_FADE_MS));
+      e.mat.opacity = e.target * t;
+      if (t < 1) remaining.push(e);
+    }
+    edgeFadeEntries = remaining;
+  }
+
+
+
+function applyFiltersAndRender(fitCamera){
+
+    // Edge fade handled per-new-edge (no global fade)
+    buildClusterOffsets();
+    buildLegendItems();
+
+    visibleKeys = new Set();
+    for (const n of nodesByKey.values()){
+      if (!enabledClusters.has(n.cluster_group)) continue;
+      // Year filter (timeline):
+      // - Dated cases appear once their year is <= current yearMax.
+      // - Undated cases (no year) appear only at the END of the timeline (and never during the guided tour).
+      if (yearModeHasData && Number.isFinite(yearMax)){
+        const hasYear = Number.isFinite(n.year);
+        const endYear = yearsWithCases.length ? yearsWithCases[yearsWithCases.length - 1] : yearMax;
+        const showUndatedNow = (!tourActive) && (yearMax === endYear);
+        if (hasYear){
+          if (n.year > yearMax) continue;
+        } else {
+          if (!showUndatedNow) continue;
+        }
+      }
+      visibleKeys.add(n.key);
+    }
+
+    // Track newly visible nodes for fade-in
+    const nowBorn = performance.now();
+    for (const k of visibleKeys){
+      if (!prevVisibleKeys.has(k)) nodeBornMs.set(k, nowBorn);
+    }
+    for (const k of prevVisibleKeys){
+      if (!visibleKeys.has(k)) nodeBornMs.delete(k);
+    }
+    prevVisibleKeys = new Set(visibleKeys);
+
+    let edges = edgesAll.filter(e => visibleKeys.has(e.s) && visibleKeys.has(e.t));
+
+    if ($('hideIsolates').checked){
+      const deg = new Map();
+      for (const k of visibleKeys) deg.set(k, 0);
+      for (const e of edges){
+        deg.set(e.s, (deg.get(e.s)||0)+1);
+        deg.set(e.t, (deg.get(e.t)||0)+1);
+      }
+      for (const [k,d] of deg){
+        if (d === 0) visibleKeys.delete(k);
+      }
+      edges = edges.filter(e => visibleKeys.has(e.s) && visibleKeys.has(e.t));
+    }
+
+    if (!$('showNeutral').checked){
+      edges = edges.filter(e => e.reception !== 'neutral');
+    }
+
+    visibleEdges = edges;
+
+    // Build adjacency (for keyboard navigation along citation links)
+    adjVisible = new Map();
+    for (const e of visibleEdges){
+      if (!adjVisible.has(e.s)) adjVisible.set(e.s, new Set());
+      if (!adjVisible.has(e.t)) adjVisible.set(e.t, new Set());
+      adjVisible.get(e.s).add(e.t);
+      adjVisible.get(e.t).add(e.s); // navigate both ways
+    }
+
+    // Build node buffers
+    nodeKey = [];
+    nodePos = [];
+    nodeRadius = [];
+    keyToIndex = new Map();
+
+    const centroidAcc = new Map();
+    const scale = Number($('posScale').value) * 1.3; // 1.3x coordinate distance
+    const jitter = Number($('jitter').value);
+
+    const coords = [];
+    let min = new THREE.Vector3( Infinity, Infinity, Infinity );
+    let max = new THREE.Vector3( -Infinity, -Infinity, -Infinity );
+
+    for (const k of visibleKeys){
+      const n = nodesByKey.get(k);
+      let v;
+      if (n && Array.isArray(n.coords) && n.coords.length===3 && n.coords.every(x=>Number.isFinite(x))){
+        v = new THREE.Vector3(n.coords[0], n.coords[1], n.coords[2]);
+      } else {
+        v = new THREE.Vector3(Math.random(), Math.random(), Math.random());
+      }
+      coords.push([k, v]);
+      min.min(v); max.max(v);
+    }
+
+    const center = (globalCoordHasCenter ? globalCoordCenter : min.clone().add(max).multiplyScalar(0.5));
+
+    const nodeSizeScale = Number($('nodeScale').value);
+    let maxIn = 1;
+    for (const k of visibleKeys){
+      const n = nodesByKey.get(k);
+      maxIn = Math.max(maxIn, (n? n._in : 0));
+    }
+
+    for (const [k, v0] of coords){
+      const n = nodesByKey.get(k);
+      const base = v0.clone().sub(center).multiplyScalar(scale);
+
+      if (jitter > 0){
+        base.x += (rand01FromKey(k,'jx')-0.5) * jitter;
+        base.y += (rand01FromKey(k,'jy')-0.5) * jitter;
+        base.z += (rand01FromKey(k,'jz')-0.5) * jitter;
+      }
+      base.add(nvl(clusterOffsets.get(n && n.cluster_group), new THREE.Vector3()));
+      {
+        const g = oc(n,'cluster_group') || 'Unclustered';
+        let a = centroidAcc.get(g);
+        if (!a){ a = {sx:0, sy:0, sz:0, c:0}; centroidAcc.set(g, a); }
+        a.sx += base.x; a.sy += base.y; a.sz += base.z; a.c += 1;
+      }
+
+      nodeKey.push(k);
+      nodePos.push(base);
+
+      const indeg = n? (n._in || 0) : 0;
+      const r = (6 + 22 * Math.log1p(indeg) / Math.log1p(maxIn)) * nodeSizeScale;
+      nodeRadius.push(r);
+
+      keyToIndex.set(k, nodeKey.length-1);
+    }
+
+    // Finalize cached centroids for guided tour labels
+    clusterCentroids = new Map();
+    for (const [g,a] of centroidAcc){
+      if (a.c > 0) clusterCentroids.set(g, new THREE.Vector3(a.sx/a.c, a.sy/a.c, a.sz/a.c));
+    }
+
+// Representative (most-central) visible node per cluster (stable like node labels)
+clusterRepPos = new Map();
+clusterRepKey = new Map();
+{
+  const best = new Map(); // group -> d2
+  for (let i=0; i<nodeKey.length; i++){
+    const k = nodeKey[i];
+    const n = nodesByKey.get(k);
+    const g = oc(n,'cluster_group') || 'Unclustered';
+    const cen = clusterCentroids.get(g);
+    if (!cen) continue;
+    const p = nodePos[i];
+    if (!p) continue;
+    const dx = p.x - cen.x, dy = p.y - cen.y, dz = p.z - cen.z;
+    const d2 = dx*dx + dy*dy + dz*dz;
+    const b = best.get(g);
+    if (b === undefined || d2 < b){
+      best.set(g, d2);
+      clusterRepPos.set(g, p.clone());
+      clusterRepKey.set(g, k);
+    }
+  }
+}
+
+    if (selectedKey && !visibleKeys.has(selectedKey)){
+      selectedKey = null;
+      marker.visible = false;
+      closeDetail();
+      focusState.active = false;
+      focusState.key = null;
+      $('linkMode').value = 'all';
+      setDefaultLinkOpacity(0.3);
+    }
+
+    rebuildMeshes();
+    updateStats();
+    if (fitCamera) fitToGraph();
+  }
+
+  function getEdgesToDraw(){
+    const mode = $('linkMode').value;
+    if (mode === 'all') return visibleEdges;
+    if (mode === 'sampled'){
+      const cap = Number($('sampleCap').value);
+      if (visibleEdges.length <= cap) return visibleEdges;
+      const step = Math.ceil(visibleEdges.length / cap);
+      const out = [];
+      for (let i=0; i<visibleEdges.length; i+=step) out.push(visibleEdges[i]);
+      return out;
+    }
+    if (!selectedKey) return [];
+    return visibleEdges.filter(e => e.s===selectedKey || e.t===selectedKey);
+  }
+
+  function updateStats(){
+    $('statTotalCases').textContent = nodesByKey.size.toLocaleString();
+    $('statVisibleCases').textContent = visibleKeys.size.toLocaleString();
+    $('statTotalLinks').textContent = edgesAll.length.toLocaleString();
+    $('statVisibleLinks').textContent = visibleEdges.length.toLocaleString();
+    $('statRawCitations').textContent = rawCitationCount.toLocaleString();
+    $('statUnresolved').textContent = unresolvedCitationCount.toLocaleString();
+    $('statDrawnLinks').textContent = getEdgesToDraw().length.toLocaleString();
+  }
+
+  function clearOldMeshes(){
+    for (const nm of nodeMeshes){
+      scene.remove(nm.mesh);
+      nm.mesh.geometry.dispose();
+      nm.mesh.material.dispose();
+    }
+    nodeMeshes = [];
+
+    for (const o of linkMeshes){
+      scene.remove(o.mesh);
+      o.mesh.geometry.dispose();
+      o.mesh.material.dispose();
+    }
+    for (const o of arrowMeshes){
+      scene.remove(o.mesh);
+      o.mesh.geometry.dispose();
+      o.mesh.material.dispose();
+    }
+    linkMeshes = [];
+    arrowMeshes = [];
+
+    if (flowPoints){
+      scene.remove(flowPoints);
+      flowPoints.geometry.dispose();
+      flowMat.dispose();
+      flowPoints = null;
+      flowMat = null;
+    }
+
+    if (labelObj){
+      scene.remove(labelObj);
+      labelObj = null;
+    }
+  }
+
+  function rebuildMeshes(){
+    clearOldMeshes();
+
+    // rebuild fade entries for this mesh set
+    fadeEntries = [];
+    const _fadeNow = performance.now();
+
+    // Nodes (group by cluster group)
+    const sphereGeom = new THREE.SphereGeometry(1, 18, 18);
+    const groupToIdx = new Map();
+    for (let gi=0; gi<nodeKey.length; gi++){
+      const k = nodeKey[gi];
+      const n = nodesByKey.get(k);
+      const g = nvl(oc(n,'cluster_group'), 'Unclustered');
+      if (!groupToIdx.has(g)) groupToIdx.set(g, []);
+      groupToIdx.get(g).push(gi);
+    }
+
+    const m = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const sc = new THREE.Vector3();
+    const groups = Array.from(groupToIdx.keys()).sort((a,b)=>String(a).localeCompare(String(b)));
+
+    for (const g of groups){
+      const idxs = groupToIdx.get(g);
+      const col = nvl(oc(clusterMeta.get(g),'color'), new THREE.Color('#9aa0a6'));
+
+      const mat = new THREE.MeshPhysicalMaterial({
+        color: col,
+        roughness: 0.22,
+        metalness: 0.22,
+        clearcoat: 0.85,
+        clearcoatRoughness: 0.14,
+        reflectivity: 0.55,
+        emissive: col.clone().multiplyScalar((pieClusterFilter && g !== pieClusterFilter) ? 0.03 : 0.15),
+        emissiveIntensity: 0.42
+      });
+
+      const mesh = new THREE.InstancedMesh(sphereGeom, mat, idxs.length);
+      mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+
+      const mapArr = new Array(idxs.length);
+      for (let i=0; i<idxs.length; i++){
+        const gi = idxs[i];
+        mapArr[i] = gi;
+        // Subtle fade-in for new nodes
+        const k2 = nodeKey[gi];
+        const born = nvl(nodeBornMs.get(k2), 0);
+        const tFade = born ? Math.min(1, Math.max(0, (_fadeNow - born) / NODE_FADE_MS)) : 1;
+        const ease = tFade < 0.5 ? 2*tFade*tFade : 1 - Math.pow(-2*tFade+2,2)/2;
+        const fadeScale = 0.22 + 0.78*ease;
+        const baseR = nodeRadius[gi];
+        sc.set(baseR*fadeScale, baseR*fadeScale, baseR*fadeScale);
+        if (tFade < 1 && born){
+          fadeEntries.push({ mesh, inst: i, gi, born, baseR });
+        }
+        m.compose(nodePos[gi], q, sc);
+        mesh.setMatrixAt(i, m);
+      }
+      mesh.instanceMatrix.needsUpdate = true;
+      mesh.renderOrder = 50;
+      mesh.userData.globalIndexByInstance = mapArr;
+      nodeMeshes.push({ mesh, globalIndexByInstance: mapArr });
+      scene.add(mesh);
+    }
+
+    // Links + arrows
+    const edgesToDraw = getEdgesToDraw();
+    $('statDrawnLinks').textContent = edgesToDraw.length.toLocaleString();
+
+    const width = Number($('linkWidth').value);
+    const linkOpacity = Number($('linkOpacity').value);
+    const arrowOpacity = Number($('arrowOpacity').value);
+    const arrowLen = Number($('arrowSize').value);
+    const gap = 2.0;
+
+    const cylGeom = new THREE.CylinderGeometry(1, 1, 1, 8, 1, true);
+    const coneGeom = new THREE.ConeGeometry(1, 1, 10, 1);
+    const yAxis = new THREE.Vector3(0,1,0);
+    const dirVec = new THREE.Vector3();
+    const mid = new THREE.Vector3();
+    const quat = new THREE.Quaternion();
+
+    const byRec = { dim: [], neutral: [], mixed: [], positive: [], negative: [] };
+    for (const e of edgesToDraw){
+      const rec = e.reception || 'neutral';
+      if (pieClusterFilter){
+        const sg = nvl(oc(nodesByKey.get(e.s),'cluster_group'), 'Unclustered');
+        const tg = nvl(oc(nodesByKey.get(e.t),'cluster_group'), 'Unclustered');
+        if (sg !== pieClusterFilter && tg !== pieClusterFilter){
+          byRec.dim.push(e);
+          continue;
+        }
+      }
+      ((byRec[rec] !== null && byRec[rec] !== undefined) ? byRec[rec] : byRec.neutral).push(e);
+    }
+
+    const order = { dim: 0, neutral: 1, mixed: 2, positive: 3, negative: 4 };
+    const makeMat = (color, opacity) => {
+      const m = new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity,
+        depthWrite: false,
+        depthTest: true,
+        blending: THREE.NormalBlending
+      });
+      m.userData.baseOpacity = opacity;
+      return m;
+    };
+
+    const makeFadeMat = (color, opacity) => {
+      const m = makeMat(color, opacity);
+      m.opacity = 0;
+      return m;
+    };
+
+        const isTimeline = (yearModeHasData && Number.isFinite(yearMax));
+    const isNewEdge = (e) => {
+      if (!isTimeline) return false;
+      const sy = Number(oc(nodesByKey.get(e.s),'year'));
+      const ty = Number(oc(nodesByKey.get(e.t),'year'));
+      return (Number.isFinite(sy) && sy === yearMax) || (Number.isFinite(ty) && ty === yearMax);
+    };
+
+    edgeFadeEntries = [];
+for (const rec of ['dim','neutral','mixed','positive','negative']){
+      const geAll = byRec[rec];
+      if (!hasLen(geAll)) continue;
+      const col = RECEPTION_COLORS[rec] || RECEPTION_COLORS.neutral;
+
+      const tgtLinkOpacity = (rec==='dim') ? Math.min(0.18, linkOpacity*0.55) : linkOpacity;
+      const tgtArrowOpacity = (rec==='dim') ? Math.min(0.22, arrowOpacity*0.55) : arrowOpacity;
+
+      const geNew = [];
+      const geOld = [];
+      for (const e of geAll){
+        (isNewEdge(e) ? geNew : geOld).push(e);
+      }
+
+      const buildInstanced = (edgesList, linkMat, arrowMat) => {
+        const link = new THREE.InstancedMesh(cylGeom, linkMat, edgesList.length);
+        link.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        link.renderOrder = order[rec];
+
+        const arrows = new THREE.InstancedMesh(coneGeom, arrowMat, edgesList.length);
+        arrows.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        arrows.renderOrder = order[rec] + 10;
+
+        const mm = new THREE.Matrix4();
+        const scv = new THREE.Vector3();
+
+        for (let i=0; i<edgesList.length; i++){
+          const e = edgesList[i];
+          const si = keyToIndex.get(e.s);
+          const ti = keyToIndex.get(e.t);
+          if (si == null || ti == null) continue;
+
+          const sPos = nodePos[si];
+          const tPos = nodePos[ti];
+          const rs = nodeRadius[si];
+          const rt = nodeRadius[ti];
+
+          dirVec.copy(tPos).sub(sPos);
+          const dist = dirVec.length();
+          if (dist < 1e-6) continue;
+          dirVec.divideScalar(dist);
+
+          const startDist = rs + gap;
+          const endDist = rt + gap + arrowLen;
+          let cylLen = dist - startDist - endDist;
+          if (cylLen < 0) cylLen = 0;
+
+          mid.copy(sPos).addScaledVector(dirVec, startDist + cylLen/2);
+          quat.setFromUnitVectors(yAxis, dirVec);
+
+          scv.set(width, Math.max(0.0001, cylLen), width);
+          mm.compose(mid, quat, scv);
+          link.setMatrixAt(i, mm);
+
+          const tipDist = rt + gap;
+          const arrowCenterDist = tipDist + arrowLen/2;
+          const aPos = tPos.clone().addScaledVector(dirVec, -arrowCenterDist);
+
+          scv.set(width*1.25, arrowLen, width*1.25);
+          mm.compose(aPos, quat, scv);
+          arrows.setMatrixAt(i, mm);
+        }
+
+        link.instanceMatrix.needsUpdate = true;
+        arrows.instanceMatrix.needsUpdate = true;
+
+        linkMeshes.push({ mesh: link, mat: linkMat });
+        arrowMeshes.push({ mesh: arrows, mat: arrowMat });
+        scene.add(link);
+        scene.add(arrows);
+      };
+
+      // Old edges: render immediately at target opacity
+      if (geOld.length){
+        const linkMat = makeMat(col, tgtLinkOpacity);
+        const arrowMat = makeMat(col, tgtArrowOpacity);
+        buildInstanced(geOld, linkMat, arrowMat);
+      }
+
+      // New edges: fade in only these
+      if (geNew.length){
+        const now = performance.now();
+        const linkMat = makeFadeMat(col, tgtLinkOpacity);
+        const arrowMat = makeFadeMat(col, tgtArrowOpacity);
+        edgeFadeEntries.push({ mat: linkMat, born: now, target: tgtLinkOpacity });
+        edgeFadeEntries.push({ mat: arrowMat, born: now, target: tgtArrowOpacity });
+        buildInstanced(geNew, linkMat, arrowMat);
+      }
+    }
+
+    // Flow dots (direction cue)
+    if ($('flowOn').checked){
+      const flowCap = Number($('flowCap').value);
+      const speed = Number($('flowSpeed').value);
+      const dotSize = Number($('flowSize').value);
+
+      let flowEdges = edgesToDraw;
+      if (flowEdges.length > flowCap){
+        const step = Math.ceil(flowEdges.length / flowCap);
+        const tmp = [];
+        for (let i=0; i<flowEdges.length; i+=step) tmp.push(flowEdges[i]);
+        flowEdges = tmp;
+      }
+
+      const N = flowEdges.length;
+      const starts = new Float32Array(N*3);
+      const ends = new Float32Array(N*3);
+      const phases = new Float32Array(N);
+      const speeds = new Float32Array(N);
+      const colors = new Float32Array(N*3);
+
+      for (let i=0; i<N; i++){
+        const e = flowEdges[i];
+        const si = keyToIndex.get(e.s);
+        const ti = keyToIndex.get(e.t);
+        if (si == null || ti == null) continue;
+
+        const sPos = nodePos[si];
+        const tPos = nodePos[ti];
+        const rs = nodeRadius[si];
+        const rt = nodeRadius[ti];
+
+        dirVec.copy(tPos).sub(sPos);
+        const dist = dirVec.length();
+        if (dist < 1e-6) continue;
+        dirVec.divideScalar(dist);
+
+        const start = sPos.clone().addScaledVector(dirVec, rs + gap);
+        const end = tPos.clone().addScaledVector(dirVec, -(rt + gap));
+
+        starts[i*3+0]=start.x; starts[i*3+1]=start.y; starts[i*3+2]=start.z;
+        ends[i*3+0]=end.x; ends[i*3+1]=end.y; ends[i*3+2]=end.z;
+
+        phases[i] = (hashStrToInt(e.s + '|' + e.t) % 10000) / 10000.0;
+        speeds[i] = speed * (0.85 + ((hashStrToInt(e.t + '|' + e.s) % 1000)/1000.0) * 0.3);
+
+        const col = RECEPTION_COLORS[e.reception || 'neutral'] || RECEPTION_COLORS.neutral;
+        colors[i*3+0]=col.r; colors[i*3+1]=col.g; colors[i*3+2]=col.b;
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N*3), 3));
+      geo.setAttribute('aStart', new THREE.BufferAttribute(starts, 3));
+      geo.setAttribute('aEnd', new THREE.BufferAttribute(ends, 3));
+      geo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+      geo.setAttribute('aSpeed', new THREE.BufferAttribute(speeds, 1));
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      flowMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+        vertexColors: true,
+        uniforms: {
+          uTime: { value: 0.0 },
+          uSize: { value: dotSize },
+          uOpacity: { value: Math.min(1.0, Math.max(0.10, linkOpacity + 0.12)) }
+        },
+        vertexShader: `
+          uniform float uTime;
+          uniform float uSize;
+          attribute vec3 aStart;
+          attribute vec3 aEnd;
+          attribute float aPhase;
+          attribute float aSpeed;
+          varying vec3 vColor;
+          void main(){
+            float t = fract(uTime * aSpeed + aPhase);
+            vec3 pos = mix(aStart, aEnd, t);
+            vColor = color;
+            vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+            gl_Position = projectionMatrix * mv;
+            gl_PointSize = uSize * (300.0 / max(1.0, -mv.z));
+          }
+        `,
+        fragmentShader: `
+          uniform float uOpacity;
+          varying vec3 vColor;
+          void main(){
+            vec2 uv = gl_PointCoord.xy - vec2(0.5);
+            float d = length(uv);
+            float alpha = smoothstep(0.5, 0.25, d) * uOpacity;
+            if (alpha < 0.01) discard;
+            gl_FragColor = vec4(vColor, alpha);
+          }
+        `
+      });
+
+      flowPoints = new THREE.Points(geo, flowMat);
+      flowPoints.renderOrder = 1000;
+      scene.add(flowPoints);
+    }
+
+    // Hover tooltip (only when directly over a node)
+    const div = document.createElement('div');
+    div.style.padding = '10px 12px';
+    div.style.border = '1px solid #e6e6e6';
+    div.style.borderRadius = '14px';
+    div.style.background = 'rgba(255,255,255,.97)';
+    div.style.boxShadow = '0 8px 18px rgba(0,0,0,.06)';
+    div.style.fontSize = '13px';
+    div.style.maxWidth = '520px';
+    div.style.pointerEvents = 'none';
+    div.style.transition = 'opacity 180ms ease';
+    div.style.opacity = '0';
+    div.style.display = 'none';
+    labelObj = new CSS2DObject(div);
+    labelObj.position.set(0,0,0);
+    scene.add(labelObj);
+
+    // Marker + selected highlight
+    if (selectedKey && keyToIndex.has(selectedKey)){
+      const gi = keyToIndex.get(selectedKey);
+      marker.visible = true;
+      marker.position.copy(nodePos[gi]);
+      const r = nodeRadius[gi];
+      marker.scale.setScalar(r * 1.35);
+      marker.rotation.set(Math.PI/2, 0, 0);
+      updateSelectedHighlight(gi);
+    } else {
+      marker.visible = false;
+      updateSelectedHighlight(-1);
+    }
+  }
+
+  function fitToGraph(){
+    if (!nodePos.length) return;
+    const box = new THREE.Box3();
+    for (const p of nodePos) box.expandByPoint(p);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+
+    const radius = Math.max(size.x, size.y, size.z) * 0.65 + 200;
+    controls.target.copy(center);
+    camera.position.copy(center).add(new THREE.Vector3(radius, radius*0.35, radius*1.15));
+    camera.near = 0.1;
+    camera.far = Math.max(10000, radius*12);
+    camera.updateProjectionMatrix();
+    controls.update();
+  }
+
+  function resetView(){
+    selectedKey = null;
+    marker.visible = false;
+    closeDetail();
+    focusState.active = false;
+    focusState.key = null;
+
+    $('linkMode').value = 'all';
+    setDefaultLinkOpacity(0.3);
+
+    controls.target.set(0,0,0);
+    camera.position.set(0, 0, 2600);
+    camera.near = 0.1;
+    camera.far = 300000;
+    camera.updateProjectionMatrix();
+    controls.update();
+    rebuildMeshes();
+    updateStats();
+  }
+
+    const fitBtn = $('fitBtn');
+  if (fitBtn) fitBtn.addEventListener('click', fitToGraph);
+  const resetBtn = $('resetBtn');
+  if (resetBtn) resetBtn.addEventListener('click', resetView);
+
+  // Detail panel
+  function openDetail(){ $('detailPanel').classList.remove('hidden'); }
+  function closeDetail(){ $('detailPanel').classList.add('hidden'); }
+  $('closeDetailBtn').addEventListener('click', ()=>closeDetail());
+
+  function recClass(rec){
+    if (rec === 'positive') return 'rec-positive';
+    if (rec === 'negative') return 'rec-negative';
+    if (rec === 'mixed') return 'rec-mixed';
+    return 'rec-neutral';
+  }
+
+  function buildNeighborhood(){
+    if (!selectedKey) return { out: [], inn: [] };
+    const out = [];
+    const inn = [];
+
+    for (const e of visibleEdges){
+      if (e.s === selectedKey){
+        const k = e.t;
+        const n = nodesByKey.get(k);
+        out.push({ key:k, name:(oc(n,'name') || k), reception: e.reception || 'neutral' });
+      } else if (e.t === selectedKey){
+        const k = e.s;
+        const n = nodesByKey.get(k);
+        inn.push({ key:k, name:(oc(n,'name') || k), reception: e.reception || 'neutral' });
+      }
+    }
+
+    out.sort((a,b)=> a.reception.localeCompare(b.reception) || a.name.localeCompare(b.name));
+    inn.sort((a,b)=> a.reception.localeCompare(b.reception) || a.name.localeCompare(b.name));
+    return { out, inn };
+  }
+
+
+
+function buildSemanticNeighbors(k, K=20){
+  const n0 = nodesByKey.get(k);
+  if (!n0 || !Array.isArray(n0.coords) || n0.coords.length !== 3) return [];
+  const x0 = n0.coords[0], y0 = n0.coords[1], z0 = n0.coords[2];
+  if (![x0,y0,z0].every(Number.isFinite)) return [];
+
+  const best = []; // sorted asc by d2 once filled
+  const pool = (visibleKeys && visibleKeys.size) ? visibleKeys : nodesByKey.keys();
+
+  for (const kk of pool){
+    if (kk === k) continue;
+    const n = nodesByKey.get(kk);
+    if (!n || !Array.isArray(n.coords) || n.coords.length !== 3) continue;
+    const x = n.coords[0], y = n.coords[1], z = n.coords[2];
+    if (![x,y,z].every(Number.isFinite)) continue;
+
+    const dx = x - x0, dy = y - y0, dz = z - z0;
+    const d2 = dx*dx + dy*dy + dz*dz;
+
+    if (best.length < K){
+      best.push({key: kk, d2});
+      if (best.length === K) best.sort((a,b)=>a.d2-b.d2);
+    } else if (d2 < best[best.length-1].d2){
+      best[best.length-1] = {key: kk, d2};
+      // insertion sort last element
+      let i = best.length - 1;
+      while (i > 0 && best[i].d2 < best[i-1].d2){
+        const tmp = best[i]; best[i] = best[i-1]; best[i-1] = tmp;
+        i--;
+      }
+    }
+  }
+
+  best.sort((a,b)=>a.d2-b.d2);
+  const out = [];
+  for (const b of best){
+    const n = nodesByKey.get(b.key);
+    out.push({
+      key: b.key,
+      name: oc(n,'name') || b.key,
+      year: Number.isFinite(oc(n,'year')) ? n.year : null,
+      group: oc(n,'cluster_group') || 'Unclustered',
+      reception: 'neutral'
+    });
+  }
+  return out;
+}
+
+function renderSemanticList(container, items){
+  if (!container) return;
+  container.innerHTML = '';
+  for (const it of items){
+    const div = document.createElement('div');
+    div.className = `item ${recClass(it.reception)}`;
+    const meta = getClusterMetaForKey(it.key);
+    const y = (Number.isFinite(it.year) ? String(it.year) : '—');
+    div.innerHTML = `
+      <div style="flex:1; min-width:0;">
+        <div class="name">${escapeHtml(it.name)}</div>
+        <div class="sub">
+          <span class="swatch" style="background:#${meta.color.getHexString()}"></span>
+          <span style="min-width:0; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(displayClusterName(meta.group))}</span>
+          <span style="color:var(--muted); margin-left:8px;">•</span>
+          <span style="color:var(--muted); font-size:12px;">${escapeHtml(y)}</span>
+        </div>
+      </div>
+    `;
+    div.addEventListener('click', ()=>{ focusOnKey(it.key, true); });
+    container.appendChild(div);
+  }
+  if (!items.length){
+    const empty = document.createElement('div');
+    empty.style.padding = '12px';
+    empty.style.color = 'var(--muted)';
+    empty.style.fontSize = '12px';
+    empty.textContent = 'No cases.';
+    container.appendChild(empty);
+  }
+}
+  function renderList(container, items, query){
+    container.innerHTML = '';
+    const q = (query || '').toLowerCase().trim();
+    const filtered = q ? items.filter(x => x.name.toLowerCase().includes(q) || x.key.toLowerCase().includes(q)) : items;
+
+    for (const it of filtered){
+      const div = document.createElement('div');
+      div.className = `item ${recClass(it.reception)}`;
+      const meta = getClusterMetaForKey(it.key);
+      div.innerHTML = `
+        <div style="flex:1; min-width:0;">
+          <div class="name">${escapeHtml(it.name)}</div>
+          <div class="sub">
+            <span class="swatch" style="background:#${meta.color.getHexString()}"></span>
+            <span style="min-width:0; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(meta.group)}</span>
+          </div>
+        </div>
+      `;
+      div.addEventListener('click', ()=>{ focusOnKey(it.key, true); });
+      container.appendChild(div);
+    }
+    if (!filtered.length){
+      const empty = document.createElement('div');
+      empty.style.padding = '12px';
+      empty.style.color = 'var(--muted)';
+      empty.style.fontSize = '12px';
+      empty.textContent = 'No cases.';
+      container.appendChild(empty);
+    }
+  }
+
+  function updateDetailPanel(){
+    if (!selectedKey) return;
+    const n = nodesByKey.get(selectedKey);
+    const g = nvl(oc(n,'cluster_group'), 'Unclustered');
+    const meta = clusterMeta.get(g);
+
+    $('detailTitle').textContent = (oc(n,'name') || selectedKey);
+    // Keep semantic-neighbours search input under user control (do not auto-fill)
+$('detailCluster').textContent = displayClusterName(g);
+    $('detailYear').textContent = (Number.isFinite(oc(n,'year')) ? String(n.year) : 'Year: —');
+    $('detailSwatch').style.background = '#'+colorHex(meta,'9aa0a6');
+    const cs = $('detailClusterSwatch'); if (cs) cs.style.background = '#'+colorHex(meta,'9aa0a6');
+
+    $('detailIn').textContent = (n? n._in:0).toLocaleString();
+    $('detailOut').textContent = (n? n._out:0).toLocaleString();
+
+    const { out, inn } = buildNeighborhood();
+    $('detailNbr').textContent = (new Set([...out.map(x=>x.key), ...inn.map(x=>x.key)])).size.toLocaleString();
+
+    const sem = buildSemanticNeighbors(selectedKey, 20);
+    renderSemanticList($('semList'), sem);
+
+    const outQ = $('outFilter').value || '';
+    const inQ = $('inFilter').value || '';
+
+    // Filtered sets (used for both list + pies)
+    const oq = outQ.toLowerCase().trim();
+    const iq = inQ.toLowerCase().trim();
+    const outF = oq ? out.filter(x => x.name.toLowerCase().includes(oq) || x.key.toLowerCase().includes(oq)) : out;
+    const inF  = iq ? inn.filter(x => x.name.toLowerCase().includes(iq) || x.key.toLowerCase().includes(iq)) : inn;
+
+    const outPieEl = $('outPie');
+
+
+    if (outPieEl){ drawClusterPie(outPieEl, outF); }
+
+
+    const inPieEl = $('inPie');
+
+
+    if (inPieEl){ drawClusterPie(inPieEl, inF); }
+
+
+    if (outPieEl || inPieEl){ attachPieInteractivity(); }
+renderList($('outList'), out, outQ);
+    renderList($('inList'), inn, inQ);
+  }
+
+  $('outFilter').addEventListener('input', updateDetailPanel);
+  $('inFilter').addEventListener('input', updateDetailPanel);
+
+  // Smooth camera transitions
+  function animateCameraRestore(camPos, tgtPos){
+    const startCam = camera.position.clone();
+    const startTgt = controls.target.clone();
+    const endCam = camPos.clone();
+    const endTgt = tgtPos.clone();
+    const startTime = performance.now();
+    const dur = 520;
+
+    function easeInOut(t){ return t<0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+    function step(){
+      const t = (performance.now() - startTime) / dur;
+      const tt = Math.min(1, Math.max(0, t));
+      const e = easeInOut(tt);
+      camera.position.lerpVectors(startCam, endCam, e);
+      controls.target.lerpVectors(startTgt, endTgt, e);
+      controls.update();
+      if (tt < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  function animateCameraTo(targetPos, desiredDistance){
+    const startCam = camera.position.clone();
+    const startTgt = controls.target.clone();
+    const dir = startCam.clone().sub(startTgt);
+    if (dir.lengthSq() < 1e-6) dir.set(0,0,1);
+    dir.normalize();
+
+    const endTgt = targetPos.clone();
+    const endCam = endTgt.clone().add(dir.multiplyScalar(desiredDistance));
+
+    const startTime = performance.now();
+    const dur = 520;
+
+    function easeInOut(t){ return t<0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+    function step(){
+      const t = (performance.now() - startTime) / dur;
+      const tt = Math.min(1, Math.max(0, t));
+      const e = easeInOut(tt);
+      camera.position.lerpVectors(startCam, endCam, e);
+      controls.target.lerpVectors(startTgt, endTgt, e);
+      controls.update();
+      if (tt < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Focus / detoggle behavior on double-click (also toggles link opacity)
+  function enterFocus(k){
+    focusState.active = true;
+    focusState.key = k;
+    focusState.prevCam = camera.position.clone();
+    focusState.prevTgt = controls.target.clone();
+
+    selectedKey = k;
+
+    // Ensure the focused case is visible under the timeline filter.
+    if (yearModeHasData){
+      const nn = nodesByKey.get(k);
+      const y = nn ? nn.year : NaN;
+      if (Number.isFinite(y) && Number.isFinite(yearMax) && y > yearMax){
+        const idx = yearsWithCases.indexOf(y);
+        if (idx >= 0){
+          yearIdx = idx;
+          yearMax = y;
+          updateTimelineUI();
+        }
+      }
+    }
+
+    $('linkMode').value = 'local';
+    setDefaultLinkOpacity(1.0);
+
+    rebuildMeshes();
+    updateStats();
+
+    const gi = keyToIndex.get(k);
+    if (gi === undefined){ toast('Case is not currently visible.'); return; }
+
+    const pos = nodePos[gi];
+    const r = nodeRadius[gi];
+
+    marker.visible = true;
+    marker.position.copy(pos);
+    marker.scale.setScalar(r * 1.35);
+    marker.rotation.set(Math.PI/2, 0, 0);
+    updateSelectedHighlight(gi);
+
+    animateCameraTo(pos, Math.max(260, r * 16));
+
+    openDetail();
+    updateDetailPanel();
+  }
+
+  function exitFocus(){
+    pieClusterFilter = null;
+    if (tourActive) stopGuidedTour();
+    const cam = focusState.prevCam || camera.position.clone();
+    const tgt = focusState.prevTgt || controls.target.clone();
+
+    focusState.active = false;
+    focusState.key = null;
+
+    selectedKey = null;
+    marker.visible = false;
+
+    $('linkMode').value = 'all';
+    setDefaultLinkOpacity(0.3);
+
+    closeDetail();
+    rebuildMeshes();
+    updateStats();
+
+    animateCameraRestore(cam, tgt);
+  }
+
+  function focusOnKey(k, openPanel=true){
+    if (!k) return;
+
+    // Ensure key becomes visible under timeline filtering (if enabled).
+    if (yearModeHasData){
+      const nn = nodesByKey.get(k);
+      const y = nn ? nn.year : NaN;
+      if (Number.isFinite(y) && Number.isFinite(yearMax) && y > yearMax){
+        const idx = yearsWithCases.indexOf(y);
+        if (idx >= 0){
+          yearIdx = idx;
+          yearMax = y;
+          updateTimelineUI();
+        }
+      }
+    }
+    selectedKey = k;
+    $('linkMode').value = 'local';
+    rebuildMeshes();
+    updateStats();
+
+    const gi = keyToIndex.get(k);
+    if (gi === undefined){ toast('Case is not currently visible.'); return; }
+
+    const pos = nodePos[gi];
+    const r = nodeRadius[gi];
+
+    marker.visible = true;
+    marker.position.copy(pos);
+    marker.scale.setScalar(r * 1.35);
+    marker.rotation.set(Math.PI/2, 0, 0);
+    updateSelectedHighlight(gi);
+
+    animateCameraTo(pos, Math.max(260, r * 16));
+
+    if (openPanel){
+      openDetail();
+      updateDetailPanel();
+    }
+  }
+
+  // Interaction (hover tooltip only when raycast hits a node)
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let lastHoverGlobal = -1;
+  let hoverHideTimer = null;
+
+  function setHoverLabel(globalIndex, show){
+    const div = labelObj.element;
+    if (!show || globalIndex < 0 || globalIndex >= nodeKey.length){
+      div.style.display = 'none';
+      return;
+    }
+    const k = nodeKey[globalIndex];
+    const n = nodesByKey.get(k);
+    const g = nvl(oc(n,'cluster_group'), 'Unclustered');
+    const meta = clusterMeta.get(g);
+    div.style.display = 'block';
+    div.style.opacity = '1';
+    if (hoverHideTimer){ clearTimeout(hoverHideTimer); hoverHideTimer = null; }
+    div.innerHTML = `
+      <div style="font-weight:700; font-size:14px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+        ${escapeHtml((oc(n,'name') || k))}
+      </div>
+      <div style="margin-top:6px; color:#555; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:14px;">
+        <div style="display:flex; align-items:center; gap:8px; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          <div class="swatch" style="background:#${colorHex(meta,'9aa0a6')}"></div>
+          <span>${escapeHtml(g)}</span>
+        </div>
+        <div style="color:#333; font-weight:600; white-space:nowrap;">
+          in ${(n? n._in:0).toLocaleString()} · out ${(n? n._out:0).toLocaleString()}
+        </div>
+      </div>`;
+
+    labelObj.position.copy(nodePos[globalIndex]).add(new THREE.Vector3(0, nodeRadius[globalIndex]*1.25, 0));
+  }
+
+  function pickNodeAtEvent(ev, strict=false){
+    const rect = getCanvasRectCached();
+    const localX = (ev.clientX - rect.left);
+    const localY = (ev.clientY - rect.top);
+
+    mouse.x = (localX / rect.width) * 2 - 1;
+    mouse.y = -(localY / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+
+    // 1) Precise raycast against instanced meshes
+    let best = null;
+    for (const nm of nodeMeshes){
+      const hits = raycaster.intersectObject(nm.mesh, false);
+      if (hits.length){
+        const h = hits[0];
+        if (!best || h.distance < best.distance) best = h;
+      }
+    }
+    if (best && best.instanceId != null){
+      const mapArr = best.object.userData.globalIndexByInstance;
+      const gi = mapArr ? mapArr[best.instanceId] : -1;
+      return gi;
+    }
+
+    if (strict) return -1;
+
+    // 2) Forgiving screen-space pick (helps when zoomed out)
+    const dist = camera.position.distanceTo(controls.target);
+    const radiusPx = Math.max(14, Math.min(55, 14 + dist / 220)); // grows with distance
+    const r2 = radiusPx * radiusPx;
+
+    const v = pickNodeAtEvent._v || (pickNodeAtEvent._v = new THREE.Vector3());
+    let bestIdx = -1;
+    let bestD2 = Infinity;
+
+    for (let i=0; i<nodePos.length; i++){
+      if (!visibleKeys.has(nodeKey[i])) continue;
+      v.copy(nodePos[i]).project(camera);
+      if (v.z < -1 || v.z > 1) continue;
+      const px = (v.x * 0.5 + 0.5) * rect.width;
+      const py = (-v.y * 0.5 + 0.5) * rect.height;
+      const dx = px - localX;
+      const dy = py - localY;
+      const d2 = dx*dx + dy*dy;
+      if (d2 < bestD2){
+        bestD2 = d2;
+        bestIdx = i;
+      }
+    }
+    return (bestD2 <= r2) ? bestIdx : -1;
+  }
+
+  
+  function updateCloseNodeLabel(){
+    // Multi-node close labels: show names for all nearby nodes when zoomed-in.
+    const cb = document.getElementById('closeLabels');
+    const layer = document.getElementById('closeNodeLabel');
+    if (!layer) return;
+    if (!cb || !cb.checked || cinematicMode){
+      layer.style.display = 'none';
+      return;
+    }
+
+    const camDist = camera.position.distanceTo(controls.target);
+    if (camDist > 750){
+      layer.style.display = 'none';
+      return;
+    }
+    layer.style.display = 'block';
+
+    const center = controls.target.clone();
+    const radiusWorld = 900;
+    const r2 = radiusWorld * radiusWorld;
+
+    const cand = [];
+    for (let i=0; i<nodeKey.length; i++){
+      const k = nodeKey[i];
+      if (!visibleKeys.has(k)) continue;
+      const p = nodePos[i];
+      const d2 = p.distanceToSquared(center);
+      if (d2 <= r2) cand.push([i, d2]);
+    }
+    cand.sort((a,b)=>a[1]-b[1]);
+    const MAX = 7;
+    const use = cand.slice(0, MAX);
+
+    if (!layer._pool){ layer._pool = []; }
+    const pool = layer._pool;
+
+    while (pool.length < use.length){
+      const d = document.createElement('div');
+      d.className = 'closeNodeTag';
+      layer.appendChild(d);
+      pool.push(d);
+    }
+
+    const w = renderer.domElement.clientWidth;
+    const h = renderer.domElement.clientHeight;
+
+    for (let j=0; j<use.length; j++){
+      const [i] = use[j];
+      const k = nodeKey[i];
+      const n = nodesByKey.get(k);
+      const name = ((oc(n,'name') || k || '')).toString();
+
+      const el = pool[j];
+      el.textContent = name;
+
+      const p = nodePos[i];
+      const v = p.clone().project(camera);
+      if (v.z < -1 || v.z > 1){
+        el.style.display = 'none';
+        continue;
+      }
+      const x = (v.x*0.5 + 0.5) * w;
+      const y = (-v.y*0.5 + 0.5) * h;
+
+      el.style.left = x + 'px';
+      el.style.top = (y - 4) + 'px';
+      el.style.display = 'block';
+    }
+
+    for (let j=use.length; j<pool.length; j++){
+      pool[j].style.display = 'none';
+    }
+  }
+
+
+function onPointerMove(ev){
+    const gi = pickNodeAtEvent(ev, focusState.active);
+
+    if (gi >= 0){
+      // hovering a node: show immediately
+      if (hoverHideTimer){ clearTimeout(hoverHideTimer); hoverHideTimer = null; }
+      lastHoverGlobal = gi;
+      setHoverLabel(gi, true);
+      renderer.domElement.style.cursor = 'pointer';
+      return;
+    }
+
+    // hovering the void
+    lastHoverGlobal = -1;
+    renderer.domElement.style.cursor = 'grab';
+
+    // schedule fade-out after 1s (do not keep tooltip stuck)
+    if (labelObj && labelObj.element.style.display !== 'none'){
+      if (hoverHideTimer) clearTimeout(hoverHideTimer);
+      hoverHideTimer = setTimeout(()=>{
+        if (!labelObj) return;
+        labelObj.element.style.opacity = '0';
+        setTimeout(()=>{ if (labelObj) labelObj.element.style.display = 'none'; }, 220);
+      }, 1000);
+    }
+  }
+
+  function onClick(){
+    if (lastHoverGlobal < 0) return;
+    const k = nodeKey[lastHoverGlobal];
+    selectedKey = k;
+
+    marker.visible = true;
+    marker.position.copy(nodePos[lastHoverGlobal]);
+    marker.scale.setScalar(nodeRadius[lastHoverGlobal] * 1.35);
+    marker.rotation.set(Math.PI/2, 0, 0);
+    updateSelectedHighlight(lastHoverGlobal);
+
+    if (!$('detailPanel').classList.contains('hidden')){
+      updateDetailPanel();
+    }
+  }
+
+  function onDoubleClick(ev){
+    const gi = pickNodeAtEvent(ev);
+    if (gi < 0){
+      // Double-clicking the void while in case (local) view resets to default view
+      if (focusState.active) { pieClusterFilter = null; exitFocus(); }
+      return;
+    }
+    const k = nodeKey[gi];
+
+    if (focusState.active && focusState.key === k){
+      exitFocus();
+      return;
+    }
+    if (!focusState.active){
+      enterFocus(k);
+    } else {
+      // already focused; switch focus target, keep opacity 1
+      focusState.key = k;
+      selectedKey = k;
+      $('linkMode').value = 'local';
+      setDefaultLinkOpacity(1.0);
+      rebuildMeshes();
+      updateStats();
+      const idx = keyToIndex.get(k);
+      const pos = nodePos[idx];
+      const r = nodeRadius[idx];
+      marker.visible = true;
+      marker.position.copy(pos);
+      marker.scale.setScalar(r * 1.35);
+      marker.rotation.set(Math.PI/2, 0, 0);
+      updateSelectedHighlight(idx);
+      animateCameraTo(pos, Math.max(260, r * 16));
+      openDetail();
+      updateDetailPanel();
+    }
+  }
+
+  renderer.domElement.addEventListener('pointermove', onPointerMove);
+  renderer.domElement.addEventListener('pointerleave', ()=>{ lastHoverGlobal=-1; if (hoverHideTimer) clearTimeout(hoverHideTimer); hoverHideTimer=null; if (labelObj){ labelObj.element.style.opacity='0'; labelObj.element.style.display='none'; } });
+  renderer.domElement.addEventListener('pointerdown', ()=>{ if (lastHoverGlobal<0 && labelObj){ if (hoverHideTimer) clearTimeout(hoverHideTimer); hoverHideTimer=null; labelObj.element.style.opacity='0'; labelObj.element.style.display='none'; } });
+  renderer.domElement.addEventListener('click', onClick);
+  renderer.domElement.addEventListener('dblclick', (ev)=>{ ev.preventDefault(); onDoubleClick(ev); });
+
+  
+  function moveSelectionToKey(k){
+    if (!k || !keyToIndex.has(k)) return;
+    if (focusState.active){
+      focusState.key = k;
+      selectedKey = k;
+      $('linkMode').value = 'local';
+      setDefaultLinkOpacity(1.0);
+      rebuildMeshes();
+      updateStats();
+      const idx = keyToIndex.get(k);
+      const pos = nodePos[idx];
+      const r = nodeRadius[idx];
+      marker.visible = true;
+      marker.position.copy(pos);
+      marker.scale.setScalar(r * 1.35);
+      marker.rotation.set(Math.PI/2, 0, 0);
+      updateSelectedHighlight(idx);
+      animateCameraTo(pos, Math.max(260, r * 16));
+      openDetail();
+      updateDetailPanel();
+    } else {
+      focusOnKey(k, true);
+    }
+  }
+
+  function stepAlongLinks(dir){
+    if (!selectedKey || !keyToIndex.has(selectedKey)) return;
+    const nbrSet = adjVisible.get(selectedKey);
+    if (!nbrSet || nbrSet.size === 0) return;
+
+    const rect = getCanvasRectCached();
+    const v = stepAlongLinks._v || (stepAlongLinks._v = new THREE.Vector3());
+    const curIdx = keyToIndex.get(selectedKey);
+
+    v.copy(nodePos[curIdx]).project(camera);
+    const cx = (v.x * 0.5 + 0.5) * rect.width;
+    const cy = (-v.y * 0.5 + 0.5) * rect.height;
+
+    const desired = {x:0,y:0};
+    if (dir === 'left') desired.x = -1;
+    if (dir === 'right') desired.x = 1;
+    if (dir === 'up') desired.y = -1;
+    if (dir === 'down') desired.y = 1;
+
+    let bestKey = null;
+    let bestScore = Infinity;
+
+    for (const nk of nbrSet){
+      const ni = keyToIndex.get(nk);
+      if (ni == null) continue;
+
+      v.copy(nodePos[ni]).project(camera);
+      if (v.z < -1 || v.z > 1) continue;
+
+      const nx = (v.x * 0.5 + 0.5) * rect.width;
+      const ny = (-v.y * 0.5 + 0.5) * rect.height;
+
+      let dx = nx - cx;
+      let dy = ny - cy;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 1e-3) continue;
+
+      dx /= dist; dy /= dist;
+      const dot = dx * desired.x + dy * desired.y;
+
+      const anglePenalty = (1 - dot);
+      const distPenalty = dist / 650.0;
+      const outOfDirPenalty = (dot > 0.12) ? 0 : 0.45;
+      const score = anglePenalty * 1.7 + distPenalty + outOfDirPenalty;
+
+      if (score < bestScore){
+        bestScore = score;
+        bestKey = nk;
+      }
+    }
+
+    if (bestKey) moveSelectionToKey(bestKey);
+  }
+
+  // Keyboard navigation (WASD move + Q/E yaw)
+  const keys = new Set();
+  window.addEventListener('keydown', (e)=>{
+    const ae = document.activeElement;
+    if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable)){
+      return; // don't steal keys while typing
+    }// Arrow keys: navigate along citation links (nearest linked node in that direction)
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+      e.preventDefault();
+      if (e.key === 'ArrowLeft') stepAlongLinks('left');
+      if (e.key === 'ArrowRight') stepAlongLinks('right');
+      if (e.key === 'ArrowUp') stepAlongLinks('up');
+      if (e.key === 'ArrowDown') stepAlongLinks('down');
+      return;
+    }
+
+    const k = e.key.toLowerCase();
+    if (['w','a','s','d','q','e','shift','control',' '].includes(k)){
+      keys.add(k);
+      e.preventDefault();
+    }
+  }, { passive:false });
+  window.addEventListener('keyup', (e)=> keys.delete(e.key.toLowerCase()));
+
+  function keyboardStep(dt){
+    if (!keys.size) return;
+
+    const up = camera.up.clone().normalize();
+    const forward = new THREE.Vector3();
+    camera.getWorldDirection(forward).normalize();
+    const right = new THREE.Vector3().crossVectors(forward, up).normalize();
+
+    // Move both camera and target (strafe/orbit center)
+    const dist = camera.position.distanceTo(controls.target);
+    let speed = Math.max(120, dist * 0.35) * dt;
+    if (keys.has('shift')) speed *= 3.5;
+
+    const delta = new THREE.Vector3();
+    if (keys.has('w')) delta.add(forward);
+    if (keys.has('s')) delta.addScaledVector(forward, -1);
+    if (keys.has('d')) delta.add(right);
+    if (keys.has('a')) delta.addScaledVector(right, -1);
+    // Vertical translate: Space up, Ctrl down
+    if (keys.has(' ')) delta.add(up);
+    if (keys.has('control')) delta.addScaledVector(up, -1);
+
+    if (delta.lengthSq() > 1e-8){
+      delta.normalize().multiplyScalar(speed);
+      camera.position.add(delta);
+      controls.target.add(delta);
+    }
+
+    // Yaw rotate around target with Q/E
+    const yaw = (keys.has('q') ? 1 : 0) + (keys.has('e') ? -1 : 0);
+    if (yaw !== 0){
+      const angle = yaw * (1.15 * dt); // radians/sec
+      const off = camera.position.clone().sub(controls.target);
+      const quat = new THREE.Quaternion().setFromAxisAngle(up, angle);
+      off.applyQuaternion(quat);
+      camera.position.copy(controls.target).add(off);
+    }
+  }
+
+  // UI bindings
+  bindRange($('posScale'), $('posScaleNum'), ()=>applyFiltersAndRender(false));
+  bindRange($('jitter'), $('jitterNum'), ()=>applyFiltersAndRender(false));
+  bindRange($('nodeScale'), $('nodeScaleNum'), ()=>applyFiltersAndRender(false));
+  bindRange($('linkWidth'), $('linkWidthNum'), ()=>{ rebuildMeshes(); updateStats(); });
+  bindRange($('linkOpacity'), $('linkOpacityNum'), ()=>{ rebuildMeshes(); updateStats(); });
+  bindRange($('arrowSize'), $('arrowSizeNum'), ()=>{ rebuildMeshes(); updateStats(); });
+  bindRange($('arrowOpacity'), $('arrowOpacityNum'), ()=>{ rebuildMeshes(); updateStats(); });
+  bindRange($('clusterSep'), $('clusterSepNum'), ()=>{ buildClusterOffsets(); applyFiltersAndRender(false); });
+  bindRange($('ipOffsetX'), $('ipOffsetXNum'), ()=>{ buildClusterOffsets(); applyFiltersAndRender(false); });
+  bindRange($('ipOffsetY'), $('ipOffsetYNum'), ()=>{ buildClusterOffsets(); applyFiltersAndRender(false); });
+  bindRange($('ipOffsetZ'), $('ipOffsetZNum'), ()=>{ buildClusterOffsets(); applyFiltersAndRender(false); });  $('linkMode').addEventListener('change', ()=>{ rebuildMeshes(); updateStats(); });
+  bindRange($('sampleCap'), $('sampleCapNum'), ()=>{ rebuildMeshes(); updateStats(); });
+
+  $('hideIsolates').addEventListener('change', ()=>applyFiltersAndRender(false));
+  $('showNeutral').addEventListener('change', ()=>applyFiltersAndRender(false));
+
+  $('flowOn').addEventListener('change', ()=>{ rebuildMeshes(); });
+  bindRange($('flowSize'), $('flowSizeNum'), ()=>{ rebuildMeshes(); });
+  bindRange($('flowSpeed'), $('flowSpeedNum'), ()=>{ rebuildMeshes(); });
+  bindRange($('flowCap'), $('flowCapNum'), ()=>{ rebuildMeshes(); });
+
+  // Guided tour animation controls (sliders in the left panel)
+  (function initTourAnimUI(){
+    const rs = $('tourRotSpeed');
+    if (!rs) return;
+
+    const set = (rid, nid, val)=>{
+      const r = $(rid), n = $(nid);
+      if (r && n) setRangeValue(r, n, val);
+    };
+
+    set('tourRotSpeed','tourRotSpeedNum', TOUR_ANIM.rotSpeed);
+    set('tourZoomAmp','tourZoomAmpNum', TOUR_ANIM.zoomAmp);
+    set('tourTilt','tourTiltNum', TOUR_ANIM.tilt);
+    set('tourWobble','tourWobbleNum', TOUR_ANIM.wobble);
+    set('tourRollAmp','tourRollAmpNum', TOUR_ANIM.rollAmp);
+    set('tourYearRate','tourYearRateNum', TOUR_ANIM.yearRate);
+    set('tourPostRoll','tourPostRollNum', TOUR_ANIM.postRollSec);
+
+    bindRange(rs, $('tourRotSpeedNum'), (v)=>{ TOUR_ANIM.rotSpeed = v; saveTourAnim(); });
+    bindRange($('tourZoomAmp'), $('tourZoomAmpNum'), (v)=>{ TOUR_ANIM.zoomAmp = v; saveTourAnim(); });
+    bindRange($('tourTilt'), $('tourTiltNum'), (v)=>{ TOUR_ANIM.tilt = v; tourTilt = v; saveTourAnim(); });
+    bindRange($('tourWobble'), $('tourWobbleNum'), (v)=>{ TOUR_ANIM.wobble = v; tourWobble = v; saveTourAnim(); });
+    bindRange($('tourRollAmp'), $('tourRollAmpNum'), (v)=>{ TOUR_ANIM.rollAmp = v; saveTourAnim(); });
+
+    bindRange($('tourYearRate'), $('tourYearRateNum'), (v)=>{
+      TOUR_ANIM.yearRate = v;
+      saveTourAnim();
+      if (tourActive && !tourPaused && yearsWithCases.length) restartTourYearTimer();
+    });
+
+    bindRange($('tourPostRoll'), $('tourPostRollNum'), (v)=>{
+      TOUR_ANIM.postRollSec = v;
+      saveTourAnim();
+    });
+  })();
+
+
+  
+  // In-memory data injection (docs_final)
+  // Provide data as a JS array of objects (e.g., patched into window.docs_final in <head>).
+  function buildFromDocsArray(docs){
+    const arr = Array.isArray(docs) ? docs : (Array.isArray(window.docs_final) ? window.docs_final : null);
+    if (!arr || !arr.length){
+      toast('docs_final is empty — provide an array of case objects.');
+      return false;
+    }
+    // Convert to JSONL and reuse the existing parser.
+    const text = arr.map(o => JSON.stringify(o)).join('\n');
+    buildFromJsonl(text);
+    return true;
+  }
+
+
+// Expose a helper for notebooks/embeds:
+  //   window.setDocsFinal([...])  // will load + render immediately
+  window.setDocsFinal = (docs)=>{
+    window.docs_final = docs;
+    const ok = buildFromDocsArray(docs);
+    if (ok) hideLoadingOverlay();
+  };
+
+  // Optional: allow data injection via postMessage:
+  //   iframe.contentWindow.postMessage({type:'SET_DOCS_FINAL', docs:[...]}, '*');
+  window.addEventListener('message', (ev)=>{
+    const d = ev && ev.data;
+    if (!d) return;
+    if (d.type === 'SET_DOCS_FINAL' && Array.isArray(d.docs)){
+      window.setDocsFinal(d.docs);
+    }
+  });
+
+  // Auto-load if docs_final is already present.
+  if (Array.isArray(window.docs_final) && window.docs_final.length){
+    const ok = buildFromDocsArray(window.docs_final);
+    if (ok) hideLoadingOverlay();
+  }
+
+// Resize + loop
+  function resize(){
+    const w = wrap.clientWidth;
+    const h = wrap.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+    labelRenderer.setSize(w, h);
+    const svg = $('tourSvg');
+    if (svg){
+      svg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
+      svg.setAttribute('width', window.innerWidth);
+      svg.setAttribute('height', window.innerHeight);
+    }
+    const hlSvg = $('hlArrowLayer');
+    if (hlSvg){
+      hlSvg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
+      hlSvg.setAttribute('width', window.innerWidth);
+      hlSvg.setAttribute('height', window.innerHeight);
+    }
+    syncSearchTimelineCenter();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  let t0 = performance.now();
+  let last = performance.now();
+  
+  function updateNodeFades(now){
+    if (!fadeEntries || fadeEntries.length === 0) return;
+    const q = new THREE.Quaternion();
+    const m = new THREE.Matrix4();
+    const sc = new THREE.Vector3();
+    const touched = new Set();
+    const remaining = [];
+
+    for (const e of fadeEntries){
+      const t = Math.min(1, Math.max(0, (now - e.born) / NODE_FADE_MS));
+      const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+      const fadeScale = 0.22 + 0.78*ease;
+      const r = e.baseR * fadeScale;
+      sc.set(r, r, r);
+      m.compose(nodePos[e.gi], q, sc);
+      e.mesh.setMatrixAt(e.inst, m);
+      touched.add(e.mesh);
+      if (t < 1) remaining.push(e);
+    }
+
+    for (const mesh of touched){
+      mesh.instanceMatrix.needsUpdate = true;
+    }
+    fadeEntries = remaining;
+  }
+
+function animate(){
+    requestAnimationFrame(animate);
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - last) * 0.001);
+    last = now;
+
+    keyboardStep(dt);
+
+    updateNodeFades(now);
+    updateEdgeBirthFades(now);
+
+    controls.update();
+    // updateCloseNodeLabel(); // disabled: no close-to-node labels
+    updateHighlightLabels();
+    if (tourActive) { updateTourCaseLabels(); }
+    if (flowMat){
+      flowMat.uniforms.uTime.value = (now - t0) * 0.001;
+      flowMat.uniforms.uSize.value = Number($('flowSize').value);
+      flowMat.uniforms.uOpacity.value = Math.min(1.0, Math.max(0.10, Number($('linkOpacity').value) + 0.12));
+    }
+    renderer.render(scene, camera);
+    labelRenderer.render(scene, camera);
+  }
+  animate();
+  });</script><div id=searchBox><input id=searchInput placeholder="Search cases (name or key)..."><div class=hidden id=searchResults></div></div><div id=legendBar aria-hidden=true></div><div class="hidden timeline"id=timelineBar><button class=playBtn id=playBtn type=button title="Timeline play/pause (Shift+click to reset)"><span id=playIcon>▶</span></button> <button class=playBtn id=legendToggle type=button title="Toggle legend"><span id=legendIcon>≡</span></button><div class=timeMain><div class=timeTop><div class=timeLabel>Year</div><div class=timeYear id=timeYear>—</div></div><input id=yearSlider type=range max=0 min=0 step=1 value=0></div></div><div id=closeNodeLabel></div>
