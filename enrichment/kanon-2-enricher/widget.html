@@ -1,10 +1,785 @@
-<!doctypehtml><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1"name=viewport><title>Case Citation Graph (3D)</title><link href=https://fonts.googleapis.com rel=preconnect><link href=https://fonts.gstatic.com rel=preconnect crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"rel=stylesheet><link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"rel=stylesheet><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap"rel=stylesheet><style>:root{--bg:#ffffff;--panel:#ffffff;--border:#e6e6e6;--text:#111111;--muted:#666666;--shadow:0 8px 18px rgba(0,0,0,.06);--timelineBottom:148px}body,html{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}#app{position:fixed;inset:0;overflow:hidden;background:var(--bg)}#canvasWrap{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,248,250,.96))}canvas{display:block}#loadingOverlay{position:absolute;inset:0;z-index:50;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;padding:20px}#loadingOverlay.hidden{display:none}.startCard{width:min(560px,95vw);border:1px solid var(--border);background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:16px}.startTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.startTitle{font-size:14px;font-weight:600;margin:0}.startSub{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.4}.startActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.dropArea{margin-top:14px;border:1px dashed #cfcfcf;border-radius:16px;padding:14px;background:#fbfbfb}.dropArea.drag{background:#f0f6ff;border-color:#9dbbff}.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:11px;padding:2px 6px;border:1px solid #ddd;border-bottom-width:2px;border-radius:8px;background:#fff}#uiToggle{position:absolute;top:14px;left:14px;z-index:20;width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow);display:grid;place-items:center;cursor:pointer;user-select:none}#uiToggle:hover{background:#fafafa;border-color:#d0d0d0}#uiToggle svg{width:18px;height:18px}.panel{position:absolute;top:64px;left:14px;width:420px;max-height:calc(100% - 78px);overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:12px 12px 10px;z-index:10}.detail{position:absolute;top:14px;right:14px;width:440px;max-height:calc(100% - 28px);overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:12px 12px 10px;z-index:11}.detail.hidden{display:none}body.ui-hidden .panel{display:none}body.ui-hidden .stats{display:none}.row{display:flex;gap:10px;align-items:center;margin:8px 0}.row>label{flex:0 0 170px;font-size:12px;color:var(--muted)}.row>input[type=range]{flex:1}.row>input[type=number]{width:96px}.row>select{flex:1}.row>input[type=checkbox]{transform:translateY(1px)}h1{font-size:14px;margin:0 0 8px;letter-spacing:.2px}h3{font-size:12px;margin:14px 0 8px;color:var(--muted);font-weight:600}.sub{font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.35}.btn{appearance:none;border:1px solid var(--border);background:#fff;color:var(--text);border-radius:10px;padding:8px 10px;font-size:12px;cursor:pointer}.btn:hover{border-color:#d0d0d0;background:#fafafa}.btn.primary{border-color:#c7d7ff;background:#f3f7ff}.filebox{border:1px dashed #cfcfcf;border-radius:12px;padding:10px;background:#fbfbfb;display:flex;flex-direction:column;gap:8px}.filebox.drag{background:#f0f6ff;border-color:#9dbbff}#fileInput{width:100%}.stats{position:absolute;left:14px;bottom:14px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 10px;box-shadow:var(--shadow);font-size:12px;color:var(--text);display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:12}.pill{padding:3px 8px;border-radius:999px;background:#f5f5f5;border:1px solid #ededed;color:#222}.pill b{font-weight:600}.legend{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}.legendHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.legendHead h2{font-size:12px;margin:0;color:var(--muted);font-weight:600}.legendList{display:flex;flex-direction:column;gap:6px}.legItem{display:flex;align-items:flex-start;gap:8px;font-size:12px}.swatch{width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.15)}.legName{flex:1;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}.legCount{color:var(--muted);font-variant-numeric:tabular-nums}.colorGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.colorRow{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:12px;background:#fff}.colorRow .cName{flex:1;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.colorRow input[type=color]{width:34px;height:26px;border:none;background:0 0;padding:0;cursor:pointer}.colorRow button{width:34px;height:30px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:12px;line-height:1}.colorRow button:hover{background:#fafafa;border-color:#d0d0d0}.hint{font-size:11px;color:var(--muted);line-height:1.35;margin-top:8px}details{border-top:1px solid var(--border);margin-top:10px;padding-top:10px}summary{cursor:pointer;font-size:12px;color:var(--muted);user-select:none}.toast{position:absolute;right:14px;top:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);font-size:12px;max-width:520px;z-index:30}.toast.hidden{display:none}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}.detailHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}.titleBlock{min-width:0}.titleLine{display:flex;align-items:center;gap:10px;min-width:0}.titleLine .swatch{flex:0 0 auto}#detailTitle{font-weight:600;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#detailCluster{font-size:11px;color:var(--muted);margin-top:4px}.closeX{width:34px;height:34px;border-radius:12px;border:1px solid #ffd0d0;background:#fff5f5;cursor:pointer;display:grid;place-items:center;flex:0 0 auto}.closeX:hover{background:#ffecec;border-color:#ffb8b8}.closeX svg{width:16px;height:16px}.kmeta{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 4px}.kmeta .pill{background:#f7f7f7}.listWrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff}.listHead{display:flex;gap:8px;padding:10px;border-bottom:1px solid var(--border);align-items:center}.listHead input{flex:1;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:12px;outline:0;background:#fff}.list{max-height:280px;overflow:auto}.item{padding:10px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:filter .12s ease,transform .08s ease}.item:hover{filter:brightness(.98);transform:translateY(-1px)}.item:last-child{border-bottom:none}.item .name{font-size:12px;line-height:1.25;font-weight:600}.rec-positive{background:#e9fff3;border-left:5px solid #1b8a5a}.rec-neutral{background:#f1f3f4;border-left:5px solid #9aa0a6}.rec-mixed{background:#fff2e6;border-left:5px solid #f39c12}.rec-negative{background:#ffecec;border-left:5px solid #d23f31}#searchBox{position:fixed;left:14px;bottom:var(--timelineBottom);z-index:14;width:420px;max-width:calc(100vw - 28px);display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:8px}#searchBox input{flex:1;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:12px;outline:0;background:#fff}#searchBox button{width:44px;height:40px;border-radius:12px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:14px}#searchBox button:hover{background:#fafafa;border-color:#d0d0d0}#searchResults{position:absolute;left:8px;right:8px;bottom:56px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;max-height:280px}#searchResults.hidden{display:none}.sItem{padding:10px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;gap:10px;align-items:flex-start}.sItem:hover{background:#fafafa}.sItem:last-child{border-bottom:none}.sName{font-size:12px;font-weight:600;line-height:1.2;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sMeta{font-size:11px;color:var(--muted);white-space:nowrap}.pieWrap{margin:8px 0 10px;border:1px solid var(--border);border-radius:14px;background:#fff;padding:10px}.pieWrap canvas{width:100%;height:46px;display:block}.pieWrap{display:flex;justify-content:center;align-items:center}.pieWrap canvas{max-width:none}.item .sub{margin-top:6px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.timeline{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:25;display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 26px rgba(0,0,0,.08);width:min(920px,calc(100vw - 28px));pointer-events:auto}.timeline.hidden{display:none}.playBtn{width:42px;height:42px;border-radius:14px;border:1px solid var(--border);background:#fff;box-shadow:0 8px 18px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600;color:#111}.playBtn:active{transform:translateY(1px)}.timeMain{flex:1;min-width:0}.timeTop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}.timeLabel{font-size:12px;color:var(--muted);font-weight:600}.timeYear{font-size:14px;font-weight:600;color:#111}#yearSlider{width:100%}body.cinematic #yearSlider{accent-color:#fff;filter:drop-shadow(0 6px 18px rgba(0,0,0,.25))}.tourCaseLabel{position:absolute;max-width:360px;padding:10px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,248,250,.96));border:1px solid rgba(0,0,0,.1);box-shadow:0 18px 44px rgba(0,0,0,.1);opacity:0;transform:translate(-9999px,-9999px) scale(.985);transition:opacity 420ms ease,transform 420ms ease;pointer-events:none}.tourCaseTitle{font-size:13px;font-weight:600;letter-spacing:.1px;color:#0f0f10}.tourCaseSub{margin-top:2px;font-size:12px;font-weight:500;color:rgba(17,17,17,.7)}#closeNodeLabel{position:fixed;inset:0;pointer-events:none;z-index:28;display:none}.closeNodeTag{position:absolute;padding:4px 8px;border-radius:10px;background:rgba(255,255,255,.88);border:1px solid rgba(0,0,0,.1);box-shadow:0 8px 18px rgba(0,0,0,.08);backdrop-filter:blur(6px);font:12px/1.2 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#111;white-space:nowrap;transform:translate(-50%,-110%);opacity:.95}body.cinematic #detailPanel,body.cinematic #dropZone,body.cinematic #searchBox,body.cinematic #statsBar,body.cinematic #toast,body.cinematic #uiToggle{display:none!important}body.cinematic #timelineBar{display:none!important}body.cinematic #timeYear{color:#fff;opacity:.95;letter-spacing:.02em}body.cinematic .playBtn{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18)}body.cinematic .playBtn:hover{background:rgba(255,255,255,.16)}body.cinematic input[type=range]{accent-color:#fff}body.cinematic #timeSlider{filter:drop-shadow(0 8px 16px rgba(0,0,0,.25))}#barTip{position:fixed;z-index:40;display:none;pointer-events:none;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.96);border:1px solid rgba(0,0,0,.12);box-shadow:0 12px 26px rgba(0,0,0,.1);font:12px/1.2 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#111}body.cinematic #playBtn{display:none!important}#timelineBar{position:fixed;left:50%;transform:translateX(-50%);bottom:120px;z-index:32;width:min(1120px,96vw);padding:10px 14px;background:rgba(255,255,255,.94);border:1px solid rgba(0,0,0,.1);box-shadow:0 18px 50px rgba(0,0,0,.1);backdrop-filter:blur(10px)}body.cinematic{--timelineBottom:148px}.hlLabel{position:absolute;transform:translate(-50%,-50%);min-width:286px;max-width:468px;padding:12px 13px 11px 13px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.1);border-top:3px solid var(--hlAccent,rgba(0,0,0,.3));border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.1);pointer-events:none;opacity:0;animation:hlFade 9s ease-in-out forwards;color:#111;text-align:center;backdrop-filter:blur(6px);will-change:left,top}.hlTitle{font-size:18px;font-weight:650;letter-spacing:.06px;margin-bottom:4px}.hlMeta{display:flex;align-items:baseline;justify-content:center;margin-bottom:5px}.hlYear{font-size:18px;font-weight:400;color:rgba(0,0,0,.7)}.hlCat{font-size:18px;font-weight:400;color:rgba(0,0,0,.7)}.hlCat::before{content:"•";margin:0 8px;color:rgba(0,0,0,.28)}.hlDesc{font-size:18px;line-height:1.35;color:rgba(0,0,0,.76)}#hlArrowLayer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.hlArrow{stroke:rgba(120,120,120,.85);stroke-width:2.6;fill:none;opacity:0;animation:hlArrowFade 9s ease-in-out forwards;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}@keyframes hlArrowFade{0%{opacity:0}18%{opacity:.92}82%{opacity:.92}100%{opacity:0}}@keyframes hlFade{0%{opacity:0;transform:translate(-50%,-50%) scale(.992)}18%{opacity:.92;transform:translate(-50%,-50%) scale(1)}82%{opacity:.92;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.996)}}#tourCallout.tourFade{animation:tourFade 5s ease-in-out forwards;transition:none!important}#tourDot.tourFade,#tourLine.tourFade{animation:tourFade 5s ease-in-out forwards}@keyframes tourFade{0%{opacity:0}10%{opacity:1}90%{opacity:1}100%{opacity:0}}#tourCallout .tourDesc,#tourCallout .tourSub{display:none}#tourCallout,#tourSvg{display:none!important}#clusterLabelLayer{position:fixed;inset:0;pointer-events:none;z-index:15}.clusterFloatLabel{position:fixed;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.08);box-shadow:0 12px 34px rgba(0,0,0,.08);backdrop-filter:blur(6px);color:rgba(0,0,0,.88);font-size:12px;font-weight:600;letter-spacing:.02em;left:-9999px;top:-9999px;transform:translate(-50%,-50%);opacity:0;transition:opacity 420ms ease;will-change:left,top,opacity,transform;user-select:none;pointer-events:none}.clusterFloatLabel.on{opacity:.92}.clusterFloatLabel .sw{width:11px;height:11px;border-radius:3px;flex:0 0 11px;box-shadow:0 0 0 1px rgba(0,0,0,.1) inset}#cinBtn{position:fixed;top:14px;left:62px;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.1);box-shadow:0 10px 22px rgba(0,0,0,.1);display:grid;place-items:center;cursor:pointer;z-index:15;user-select:none}#cinBtn:hover{box-shadow:0 12px 28px rgba(0,0,0,.14)}#cinBtn svg{width:22px;height:22px}#bottomDock>*{pointer-events:auto}#searchBox{position:relative!important;left:auto!important;bottom:auto!important;grid-column:1;justify-self:start}#timelineBar{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:var(--timelineBottom)!important;top:auto!important;z-index:14!important}#searchBox{position:fixed!important;left:14px!important;bottom:var(--timelineBottom)!important;z-index:14!important}#timelineBar{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:var(--timelineBottom)!important;top:auto!important;z-index:32!important}#searchBox{position:fixed!important;left:14px!important;bottom:var(--timelineBottom)!important;top:auto!important;z-index:32!important}#tourCaseLayer{position:fixed;inset:0;pointer-events:none;z-index:40}body.cinematic #tourCaseLayer{display:block!important}#cinemaCounter{position:fixed;left:50%;bottom:clamp(24px,calc(182px - 10vh),182px);transform:translateX(-50%);z-index:999999;font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;font-size:128px;font-weight:700;letter-spacing:.02em;color:#fff;opacity:0;pointer-events:none;user-select:none;display:block;will-change:opacity;transition:opacity 260ms ease;-webkit-text-stroke:3px #000;text-stroke:3px #000;-webkit-text-fill-color:#fff;text-shadow:none}body.cinematic #cinemaCounter{opacity:1}.cinematic #cinemaCounter{opacity:1}body:not(.cinematic) #cinemaCounter{display:none!important}body.counter-hidden #cinemaCounter{opacity:0!important}#cinemaCounter.tick{animation:yearTick .9s ease-in-out}@keyframes yearTick{0%{opacity:.82}40%{opacity:1}70%{opacity:.9}100%{opacity:1}}#legendBar{font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;position:fixed;left:50%;top:calc(18px + 2vh + env(safe-area-inset-top));bottom:auto;transform:translateX(-50%);z-index:999998;width:min(92vw,980px);padding:12px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.42),rgba(245,245,245,.22));border:1px solid rgba(0,0,0,.14);box-shadow:0 18px 50px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.65);backdrop-filter:blur(18px) saturate(1.25);display:none;gap:14px;align-items:center;justify-content:center;overflow:hidden;pointer-events:auto}#legendBar::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(1200px 80px at 20% 0,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),radial-gradient(900px 70px at 80% 100%,rgba(255,255,255,.22),rgba(255,255,255,0) 62%);opacity:.9;pointer-events:none}body.legend-on #legendBar{font-family:"Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:center;align-items:flex-start;max-height:min(42vh,360px);overflow:auto;padding-right:10px}.legendItem{display:flex;align-items:flex-start;gap:9px;white-space:normal;font:14px/1.15 "Source Sans Pro",Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#000;user-select:none;position:relative;z-index:1;max-width:min(240px,42vw);overflow-wrap:anywhere}.legendSw{width:14px;height:14px;border-radius:3px;border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);flex:0 0 14px;background:#000;position:relative;z-index:1}body.cinematic #legendToggle{display:none!important}.panel{display:none!important}#cinBtn,#cinemaCounter,#tourCaseLayer,#tourOverlay,#uiToggle{display:none!important}.spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:rgba(255,255,255,.85);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loadbar{width:260px;max-width:70vw;height:10px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);margin-top:10px}.loadbarFill{height:100%;width:35%;border-radius:999px;background:rgba(255,255,255,.85);animation:loadbar 1.15s ease-in-out infinite}@keyframes loadbar{0%{transform:translateX(-140%);opacity:.6}45%{opacity:.95}100%{transform:translateX(340%);opacity:.6}}</style><script type=importmap>{
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Case Citation Graph (3D)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root{
+      --bg:#ffffff; --panel:#ffffff; --border:#e6e6e6;
+      --text:#111111; --muted:#666666;
+      --shadow: 0 8px 18px rgba(0,0,0,.06);
+
+      --uiPad: 14px;
+      --searchW: clamp(260px, 34vw, 420px);
+      --timelineGap: 12px;
+      --searchH: 58px;
+    }
+html,body{height:100%; margin:0; background:var(--bg); color:var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    #app{position:fixed; inset:0; overflow:hidden; background:var(--bg);}
+    #canvasWrap{position:absolute; inset:0; background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,248,250,.96));}
+    canvas{display:block;}
+
+    /* Startup overlay */
+    #loadingOverlay{
+      position:absolute; inset:0; z-index:50;
+      background: rgba(255,255,255,.92);
+      display:flex; align-items:center; justify-content:center;
+      padding:20px;
+    }
+    #loadingOverlay.hidden{display:none;}
+    .startCard{
+      width:min(560px, 95vw);
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .startTop{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+    .startTitle{font-size:14px; font-weight:600; margin:0;}
+    .startSub{margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.4;}
+    .startActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+    .dropArea{
+      margin-top:14px;
+      border:1px dashed #cfcfcf;
+      border-radius:16px;
+      padding:14px;
+      background:#fbfbfb;
+    }
+    .dropArea.drag{background:#f0f6ff; border-color:#9dbbff;}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px; padding:2px 6px; border:1px solid #ddd; border-bottom-width:2px;
+      border-radius:8px; background:#fff;
+    }
+
+    /* UI Toggle */
+    #uiToggle{
+      position:absolute; top:14px; left:14px; z-index: 20;
+      width:40px; height:40px; border-radius:12px;
+      border:1px solid var(--border); background:#fff;
+      box-shadow: var(--shadow);
+      display:grid; place-items:center;
+      cursor:pointer; user-select:none;
+    }
+    #uiToggle:hover{background:#fafafa; border-color:#d0d0d0;}
+    #uiToggle svg{width:18px; height:18px;}
+
+    /* Panels */
+    .panel{
+      position:absolute; top:64px; left:14px; width:420px; max-height: calc(100% - 78px);
+      overflow:auto; background:var(--panel); border:1px solid var(--border);
+      border-radius:14px; box-shadow:var(--shadow); padding:12px 12px 10px;
+      z-index: 10;
+      display:none !important;
+    }
+    .detail{
+      position:absolute; top:14px; right:0px; width:440px; max-height: calc(100% - 28px);
+      overflow:auto; background:var(--panel); border:1px solid var(--border);
+      border-radius:14px; box-shadow:var(--shadow); padding:12px 12px 10px;
+      z-index: 11;
+    }
+    .detail.hidden{display:none;}
+
+    /* Hide side + stats by default (toggle button controls this) */
+    body.ui-hidden .panel{display:none;}
+    body.ui-hidden .stats{display:none;}
+
+    /* Controls */
+    .row{display:flex; gap:10px; align-items:center; margin:8px 0;}
+    .row > label{flex: 0 0 170px; font-size:12px; color:var(--muted);}
+    .row > input[type="range"]{flex:1;}
+    .row > input[type="number"]{width:96px;}
+    .row > select{flex:1;}
+    .row > input[type="checkbox"]{transform: translateY(1px); }
+
+    h1{font-size:14px; margin:0 0 8px; letter-spacing:.2px;}
+    h3{font-size:12px; margin:14px 0 8px; color:var(--muted); font-weight:600;}
+    .sub{font-size:12px; color:var(--muted); margin:0 0 10px; line-height:1.35;}
+
+    .btn{
+      appearance:none; border:1px solid var(--border); background:#fff; color:var(--text);
+      border-radius:10px; padding:8px 10px; font-size:12px; cursor:pointer;
+    }
+    .btn:hover{border-color:#d0d0d0; background:#fafafa;}
+    .btn.primary{border-color:#c7d7ff; background:#f3f7ff;}
+
+    .filebox{
+      border:1px dashed #cfcfcf; border-radius:12px; padding:10px; background:#fbfbfb;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .filebox.drag{background:#f0f6ff; border-color:#9dbbff;}
+    #fileInput{width:100%;}
+
+    .stats{
+      position:fixed; left:var(--uiPad); top:var(--uiPad); bottom:auto;
+      background:#fff; border:1px solid var(--border); border-radius:999px; padding:8px 10px;
+      box-shadow: var(--shadow); font-size:12px; color:var(--text);
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      z-index: 12;
+    }
+    .pill{padding:3px 8px; border-radius:999px; background:#f5f5f5; border:1px solid #ededed; color:#222;}
+    .pill b{font-weight:600;}
+
+    .legend{ margin-top:10px; border-top:1px solid var(--border); padding-top:10px; font-family: "Source Sans Pro", Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    .legendHead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;}
+    .legendHead h2{font-size:12px; margin:0; color:var(--muted); font-weight:600;}
+    .legendList{display:flex; flex-direction:column; gap:6px;}
+    .legItem{display:flex; align-items:flex-start; gap:8px; font-size:12px;}
+    .swatch{width:12px; height:12px; border-radius:3px; border:1px solid rgba(0,0,0,.15);}
+    .legName{flex:1; white-space:normal; overflow:visible; text-overflow:clip; overflow-wrap:anywhere;}
+    .legCount{color:var(--muted); font-variant-numeric: tabular-nums;}
+    .colorGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:8px;
+      margin-top:8px;
+    }
+    .colorRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+    }
+    .colorRow .cName{
+      flex:1;
+      font-size:12px;
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .colorRow input[type="color"]{
+      width:34px; height:26px;
+      border:none;
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+    }
+    .colorRow button{
+      width:34px; height:30px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-size:12px;
+      line-height:1;
+    }
+    .colorRow button:hover{ background:#fafafa; border-color:#d0d0d0; }
+
+
+    .hint{font-size:11px; color:var(--muted); line-height:1.35; margin-top:8px;}
+    details{border-top:1px solid var(--border); margin-top:10px; padding-top:10px;}
+    summary{cursor:pointer; font-size:12px; color:var(--muted); user-select:none;}
+
+    .toast{
+      position:absolute; right:14px; top:14px;
+      background:#fff; border:1px solid var(--border); border-radius:12px;
+      padding:10px 12px; box-shadow:var(--shadow); font-size:12px; max-width:520px;
+      z-index: 30;
+    }
+    .toast.hidden{display:none;}
+
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+
+    /* Detail panel styling */
+    .detailHeader{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      padding-bottom:10px; border-bottom:1px solid var(--border);
+    }
+    .titleBlock{min-width:0;}
+    .titleLine{display:flex; align-items:center; gap:10px; min-width:0;}
+    .titleLine .swatch{flex:0 0 auto;}
+    #detailTitle{
+      font-weight:600; font-size:14px; line-height:1.2;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    #detailCluster{font-size:11px; color:var(--muted); margin-top:4px;}
+    .closeX{
+      width:34px; height:34px; border-radius:12px;
+      border:1px solid #ffd0d0; background:#fff5f5; cursor:pointer;
+      display:grid; place-items:center; flex:0 0 auto;
+    }
+    .closeX:hover{background:#ffecec; border-color:#ffb8b8;}
+    .closeX svg{width:16px; height:16px;}
+    .kmeta{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0 4px;}
+    .kmeta .pill{background:#f7f7f7;}
+
+    .listWrap{border:1px solid var(--border); border-radius:14px; overflow:hidden; background:#fff;}
+    .listHead{display:flex; gap:8px; padding:10px; border-bottom:1px solid var(--border); align-items:center;}
+    .listHead input{
+      flex:1; border:1px solid var(--border); border-radius:12px;
+      padding:10px 12px; font-size:12px; outline:none;
+      background:#fff;
+    }
+    .list{max-height:280px; overflow:auto;}
+
+    .item{
+      padding:10px 12px; border-bottom:1px solid #f0f0f0; cursor:pointer;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      transition: filter .12s ease, transform .08s ease;
+    }
+    .item:hover{filter: brightness(0.98); transform: translateY(-1px);}
+    .item:last-child{border-bottom:none;}
+    .item .name{font-size:12px; line-height:1.25; font-weight:600;}
+
+    /* Reception backgrounds (neutral should be grey) */
+    .rec-positive{ background:#e9fff3; border-left:5px solid #1b8a5a; }
+    .rec-neutral{  background:#f1f3f4; border-left:5px solid #9aa0a6; }
+    .rec-mixed{    background:#fff2e6; border-left:5px solid #f39c12; }
+    .rec-negative{ background:#ffecec; border-left:5px solid #d23f31; }
+
+
+    /* Bottom-left search box */
+    #searchBox{
+      position: fixed; left: var(--uiPad); bottom: var(--uiPad); z-index:14;
+      width: var(--searchW); max-width: calc(100vw - (var(--uiPad) * 2));
+      display:flex; align-items:center; gap:8px;
+      background:#fff; border:1px solid var(--border);
+      border-radius:14px; box-shadow: var(--shadow);
+    }
+    #searchBox input{
+      flex:1; border:1px solid var(--border); border-radius:12px;
+      padding:10px 12px; font-size:12px; outline:none; background:#fff;
+    }
+    #searchBox button{
+      width:44px; height:40px; border-radius:12px;
+      border:1px solid var(--border); background:#fff; cursor:pointer;
+      font-size:14px;
+    }
+    #searchBox button:hover{background:#fafafa; border-color:#d0d0d0;}
+    #searchResults{
+      position:absolute; left:8px; right:8px; bottom:56px;
+      background:#fff; border:1px solid var(--border);
+      border-radius:14px; box-shadow: var(--shadow);
+      overflow:hidden; max-height: 280px;
+    }
+    #searchResults.hidden{display:none;}
+    .sItem{
+      padding:10px 12px; border-bottom:1px solid #f0f0f0; cursor:pointer;
+      display:flex; gap:10px; align-items:flex-start;
+    }
+    .sItem:hover{background:#fafafa;}
+    .sItem:last-child{border-bottom:none;}
+    .sName{font-size:12px; font-weight:600; line-height:1.2; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .sMeta{font-size:11px; color:var(--muted); white-space:nowrap;}
+
+  
+    .pieWrap{
+      margin:8px 0 10px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fff;
+      padding:10px;
+    }
+    .pieWrap canvas{width:100%; height:46px; display:block;}
+
+    .pieWrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .pieWrap canvas{max-width:none;}
+    .item .sub{
+      margin-top:6px;
+      font-size:11px;
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+  
+    .timeline{
+      position:fixed;
+      left: 50%;
+      bottom: max(calc(var(--uiPad) + var(--searchH) + var(--timelineGap)), calc(var(--uiPad) + 10vh));
+      transform: translateX(-50%);
+      z-index:25;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      background:#ffffff;
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:0 10px 26px rgba(0,0,0,.08);
+      width: clamp(320px, 60vw, 720px);
+      max-width: calc(100vw - (var(--uiPad) * 2));
+      pointer-events:auto;
+    }
+    .timeline.hidden{display:none;}
+    .playBtn{
+      width:42px; height:42px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      box-shadow:0 8px 18px rgba(0,0,0,.06);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      font-weight:600;
+      color:#111;
+    }
+    .playBtn:active{transform:translateY(1px);} 
+    
+    .timeMain{flex:1; min-width:0;}
+    .timeTop{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
+    .timeLabel{font-size:12px; color:var(--muted); font-weight:600;}
+    .timeYear{font-size:14px; font-weight:600; color:#111;}
+    #yearSlider{width:100%;}
+
+
+    /* Cinematic mode */
+    body.cinematic #yearSlider{
+      accent-color: #ffffff;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,.25));
+    }
+
+    /* Guided tour: case labels */
+    .tourCaseLabel{
+      position:absolute;
+      max-width: 360px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,248,250,.96));
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: 0 18px 44px rgba(0,0,0,.10);
+      opacity:0;
+      transform: translate(-9999px,-9999px) scale(.985);
+      transition: opacity 420ms ease, transform 420ms ease;
+      pointer-events:none;
+    }
+    .tourCaseTitle{ font-size: 13px; font-weight: 600; letter-spacing: .1px; color:#0f0f10; }
+    .tourCaseSub{ margin-top:2px; font-size: 12px; font-weight: 500; color: rgba(17,17,17,.70); }
+
+    /* Close-up node label */
+    #closeNodeLabel{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index: 28;
+      display:none;
+    }
+    .closeNodeTag{
+      position:absolute;
+      padding: 4px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: 0 8px 18px rgba(0,0,0,.08);
+      backdrop-filter: blur(6px);
+      font: 12px/1.2 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:#111;
+      white-space:nowrap;
+      transform: translate(-50%, -110%);
+      opacity: .95;
+    }
+
+
+    /* Cinematic mode (fullscreen + minimal UI) */
+    body.cinematic #uiToggle,
+    body.cinematic #dropZone,
+    body.cinematic #detailPanel,
+    body.cinematic #statsBar,
+    body.cinematic #searchBox,
+    body.cinematic #toast{
+      display:none !important;
+    }
+
+    body.cinematic #timelineBar{
+  display:flex !important;
+  position:fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(calc(var(--uiPad) + var(--searchH) + var(--timelineGap)), calc(var(--uiPad) + 10vh)) !important;
+  top:auto !important;
+  transform: translateX(-50%) !important;
+  width: clamp(320px, 60vw, 720px) !important;
+  max-width: calc(100vw - (var(--uiPad) * 2)) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  z-index: 25 !important;
+}
+#statsBar{
+  position:fixed !important;
+  left: var(--uiPad) !important;
+  top: var(--uiPad) !important;
+  bottom:auto !important;
+  z-index: 30 !important;
+}
+.detail{
+  right: 0px !important;
+}
+
+
+    /* ===== Legend bar (cluster names) ===== */
+    #legendBar{
+      font-family: "Source Sans Pro", Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      position: fixed;
+      left: 50%;
+      top: calc(var(--uiPad) + env(safe-area-inset-top));
+      transform: translateX(-50%);
+      z-index: 26;
+
+      width: min(92vw, 980px);
+      padding: 10px 12px;
+      border-radius: 18px;
+
+      background: linear-gradient(135deg, rgba(255,255,255,0.52), rgba(245,245,245,0.28));
+      border: 1px solid rgba(0,0,0,0.14);
+      box-shadow:
+        0 18px 50px rgba(0,0,0,0.14),
+        inset 0 1px 0 rgba(255,255,255,0.65);
+      backdrop-filter: blur(16px) saturate(1.20);
+
+      display: none;
+      gap: 10px 14px;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      max-height: min(42vh, 360px);
+      overflow: auto;
+      padding-right: 12px; /* room for scrollbar */
+      pointer-events: auto;
+    }
+    #legendBar::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius: inherit;
+      background:
+        radial-gradient(1200px 80px at 20% 0%, rgba(255,255,255,0.55), rgba(255,255,255,0.00) 60%),
+        radial-gradient(900px 70px at 80% 100%, rgba(255,255,255,0.22), rgba(255,255,255,0.00) 62%);
+      opacity: 0.9;
+      pointer-events:none;
+    }
+    body.legend-on #legendBar{ display: flex; }
+
+    .legendItem{
+      display:flex;
+      align-items:flex-start;
+      gap: 8px;
+      white-space: normal;
+      font: 12px/1.15 "Source Sans Pro", Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: #111;
+      user-select: none;
+      position: relative;
+      z-index: 1; /* above ::before sheen */
+      max-width: min(240px, 42vw);
+      overflow-wrap: anywhere;
+    }
+    .legendSw{
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 0;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+      flex: 0 0 12px;
+      background: #000;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Visual feedback for the legend toggle button */
+    #legendToggle[aria-pressed="true"]{
+      background:#f3f7ff;
+      border-color:#c7d7ff;
+    }
+
+    @media (max-width: 820px){
+      #legendBar{ width: min(92vw, 560px); }
+      .legendItem{ max-width: min(220px, 44vw); }
+    }
+
+</style>
+<script type="importmap">
+  {
     "imports": {
       "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
       "three/examples/jsm/controls/OrbitControls.js": "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js",
       "three/examples/jsm/renderers/CSS2DRenderer.js": "https://unpkg.com/three@0.160.0/examples/jsm/renderers/CSS2DRenderer.js"
     }
-  }</script><script>window.docs_final=window.docs_final||[]</script><div id=app><div id=canvasWrap></div><div id=loadingOverlay><div class=startCard><div class=startTop><div><p class=startTitle>Loading case graph…<p class=startSub style=margin:0>Preparing viewer…<div class=loadbar aria-label=Loading role=progressbar><div class=loadbarFill></div></div></div></div><div class=startSub style=margin-top:14px;color:var(--muted);font-size:12px;line-height:1.4><div><b>Controls</b>: drag rotate • scroll zoom • double‑click node focus • double‑click empty reset</div></div></div></div><div class=panel><h1>Case Citation Graph (3D)</h1><p class=sub>Double‑click a node to <b>zoom + isolate its neighborhood</b>. Double‑click the <b>same node again</b> to return to the full graph.<div class=row><label>Hide isolates</label> <input id=hideIsolates type=checkbox> <span style=font-size:12px;color:var(--muted)>Drop cases with 0 in/out links</span></div><div class=row><label>Show neutral links</label> <input id=showNeutral type=checkbox checked> <span style=font-size:12px;color:var(--muted)>Neutral uses same opacity</span></div><div class=row><label>Position scale</label> <input id=posScale type=range max=15000 min=100 step=10 value=4500> <input id=posScaleNum type=number max=15000 min=100 step=10 value=4500></div><div class=row><label>Jitter</label> <input id=jitter type=range max=80 min=0 step=1 value=50> <input id=jitterNum type=number max=80 min=0 step=1 value=50></div><div class=row><label>Node size scale</label> <input id=nodeScale type=range max=5 min=0.6 step=0.1 value=1.3> <input id=nodeScaleNum type=number max=5 min=0.6 step=0.1 value=1.3></div><div class=row><label>Link width</label> <input id=linkWidth type=range max=10 min=0.2 step=0.2 value=1> <input id=linkWidthNum type=number max=10 min=0.2 step=0.2 value=1></div><div class=row><label>Link opacity</label> <input id=linkOpacity type=range max=1 min=0.01 step=0.01 value=0.3> <input id=linkOpacityNum type=number max=1 min=0.01 step=0.01 value=0.3></div><div class=row><label>Arrow size</label> <input id=arrowSize type=range max=40 min=4 step=1 value=15> <input id=arrowSizeNum type=number max=40 min=4 step=1 value=15></div><div class=row><label>Arrow opacity</label> <input id=arrowOpacity type=range max=1 min=0.01 step=0.01 value=0.5> <input id=arrowOpacityNum type=number max=1 min=0.01 step=0.01 value=0.5></div><details open><summary>Advanced layout & direction cues</summary><div class=row><label>Cluster separation</label> <input id=clusterSep type=range max=2600 min=0 step=20 value=0> <input id=clusterSepNum type=number max=2600 min=0 step=20 value=0></div><div class=row><label>IP offset X</label> <input id=ipOffsetX type=range max=10000 min=-10000 step=50 value=0> <input id=ipOffsetXNum type=number max=10000 min=-10000 step=50 value=0></div><div class=row><label>IP offset Y</label> <input id=ipOffsetY type=range max=10000 min=-10000 step=50 value=0> <input id=ipOffsetYNum type=number max=10000 min=-10000 step=50 value=0></div><div class=row><label>IP offset Z</label> <input id=ipOffsetZ type=range max=10000 min=-10000 step=50 value=0> <input id=ipOffsetZNum type=number max=10000 min=-10000 step=50 value=0></div><div class=row><label>Close-up node labels</label> <input id=closeLabels type=checkbox checked></div><div class=row><label>Animated flow dots</label> <input id=flowOn type=checkbox checked> <span style=font-size:12px;color:var(--muted)>Direction cue</span></div><div class=row><label>Flow dot size</label> <input id=flowSize type=range max=10 min=1 step=1 value=10> <input id=flowSizeNum type=number max=10 min=1 step=1 value=10></div><div class=row><label>Flow speed</label> <input id=flowSpeed type=range max=2.5 min=0.05 step=0.05 value=0.05> <input id=flowSpeedNum type=number max=2.5 min=0.05 step=0.05 value=0.05></div><div class=row><label>Flow cap</label> <input id=flowCap type=range max=80000 min=2000 step=1000 value=80000> <input id=flowCapNum type=number max=80000 min=2000 step=1000 value=80000></div></details><details open><summary>Guided tour animation</summary><div class=row><label>Rotation speed</label> <input id=tourRotSpeed type=range max=0.8 min=0 step=0.01 value=0.16> <input id=tourRotSpeedNum type=number max=0.8 min=0 step=0.01 value=0.16></div><div class=row><label>Zoom in/out</label> <input id=tourZoomAmp type=range max=0.8 min=0 step=0.01 value=0.35> <input id=tourZoomAmpNum type=number max=0.8 min=0 step=0.01 value=0.35></div><div class=row><label>Tilt</label> <input id=tourTilt type=range max=0.5 min=0 step=0.01 value=0.16> <input id=tourTiltNum type=number max=0.5 min=0 step=0.01 value=0.16></div><div class=row><label>Wobble</label> <input id=tourWobble type=range max=0.25 min=0 step=0.01 value=0.07> <input id=tourWobbleNum type=number max=0.25 min=0 step=0.01 value=0.07></div><div class=row><label>Roll</label> <input id=tourRollAmp type=range max=0.8 min=0 step=0.01 value=0.30> <input id=tourRollAmpNum type=number max=0.8 min=0 step=0.01 value=0.30></div><div class=row><label>Year steps/sec</label> <input id=tourYearRate type=range max=6 min=0.5 step=0.1 value=2.0> <input id=tourYearRateNum type=number max=6 min=0.5 step=0.1 value=2.0></div><div class=row><label>Post‑roll (sec)</label> <input id=tourPostRoll type=range max=20 min=0 step=0.5 value=10> <input id=tourPostRollNum type=number max=20 min=0 step=0.5 value=10></div><div class=hint>These affect the guided tour/cinematic camera motion.</div></details><div class=row><label>Link rendering</label> <select id=linkMode><option value=all selected>All links<option value=local>Local (selected + neighbors)<option value=sampled>Sampled cap</select></div><div class=row><label>Sample cap</label> <input id=sampleCap type=range max=80000 min=2000 step=1000 value=80000> <input id=sampleCapNum type=number max=80000 min=2000 step=1000 value=80000></div><div class=legend><div class=legendHead><h2>Cluster groups</h2><div style=display:flex;gap:8px><button class=btn id=allOnBtn type=button>All on</button> <button class=btn id=allOffBtn type=button>All off</button></div></div><div class=legendList id=legendList></div><div class=colorTools id=colorTools><div class=legendHead style=margin-top:10px><h2 style=font-size:12px;margin:0;color:var(--muted);font-weight:600>Cluster colors</h2><div style=display:flex;gap:8px><button class=btn id=colorsRandomizeBtn type=button>Randomise</button> <button class=btn id=colorsResetBtn type=button>Reset</button></div></div><div class=colorGrid id=clusterColorEditor></div><div class=hint style=margin-top:8px>Pick colors per cluster name, or Randomise for a fresh high-contrast set. Saved locally in this browser.</div></div></div></div><div class="hidden detail"id=detailPanel><div class=detailHeader><div class=titleBlock><div class=titleLine><div class=swatch id=detailSwatch></div><div id=detailTitle>—</div></div><div style=display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap><div class=swatch id=detailClusterSwatch></div><div id=detailCluster>—</div><div style=color:var(--muted);font-size:12px>•</div><div id=detailYear style=color:var(--muted);font-size:12px>—</div></div></div><button class=closeX id=closeDetailBtn type=button title=Close><svg fill=none stroke=#d23f31 stroke-linecap=round stroke-width=2.4 viewbox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div><div class=kmeta><span class=pill>In: <b id=detailIn>0</b></span> <span class=pill>Out: <b id=detailOut>0</b></span> <span class=pill>Neighbors: <b id=detailNbr>0</b></span></div><h3>Cites (outgoing)</h3><div class=listWrap><div class=listHead><input id=outFilter placeholder="Filter outgoing by name or key…"></div><div class=list id=outList></div></div><h3>Cited by (incoming)</h3><div class=listWrap><div class=listHead><input id=inFilter placeholder="Filter incoming by name or key…"></div><div class=list id=inList></div></div><h3>Nearest semantic neighbours</h3><div class=listWrap><div class=listHead><input id=semSearchInput placeholder="Search a case to view neighbours (name or key)…"></div><div class=list id=semList></div></div></div><div class=stats id=statsBar><span class=pill><b id=statVisibleCases>0</b>/<span id=statTotalCases>0</span> cases visible</span> <span class=pill><b id=statVisibleLinks>0</b>/<span id=statTotalLinks>0</span> links (visible endpoints)</span> <span class=pill><b id=statDrawnLinks>0</b> drawn</span> <span class=pill><b id=statRawCitations>0</b> raw citations</span> <span class=pill><b id=statUnresolved>0</b> unresolved</span></div><div class="hidden toast"id=toast></div></div><script type=module>import * as THREE from 'three';
+  }
+  </script>
+<script>
+  // Data is injected via `window.docs_final` (inline) or via `postMessage` / `window.setDocsFinal`.
+  // This build does NOT support loading .jsonl files from disk.
+  // Shape:
+  //   window.docs_final = [{ name, key, citations, year, coords, cluster_name, cluster_keywords, cluster_id }, ...];
+  window.docs_final = window.docs_final || [];
+</script>
+</head>
+<body>
+<div id="app">
+<div id="canvasWrap"></div>
+<!-- Start overlay: ask for JSONL -->
+<!-- Loading overlay: waits for docs_final injection -->
+<div id="loadingOverlay">
+  <div class="startCard">
+    <div class="startTop">
+      <div>
+        <p class="startTitle">Loading case graph…</p>
+        <p class="startSub" style="margin:0;">Preparing viewer…</p>
+        <div class="loadbar" role="progressbar" aria-label="Loading">
+          <div class="loadbarFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="startSub" style="margin-top:14px; color:var(--muted); font-size:12px; line-height:1.4;">
+      <div><b>Controls</b>: drag rotate • scroll zoom • double‑click node focus • double‑click empty reset</div>
+    </div>
+  </div>
+</div>
+<div class="panel">
+<h1>Case Citation Graph (3D)</h1>
+<p class="sub">
+      Double‑click a node to <b>zoom + isolate its neighborhood</b>.
+      Double‑click the <b>same node again</b> to return to the full graph.
+    </p>
+
+<div class="row">
+<label>Hide isolates</label>
+<input id="hideIsolates" type="checkbox"/>
+<span style="font-size:12px;color:var(--muted)">Drop cases with 0 in/out links</span>
+</div>
+<div class="row">
+<label>Show neutral links</label>
+<input checked="" id="showNeutral" type="checkbox"/>
+<span style="font-size:12px;color:var(--muted)">Neutral uses same opacity</span>
+</div>
+<div class="row">
+<label>Position scale</label>
+<input id="posScale" max="15000" min="100" step="10" type="range" value="4500"/>
+<input id="posScaleNum" max="15000" min="100" step="10" type="number" value="4500"/>
+</div>
+<div class="row">
+<label>Jitter</label>
+<input id="jitter" max="80" min="0" step="1" type="range" value="50"/>
+<input id="jitterNum" max="80" min="0" step="1" type="number" value="50"/>
+</div>
+<div class="row">
+<label>Node size scale</label>
+<input id="nodeScale" max="5" min="0.6" step="0.1" type="range" value="1.3"/>
+<input id="nodeScaleNum" max="5" min="0.6" step="0.1" type="number" value="1.3"/>
+</div>
+<div class="row">
+<label>Link width</label>
+<input id="linkWidth" max="10" min="0.2" step="0.2" type="range" value="1"/>
+<input id="linkWidthNum" max="10" min="0.2" step="0.2" type="number" value="1"/>
+</div>
+<div class="row">
+<label>Link opacity</label>
+<input id="linkOpacity" max="1" min="0.01" step="0.01" type="range" value="0.3"/>
+<input id="linkOpacityNum" max="1" min="0.01" step="0.01" type="number" value="0.3"/>
+</div>
+<div class="row">
+<label>Arrow size</label>
+<input id="arrowSize" max="40" min="4" step="1" type="range" value="15"/>
+<input id="arrowSizeNum" max="40" min="4" step="1" type="number" value="15"/>
+</div>
+<div class="row">
+<label>Arrow opacity</label>
+<input id="arrowOpacity" max="1" min="0.01" step="0.01" type="range" value="0.5"/>
+<input id="arrowOpacityNum" max="1" min="0.01" step="0.01" type="number" value="0.5"/>
+</div>
+<details open="">
+<summary>Advanced layout &amp; direction cues</summary>
+<div class="row">
+<label>Cluster separation</label>
+<input id="clusterSep" max="2600" min="0" step="20" type="range" value="0"/>
+<input id="clusterSepNum" max="2600" min="0" step="20" type="number" value="0"/>
+</div>
+<div class="row">
+<label>IP offset X</label>
+<input id="ipOffsetX" max="10000" min="-10000" step="50" type="range" value="0"/>
+<input id="ipOffsetXNum" max="10000" min="-10000" step="50" type="number" value="0"/>
+</div>
+<div class="row">
+<label>IP offset Y</label>
+<input id="ipOffsetY" max="10000" min="-10000" step="50" type="range" value="0"/>
+<input id="ipOffsetYNum" max="10000" min="-10000" step="50" type="number" value="0"/>
+</div>
+<div class="row">
+<label>IP offset Z</label>
+<input id="ipOffsetZ" max="10000" min="-10000" step="50" type="range" value="0"/>
+<input id="ipOffsetZNum" max="10000" min="-10000" step="50" type="number" value="0"/>
+</div>
+<div class="row">
+<label>Close-up node labels</label>
+<input checked="" id="closeLabels" type="checkbox"/>
+</div>
+<div class="row">
+<label>Animated flow dots</label>
+<input checked="" id="flowOn" type="checkbox"/>
+<span style="font-size:12px;color:var(--muted)">Direction cue</span>
+</div>
+<div class="row">
+<label>Flow dot size</label>
+<input id="flowSize" max="10" min="1" step="1" type="range" value="10"/>
+<input id="flowSizeNum" max="10" min="1" step="1" type="number" value="10"/>
+</div>
+<div class="row">
+<label>Flow speed</label>
+<input id="flowSpeed" max="2.5" min="0.05" step="0.05" type="range" value="0.05"/>
+<input id="flowSpeedNum" max="2.5" min="0.05" step="0.05" type="number" value="0.05"/>
+</div>
+<div class="row">
+<label>Flow cap</label>
+<input id="flowCap" max="80000" min="2000" step="1000" type="range" value="80000"/>
+<input id="flowCapNum" max="80000" min="2000" step="1000" type="number" value="80000"/>
+</div>
+
+</details>
+<details open>
+<summary>Guided tour animation</summary>
+<div class="row">
+<label>Rotation speed</label>
+<input id="tourRotSpeed" max="0.8" min="0" step="0.01" type="range" value="0.16"/>
+<input id="tourRotSpeedNum" max="0.8" min="0" step="0.01" type="number" value="0.16"/>
+</div>
+<div class="row">
+<label>Zoom in/out</label>
+<input id="tourZoomAmp" max="0.8" min="0" step="0.01" type="range" value="0.35"/>
+<input id="tourZoomAmpNum" max="0.8" min="0" step="0.01" type="number" value="0.35"/>
+</div>
+<div class="row">
+<label>Tilt</label>
+<input id="tourTilt" max="0.5" min="0" step="0.01" type="range" value="0.16"/>
+<input id="tourTiltNum" max="0.5" min="0" step="0.01" type="number" value="0.16"/>
+</div>
+<div class="row">
+<label>Wobble</label>
+<input id="tourWobble" max="0.25" min="0" step="0.01" type="range" value="0.07"/>
+<input id="tourWobbleNum" max="0.25" min="0" step="0.01" type="number" value="0.07"/>
+</div>
+<div class="row">
+<label>Roll</label>
+<input id="tourRollAmp" max="0.8" min="0" step="0.01" type="range" value="0.30"/>
+<input id="tourRollAmpNum" max="0.8" min="0" step="0.01" type="number" value="0.30"/>
+</div>
+<div class="row">
+<label>Year steps/sec</label>
+<input id="tourYearRate" max="6" min="0.5" step="0.1" type="range" value="2.0"/>
+<input id="tourYearRateNum" max="6" min="0.5" step="0.1" type="number" value="2.0"/>
+</div>
+<div class="row">
+<label>Post‑roll (sec)</label>
+<input id="tourPostRoll" max="20" min="0" step="0.5" type="range" value="10"/>
+<input id="tourPostRollNum" max="20" min="0" step="0.5" type="number" value="10"/>
+</div>
+<div class="hint">These affect the guided tour/cinematic camera motion.</div>
+</details>
+<div class="row">
+<label>Link rendering</label>
+
+<select id="linkMode">
+<option selected="" value="all">All links</option>
+<option value="local">Local (selected + neighbors)</option>
+<option value="sampled">Sampled cap</option>
+</select>
+</div>
+<div class="row">
+<label>Sample cap</label>
+<input id="sampleCap" max="80000" min="2000" step="1000" type="range" value="80000"/>
+<input id="sampleCapNum" max="80000" min="2000" step="1000" type="number" value="80000"/>
+</div>
+<div class="legend">
+<div class="legendHead">
+<h2>Cluster groups</h2>
+<div style="display:flex; gap:8px;">
+<button class="btn" id="allOnBtn" type="button">All on</button>
+<button class="btn" id="allOffBtn" type="button">All off</button>
+</div>
+</div>
+<div class="legendList" id="legendList"></div>
+<div class="colorTools" id="colorTools">
+  <div class="legendHead" style="margin-top:10px;">
+    <h2 style="font-size:12px; margin:0; color:var(--muted); font-weight:600;">Cluster colors</h2>
+    <div style="display:flex; gap:8px;">
+      <button class="btn" id="colorsRandomizeBtn" type="button">Randomise</button>
+      <button class="btn" id="colorsResetBtn" type="button">Reset</button>
+    </div>
+  </div>
+  <div class="colorGrid" id="clusterColorEditor"></div>
+  <div class="hint" style="margin-top:8px;">Pick colors per cluster name, or Randomise for a fresh high-contrast set. Saved locally in this browser.</div>
+</div>
+
+</div>
+</div>
+<!-- Right-side detail panel (shown on double-click) -->
+<div class="detail hidden" id="detailPanel">
+<div class="detailHeader">
+<div class="titleBlock">
+<div class="titleLine">
+<div class="swatch" id="detailSwatch"></div>
+<div id="detailTitle">—</div>
+</div>
+<div style="display:flex; align-items:center; gap:10px; margin-top:6px; flex-wrap:wrap;">
+<div class="swatch" id="detailClusterSwatch"></div>
+<div id="detailCluster">—</div>
+<div style="color:var(--muted); font-size:12px;">•</div>
+<div id="detailYear" style="color:var(--muted); font-size:12px;">—</div>
+</div>
+</div>
+<button class="closeX" id="closeDetailBtn" title="Close" type="button">
+<svg fill="none" stroke="#d23f31" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M6 6l12 12M18 6L6 18"></path>
+</svg>
+</button>
+</div>
+<div class="kmeta">
+<span class="pill">In: <b id="detailIn">0</b></span>
+<span class="pill">Out: <b id="detailOut">0</b></span>
+<span class="pill">Neighbors: <b id="detailNbr">0</b></span>
+</div>
+<h3>Cites (outgoing)</h3>
+<div class="listWrap">
+<div class="listHead">
+<input id="outFilter" placeholder="Filter outgoing by name or key…"/>
+</div>
+<div class="list" id="outList"></div>
+</div>
+<h3>Cited by (incoming)</h3>
+<div class="listWrap">
+<div class="listHead">
+<input id="inFilter" placeholder="Filter incoming by name or key…"/>
+</div>
+<div class="list" id="inList"></div>
+</div>
+<h3>Nearest semantic neighbours</h3>
+<div class="listWrap">
+<div class="listHead">
+<input id="semSearchInput" placeholder="Search a case to view neighbours (name or key)…"/>
+</div>
+<div class="list" id="semList"></div>
+</div>
+</div>
+<div class="stats" id="statsBar">
+<span class="pill">Cases visible: <b id="statVisibleCases">0</b></span>
+<span class="pill">Links visible: <b id="statVisibleLinks">0</b></span>
+</div>
+<div class="toast hidden" id="toast"></div>
+</div>
+<script type="module">
+
+  import * as THREE from 'three';
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
@@ -221,7 +996,9 @@ function applyLegendVisibility(){
   document.body.classList.toggle('legend-on', show);
   const lb = document.getElementById('legendBar');
   if (lb) lb.setAttribute('aria-hidden', show ? 'false' : 'true');
-  try{ localStorage.setItem('legendOn', legendEnabled ? '1' : '0'); }catch(e){}
+    const tgl = document.getElementById('legendToggle');
+  if (tgl) tgl.setAttribute('aria-pressed', show ? 'true' : 'false');
+try{ localStorage.setItem('legendOn', legendEnabled ? '1' : '0'); }catch(e){}
 }
 
 function buildLegendItems(){
@@ -1375,83 +2152,124 @@ function advanceTourYears(steps){
   }
 
 
-  // Keep bottom-left search and timeline vertically aligned (center-to-center)
-  function syncSearchTimelineCenter(){
-    const sb = $('searchBox');
+  
+  function initTimelineUI(){
     const tb = $('timelineBar');
-    if (!sb || !tb || tb.classList.contains('hidden')) return;
-    const tr = tb.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight || 0;
-    const centerY = tr.top + tr.height/2;
-    const bh = (sb.getBoundingClientRect().height || sb.offsetHeight || 0);
-    const bottom = Math.max(8, (vh - centerY) - bh/2);
-    sb.style.bottom = bottom + 'px';
-  }
+    if (!tb) return;
+    tb.classList.remove('hidden');
 
-function initTimelineUI(){
-  const tb = $('timelineBar');
-  if (!tb) return;
-  tb.classList.remove('hidden');
+    // Update slider bounds based on yearsWithCases
+    const slider = $('yearSlider');
+    if (slider){
+      slider.min = '0';
+      slider.max = String(Math.max(0, yearsWithCases.length - 1));
+      slider.step = '1';
+      slider.value = String(Math.min(yearIdx, Math.max(0, yearsWithCases.length - 1)));
+    }
 
-  const slider = $('yearSlider');
-  if (!slider) return;
-  slider.min = 0;
-  slider.max = Math.max(0, yearsWithCases.length - 1);
-  slider.step = 1;
+    // Wire handlers only once
+    if (tb.dataset && tb.dataset.wiredTimeline === '1'){
+      syncSearchTimelineCenter();
+      return;
+    }
+    if (tb.dataset) tb.dataset.wiredTimeline = '1';
 
-  slider.addEventListener('input', ()=>{
-    // manual scrub: jump immediately (keeps playing if currently playing)
-    yearIdx = Number(slider.value);
-    yearMax = yearsWithCases[yearIdx];
-    updateTimelineUI();
-    applyFiltersAndRender(false);
-  });
-
-  const pb = $('playBtn');
-  if (pb && !pb._bound){
-    pb.addEventListener('click', (ev)=>{
-      if (!yearModeHasData || yearsWithCases.length === 0) return;
-
-      // Shift+click resets to the beginning and stops.
-      if (ev && ev.shiftKey){
-        stopYearPlayback();
-        yearIdx = 0;
+        if (slider){
+      const setYearFromSlider = ()=>{
+        const v = parseInt(slider.value || '0', 10);
+        yearIdx = Math.max(0, Math.min(Number.isFinite(v) ? v : 0, Math.max(0, yearsWithCases.length - 1)));
         yearMax = yearsWithCases[yearIdx];
         updateTimelineUI();
         applyFiltersAndRender(false);
-        return;
-      }
+      };
 
-      if (isPlaying){ stopYearPlayback(); return; }
+      // Prevent OrbitControls / canvas listeners from interfering with range dragging in embedded webviews
+      slider.addEventListener('pointerdown', (e)=>{ stopYearPlayback(); if (slider.dataset) slider.dataset.dragging='1'; e.stopPropagation(); }, { capture:true });
+      slider.addEventListener('pointerup',   (e)=>{ if (slider.dataset) slider.dataset.dragging='0'; e.stopPropagation(); }, { capture:true });
+      slider.addEventListener('pointercancel', (e)=>{ if (slider.dataset) slider.dataset.dragging='0'; e.stopPropagation(); }, { capture:true });
 
-      // If at the end, restart from beginning
-      if (yearIdx >= yearsWithCases.length - 1){
-        yearIdx = 0;
-        yearMax = yearsWithCases[yearIdx];
-        updateTimelineUI();
-        applyFiltersAndRender(false);
-      }
-      startYearPlayback();
-    });
-    pb._bound = true;
+      slider.addEventListener('click',  (e)=> e.stopPropagation(), { capture:true });
+      slider.addEventListener('input', (e)=>{ e.stopPropagation(); setYearFromSlider(); }, { capture:true });
+      slider.addEventListener('change',(e)=>{ e.stopPropagation(); setYearFromSlider(); }, { capture:true });
+    }
+
+const playBtn = $('playBtn');
+    if (playBtn){
+      playBtn.addEventListener('click', (ev)=>{
+        if (ev.shiftKey){
+          stopYearPlayback();
+          yearIdx = 0;
+          yearMax = yearsWithCases[0] ?? yearMax;
+          if (slider) slider.value = String(yearIdx);
+          updateTimelineUI();
+          applyFiltersAndRender(false);
+          return;
+        }
+
+        if (isPlaying){
+          stopYearPlayback();
+          return;
+        }
+
+        // Restart from beginning if we're already at the end
+        if (yearsWithCases.length && yearIdx >= yearsWithCases.length - 1){
+          yearIdx = 0;
+          yearMax = yearsWithCases[0];
+          if (slider) slider.value = String(yearIdx);
+          updateTimelineUI();
+          applyFiltersAndRender(false);
+        }
+
+        startYearPlayback();
+      });
+    }
+
+    syncSearchTimelineCenter();
   }
 
-  // Prevent timeline interaction from affecting orbit controls
-  tb.addEventListener('pointerdown', (e)=>e.stopPropagation());
-  tb.addEventListener('wheel', (e)=>e.stopPropagation(), { passive:false });
-  requestAnimationFrame(syncSearchTimelineCenter);
-}
-
+// Keep bottom-left search and timeline vertically aligned (center-to-center)
+  function syncSearchTimelineCenter(){
+    const tb = $('timelineBar');
+    if (!tb) return;
+    // Keep the timeline horizontally centered (no auto-nudging).
+    tb.style.left = '50%';
+    tb.style.right = 'auto';
+    tb.style.transform = 'translateX(-50%)';
+  }
 
   function updateTimelineUI(){
-  if (!yearModeHasData) return;
-  const y = yearsWithCases[yearIdx];
-  $('timeYear').textContent = nvl(y, '—');
-  const slider = $('yearSlider');
-  if (slider) slider.value = String(yearIdx);
-  const pi = $('playIcon');
-  if (pi) pi.textContent = isPlaying ? '❚❚' : '▶';
-}
+    const tb = $('timelineBar');
+    if (!tb) return;
+
+    const hasYears = Array.isArray(yearsWithCases) && yearsWithCases.length > 0;
+    if (!hasYears){
+      tb.classList.add('hidden');
+      return;
+    }
+    tb.classList.remove('hidden');
+
+    const year = yearsWithCases[Math.max(0, Math.min(yearIdx, yearsWithCases.length - 1))];
+    const yearEl = $('timeYear');
+    if (yearEl) yearEl.textContent = (year != null ? String(year) : '—');
+
+    const slider = $('yearSlider');
+    if (slider){
+      slider.min = '0';
+      slider.max = String(Math.max(0, yearsWithCases.length - 1));
+      slider.step = '1';
+
+      // Don't fight the user while dragging
+      if (!(slider.dataset && slider.dataset.dragging === '1')){
+        slider.value = String(Math.max(0, Math.min(yearIdx, yearsWithCases.length - 1)));
+      }
+    }
+
+    const playIcon = $('playIcon');
+    if (playIcon) playIcon.textContent = isPlaying ? '❚❚' : '▶';
+
+    syncSearchTimelineCenter();
+  }
+
 
 
 function setCinematicYear(y){
@@ -2933,15 +3751,10 @@ clusterRepKey = new Map();
     if (!selectedKey) return [];
     return visibleEdges.filter(e => e.s===selectedKey || e.t===selectedKey);
   }
-
   function updateStats(){
-    $('statTotalCases').textContent = nodesByKey.size.toLocaleString();
-    $('statVisibleCases').textContent = visibleKeys.size.toLocaleString();
-    $('statTotalLinks').textContent = edgesAll.length.toLocaleString();
-    $('statVisibleLinks').textContent = visibleEdges.length.toLocaleString();
-    $('statRawCitations').textContent = rawCitationCount.toLocaleString();
-    $('statUnresolved').textContent = unresolvedCitationCount.toLocaleString();
-    $('statDrawnLinks').textContent = getEdgesToDraw().length.toLocaleString();
+    const set = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+    set('statVisibleCases', visibleKeys.size.toLocaleString());
+    set('statVisibleLinks', visibleEdges.length.toLocaleString());
   }
 
   function clearOldMeshes(){
@@ -3047,7 +3860,7 @@ clusterRepKey = new Map();
 
     // Links + arrows
     const edgesToDraw = getEdgesToDraw();
-    $('statDrawnLinks').textContent = edgesToDraw.length.toLocaleString();
+    const _drawnEl = $('statDrawnLinks'); if (_drawnEl) _drawnEl.textContent = edgesToDraw.length.toLocaleString();
 
     const width = Number($('linkWidth').value);
     const linkOpacity = Number($('linkOpacity').value);
@@ -4297,4 +5110,30 @@ function animate(){
     labelRenderer.render(scene, camera);
   }
   animate();
-  });</script><div id=searchBox><input id=searchInput placeholder="Search cases (name or key)..."><div class=hidden id=searchResults></div></div><div id=legendBar aria-hidden=true></div><div class="hidden timeline"id=timelineBar><button class=playBtn id=playBtn type=button title="Timeline play/pause (Shift+click to reset)"><span id=playIcon>▶</span></button> <button class=playBtn id=legendToggle type=button title="Toggle legend"><span id=legendIcon>≡</span></button><div class=timeMain><div class=timeTop><div class=timeLabel>Year</div><div class=timeYear id=timeYear>—</div></div><input id=yearSlider type=range max=0 min=0 step=1 value=0></div></div><div id=closeNodeLabel></div>
+  });
+</script>
+<!-- Bottom-left search -->
+<div id="searchBox">
+<input id="searchInput" placeholder="Search cases (name or key)..."/>
+<div class="hidden" id="searchResults"></div>
+</div>
+<div aria-hidden="true" id="legendBar"></div>
+<!-- Timeline (year playback) -->
+<div class="timeline hidden" id="timelineBar">
+<button class="playBtn" id="playBtn" title="Timeline play/pause (Shift+click to reset)" type="button">
+<span id="playIcon">▶</span>
+</button>
+<button class="playBtn" id="legendToggle" title="Toggle legend" type="button">
+<span id="legendIcon">≡</span>
+</button>
+<div class="timeMain">
+<div class="timeTop">
+<div class="timeLabel">Year</div>
+<div class="timeYear" id="timeYear">—</div>
+</div>
+<input id="yearSlider" max="0" min="0" step="1" type="range" value="0"/>
+</div>
+</div>
+<div id="closeNodeLabel"></div>
+</body>
+</html>
