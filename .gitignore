@@ -85,5 +85,5 @@ node_modules/
 open.vbs
 
 # Specific
-enrichment/kanon-2-enricher/docs.jsonl
-enrichment/kanon-2-enricher/embeddings.npy
+cookbooks/semantic-legal-citation-graph/docs.jsonl
+cookbooks/semantic-legal-citation-graph/embeddings.npy
