@@ -83,6 +83,7 @@ catboost_info/
 .ruff_cache
 node_modules/
 open.vbs
+explorer.ipynb
 
 # Specific
 cookbooks/semantic-legal-citation-graph/docs.jsonl
