@@ -88,3 +88,4 @@ explorer.ipynb
 # Specific
 cookbooks/semantic-legal-citation-graph/docs.jsonl
 cookbooks/semantic-legal-citation-graph/embeddings.npy
+cookbooks/ilgs-viewer/doc.json

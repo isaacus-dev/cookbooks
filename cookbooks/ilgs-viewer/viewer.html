@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanon 2 Enricher</title>
+
+    <link rel="icon" type="image/png" href="https://media.isaacus.com/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="https://media.isaacus.com/favicon/favicon.svg">
+    <link rel="shortcut icon" href="https://media.isaacus.com/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://media.isaacus.com/favicon/apple-touch-icon.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-serif { font-family: 'Merriweather', serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+        /* Entity Highlighting Styles */
+        .hl-person { background-color: #E0E7FF; border-bottom: 2px solid #6366F1; color: #312E81; cursor: pointer; }
+        .hl-person:hover { background-color: #C7D2FE; }
+        .hl-person.active { background-color: #4F46E5; color: white; border-bottom-color: #312E81; }
+
+        .hl-location { background-color: #DCFCE7; border-bottom: 2px solid #22C55E; color: #064E3B; cursor: pointer; }
+        .hl-location:hover { background-color: #BBF7D0; }
+        .hl-location.active { background-color: #16A34A; color: white; border-bottom-color: #064E3B; }
+
+        .hl-term { background-color: #FEF3C7; border-bottom: 2px solid #F59E0B; color: #78350F; cursor: pointer; }
+        .hl-term:hover { background-color: #FDE68A; }
+        .hl-term.active { background-color: #D97706; color: white; border-bottom-color: #78350F; }
+
+        /* Term Canonical/Definition Highlight (lighter yellow) */
+        .hl-term-special { background-color: #FFFBEB; border-bottom: 2px solid #F59E0B; color: #78350F; cursor: pointer; }
+        .hl-term-special:hover { background-color: #FEF3C7; }
+        .hl-term-special.active { background-color: #B45309; color: white; border-bottom-color: #78350F; }
+
+        /* Quote Highlighting */
+        .hl-quote { box-shadow: inset 0 0 0 9999px rgba(156, 163, 175, 0.14); border-radius: 2px; }
+        .hl-quote-amending { box-shadow: inset 0 0 0 9999px rgba(100, 116, 139, 0.16); border-radius: 2px; }
+
+        /* Pinpoint / Cross-reference Highlighting */
+        .hl-pinpoint { box-shadow: inset 0 0 0 9999px rgba(37, 99, 235, 0.10); border-radius: 2px; }
+
+        /* External document references */
+        .hl-doc { background-color: #F3E8FF; border-bottom: 2px solid #A855F7; color: #581C87; cursor: pointer; }
+        .hl-doc.active { background-color: #9333EA; color: white; border-bottom-color: #581C87; }
+
+        /* Pinpoint references to external documents: same highlight, but dotted underline */
+        .style-xref-doc { border-bottom-style: dotted !important; cursor: pointer; }
+
+        /* Segment Highlight (Active Structure) */
+        .hl-segment-active { background-color: rgba(255, 255, 0, 0.15); }
+
+        /* Structural Styles */
+        .style-heading { font-weight: 700; display: block; color: #111827; }
+        .style-junk { color: #9CA3AF; text-decoration: line-through; opacity: 0.5; font-size: 0.9em; }
+        .style-xref { text-decoration: underline; text-decoration-style: dotted; text-decoration-color: #2563EB; color: #2563EB; cursor: pointer; }
+        .style-xref:hover { background-color: #EFF6FF; }
+
+        /* Entity cross-links in Selection Details */
+        .entity-link { color: #1d6de4; }
+
+        /* Drag Handle */
+        .resizer-handle { cursor: row-resize; height: 8px; background: #F3F4F6; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .resizer-handle:hover { background: #E5E7EB; }
+        .resizer-handle::after { content: ''; width: 30px; height: 3px; background: #D1D5DB; border-radius: 2px; }
+
+        .hl-date { background-color: #CFFAFE; border-bottom: 2px solid #06B6D4; color: #155E75; cursor: pointer; }
+        .hl-date:hover { background-color: #A5F3FC; }
+        .hl-date.active { background-color: #0891B2; color: white; border-bottom-color: #155E75; }
+
+        /* Sidebar (horizontal) resize handles */
+        .sidebar-resizer { position: absolute; top: 0; bottom: 0; width: 10px; cursor: col-resize; z-index: 40; opacity: 0; transition: opacity 0.15s, background 0.15s; }
+        aside:hover .sidebar-resizer { opacity: 1; }
+        .sidebar-resizer:hover { background: rgba(229, 231, 235, 0.6); }
+        .sidebar-resizer::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: #E5E7EB; transform: translateX(-50%); }
+        .sidebar-resizer.left { right: -5px; }
+        .sidebar-resizer.right { left: -5px; }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen overflow-hidden text-sm text-gray-800">
+
+    <div id="app" class="h-full flex flex-col">
+
+        <!-- Header -->
+        <header class="h-14 bg-white border-b border-gray-200 flex items-center px-4 justify-between shrink-0 z-20 shadow-sm">
+
+            <!-- Left: Logo -->
+            <div class="flex items-center w-64 shrink-0">
+                <img src="https://isaacus.com/wp-content/uploads/2025/01/Logo.svg" alt="Isaacus" class="h-8 w-auto object-contain" />
+            </div>
+
+            <!-- Center: Title + Type / Jurisdiction -->
+            <div v-if="doc" class="flex-1 px-4 overflow-hidden flex items-center justify-center">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span
+                        class="font-semibold text-gray-900 truncate block"
+                        :title="docTitle"
+                    >
+                        {{ docTitle }}
+                    </span>
+
+                    <!-- Type Badge (moved here) -->
+                    <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 uppercase tracking-wide">
+                        {{ formatEnum(doc.type) }}
+                    </span>
+
+                    <!-- Jurisdiction Badge (moved here) -->
+                    <span
+                        v-if="doc.jurisdiction"
+                        class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 uppercase tracking-wide"
+                    >
+                        {{ doc.jurisdiction }}
+                    </span>
+                </div>
+            </div>
+            <div v-else class="flex-1"></div>
+
+            <!-- Right: Only Actions -->
+            <div class="flex items-center justify-end w-24 shrink-0">
+                <button
+                    @click="reset"
+                    class="ml-2 text-gray-400 hover:text-red-600 transition-colors text-xs font-medium p-1.5 hover:bg-gray-100 rounded-md"
+                    title="Reload doc.json"
+                >
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </header>
+
+
+        <!-- Loading / Upload State (now: load doc.json) -->
+        <div v-if="!doc" class="flex-1 flex flex-col items-center justify-center p-8">
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-lg w-full text-center">
+                <h2 class="text-lg font-semibold text-gray-900 mb-2">Load enriched document</h2>
+                <p class="text-gray-500 mb-6 text-sm">
+                    This viewer loads <span class="font-mono">doc.json</span> from the same folder as <span class="font-mono">widget.html</span>.
+                </p>
+
+                <div class="flex gap-3 justify-center">
+                    <button 
+                        @click="loadDoc" 
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium text-xs shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        :disabled="isLoading">
+                        {{ isLoading ? 'Loading…' : 'Load doc.json' }}
+                    </button>
+                </div>
+                <p v-if="error" class="text-red-600 mt-4 text-xs bg-red-50 p-2 rounded border border-red-100 text-left overflow-auto max-h-32 whitespace-pre-wrap">{{ error }}</p>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div v-else class="flex-1 flex overflow-hidden">
+
+            <!-- Left Sidebar: Segment Tree -->
+            <aside class="w-72 bg-gray-50 border-r border-gray-200 flex flex-col shrink-0 z-10 relative" :style="{ width: leftSidebarWidth + 'px' }">
+                <div class="sidebar-resizer left" @mousedown="startSidebarResize('left', $event)" title="Drag to resize"></div>
+                <div class="p-3 border-b border-gray-200 bg-gray-50 flex items-center gap-2">
+                    <i data-lucide="list-tree" class="w-4 h-4 text-gray-400"></i>
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Contents</h3>
+                </div>
+                <div class="flex-1 overflow-y-auto p-2 pb-10">
+                    <tree-item 
+                        v-for="node in segmentTree" 
+                        :key="node.id" 
+                        :node="node"
+                        :active-id="activeSegmentId"
+                        @navigate="scrollToSegment">
+                    </tree-item>
+                </div>
+            </aside>
+
+            <!-- Center: Document Viewer -->
+            <main class="flex-1 bg-white overflow-y-auto relative flex justify-center bg-gray-100/30" @click.self="deselectEntity">
+                <div class="max-w-4xl w-full py-16 px-16 bg-white min-h-full shadow-sm" @click.self="deselectEntity">
+
+                    <!-- Title Block -->
+                    <div class="mb-12 text-center border-b border-gray-100 pb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 tracking-tight mb-3 font-serif">{{ docTitle }}</h1>
+                        <p v-if="docSubtitle" class="text-lg text-gray-500 font-light font-serif">{{ docSubtitle }}</p>
+                    </div>
+
+                    <!-- Rendered Text Content -->
+                    <div class="text-gray-800 leading-7 font-serif text-base whitespace-pre-wrap relative">
+                        <template v-for="(block, bIndex) in renderBlocks" :key="bIndex">
+                            <!-- Headings are wrapped so highlighted entities don't force line breaks -->
+                            <span v-if="block.kind === 'heading'" class="style-heading">
+                                <template v-for="(token, tIndex) in block.tokens" :key="tIndex">
+                                    <span 
+                                        :class="getTokenClasses(token, true)"
+                                        :id="token.anchorId || null"
+                                        :data-pos="token.start"
+                                        @click="handleTokenClick(token)"
+                                        :title="token.tooltip"
+                                    >{{ token.text }}</span>
+                                </template>
+                            </span>
+
+                            <!-- Normal tokens -->
+                            <span 
+                                v-else
+                                :class="getTokenClasses(block.token)"
+                                :id="block.token.anchorId || null"
+                                :data-pos="block.token.start"
+                                @click="handleTokenClick(block.token)"
+                                :title="block.token.tooltip"
+                            >{{ block.token.text }}</span>
+                        </template>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar: Entity Metadata -->
+            <aside class="w-80 bg-white border-l border-gray-200 flex flex-col shrink-0 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-20 relative" :style="{ width: rightSidebarWidth + 'px' }" ref="rightSidebarRef">
+                <div class="sidebar-resizer right" @mousedown="startSidebarResize('right', $event)" title="Drag to resize"></div>
+
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-200 shrink-0">
+                    <button 
+                        v-for="tab in tabs" 
+                        :key="tab.id"
+                        @click="currentTab = tab.id"
+                        class="flex-1 py-3 text-xs font-medium border-b-2 transition-colors flex items-center justify-center gap-1.5 outline-none"
+                        :class="currentTab === tab.id ? 'border-indigo-600 text-indigo-600 bg-indigo-50/40' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'"
+                    >
+                        <i :data-lucide="tab.icon" class="w-3.5 h-3.5"></i>
+                        {{ tab.label }}
+                    </button>
+                </div>
+
+                <!-- Entity List (Top part of split pane) -->
+                <div class="flex-1 overflow-y-auto bg-gray-50/30" :style="{ height: listHeight }">
+
+                    <!-- Empty State -->
+                    <div v-if="currentEntities.length === 0" class="p-8 text-center text-gray-400 mt-10">
+                        <i data-lucide="search-x" class="w-8 h-8 mx-auto mb-2 opacity-30"></i>
+                        <p class="text-xs">No items found.</p>
+                    </div>
+
+                    <!-- List Items -->
+                    <div v-for="entity in currentEntities" :key="entity.id"
+                         :id="'entity-' + entity.id"
+                         @click="selectEntity(entity.id)"
+                         @dblclick.stop="navigateToFirstMention(entity.id)"
+                         class="border-b border-gray-100 bg-white hover:bg-gray-50 cursor-pointer transition-colors group relative"
+                         :class="selectedEntityId === entity.id ? 'bg-indigo-50 hover:bg-indigo-50 border-indigo-100 ring-1 ring-inset ring-indigo-200 z-10' : ''">
+
+                         <div class="p-3">
+                            <div class="flex justify-between items-start gap-2 mb-1">
+                                <span class="font-medium text-gray-800 text-xs group-hover:text-indigo-700 transition-colors break-words line-clamp-2">
+                                    {{ getEntityName(entity) }}
+                                </span>
+                                <!-- Type Badge with Color Coding -->
+                                <span v-if="entity.type" 
+                                      class="shrink-0 text-[10px] px-1.5 py-0.5 rounded border uppercase tracking-wide"
+                                      :class="getTypeBadgeClass(entity.type)">
+                                    {{ formatTypeLabel(entity) }}
+                                </span>
+                            </div>
+
+                            <!-- Preview of first valid metadata field -->
+                            <div class="text-[10px] text-gray-400 truncate mt-1">
+                                {{ getEntityPreviewText(entity) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resizable Handle -->
+                <div 
+                    class="resizer-handle shrink-0" 
+                    @mousedown="startResize"
+                    v-if="selectedEntity"
+                ></div>
+
+                <!-- Detail Footer (Active Selection) -->
+                <div v-if="selectedEntity" 
+                     class="bg-white flex flex-col shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-200"
+                     :style="{ height: detailsHeight }">
+
+                    <div class="p-2 px-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center shrink-0">
+                        <span class="font-semibold text-xs text-gray-700">Selection details</span>
+                        <button @click="deselectEntity" class="text-gray-400 hover:text-gray-600 p-1 rounded hover:bg-gray-200 transition-colors">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-4 overflow-y-auto flex-1 space-y-4">
+                        <!-- Entity Title in Detail -->
+                         <div class="mb-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <h2 class="text-sm font-bold text-gray-900 flex-1 min-w-0 break-words">{{ getEntityName(selectedEntity) }}</h2>
+                                <span v-if="selectedEntity.type" 
+                                      class="shrink-0 text-[10px] px-1.5 py-0.5 rounded border uppercase tracking-wide"
+                                      :class="getTypeBadgeClass(selectedEntity.type)">
+                                    {{ formatTypeLabel(selectedEntity) }}
+                                </span>
+                            </div>
+                            <span class="text-xs text-gray-500 font-mono">{{ selectedEntity.id }}</span>
+                         </div>
+
+                         <!-- Key Value Pairs -->
+                        <div v-for="(value, key) in filterMetadata(selectedEntity)" :key="key">
+                            <div class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">{{ formatKey(key) }}</div>
+
+                            <!-- Quotes (custom rendering) -->
+                            <div v-if="key === 'quotes' && Array.isArray(value)" class="flex flex-col gap-1.5">
+                                <button
+                                    v-for="(q, i) in value"
+                                    :key="i"
+                                    @click.stop="scrollToPosition(q.start)"
+                                    class="text-left p-2 rounded border text-xs font-mono leading-relaxed transition-colors"
+                                    :class="q.amending ? 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-50' : 'bg-gray-50 border-gray-200 text-gray-700'"
+                                >
+                                    <span class="block break-words">{{ q.snippet }}</span>
+                                </button>
+                            </div>
+
+                            <!-- Array Handling -->
+                            <div v-else-if="Array.isArray(value)" class="flex flex-col gap-1.5">
+                                <div v-for="(v, i) in value" :key="i" class="bg-gray-50 p-2 rounded border border-gray-200 text-xs">
+                                    <template v-if="typeof v === 'object' && v !== null">
+                                        <!-- Compact objects inside arrays (e.g., Emails, URLs, Numbers) -->
+                                        <template v-if="isSingleValueObject(v)">
+                                            <span class="text-gray-800 font-mono break-all">
+                                                <button 
+                                                    v-if="isEntityRef(getSingleObjectValue(v).value)" 
+                                                    @click.stop="navigateToRef(getSingleObjectValue(v).value)" 
+                                                    class="entity-link hover:underline text-left"
+                                                >
+                                                    {{ getEntityLabel(getSingleObjectValue(v).value) }}
+                                                </button>
+
+                                                <!-- Jump to first mention for contact-ish objects (emails/phones/ids/websites) -->
+                                                <button
+                                                    v-else-if="hasMentions(v)"
+                                                    @click.stop="scrollToPosition(getFirstObjectMentionStart(v))"
+                                                    class="text-gray-800 font-mono break-all hover:underline text-left"
+                                                >
+                                                    {{ resolveValue(getSingleObjectValue(v).key, getSingleObjectValue(v).value) }}
+                                                </button>
+
+                                                <span v-else>{{ resolveValue(getSingleObjectValue(v).key, getSingleObjectValue(v).value) }}</span>
+                                            </span>
+                                        </template>
+
+                                        <template v-else>
+                                            <div v-for="(subVal, subKey) in filterSubObject(v)" :key="subKey" class="mb-0.5 last:mb-0">
+                                                <span class="text-gray-400 font-mono text-[10px] mr-1">{{ subKey }}:</span>
+                                                <span class="text-gray-800 font-mono break-all">
+                                                    <button 
+                                                        v-if="isEntityRef(subVal)" 
+                                                        @click.stop="navigateToRef(subVal)" 
+                                                        class="entity-link hover:underline text-left"
+                                                    >
+                                                        {{ getEntityLabel(subVal) }}
+                                                    </button>
+                                                    <span v-else>{{ resolveValue(subKey, subVal) }}</span>
+                                                </span>
+                                            </div>
+                                        </template>
+                                    </template>
+
+                                    <!-- Primitive array items -->
+                                    <template v-else>
+                                        <!-- Dates listed under People: show date + type pill -->
+                                        <div v-if="key === 'dates' && isDateEntityRef(v)" class="flex items-center justify-between gap-2">
+                                            <button 
+                                                @click.stop="navigateToRef(v)" 
+                                                class="entity-link hover:underline font-mono break-words text-left"
+                                            >
+                                                {{ getEntityLabel(v) }}
+                                            </button>
+                                            <span 
+                                                v-if="getRefEntity(v) && getRefEntity(v).type"
+                                                class="shrink-0 text-[10px] px-1.5 py-0.5 rounded border uppercase tracking-wide"
+                                                :class="getTypeBadgeClass(getRefEntity(v).type)"
+                                            >
+                                                {{ formatTypeLabel(getRefEntity(v)) }}
+                                            </span>
+                                        </div>
+
+                                        <button 
+                                            v-else-if="isEntityRef(v)" 
+                                            @click.stop="navigateToRef(v)" 
+                                            class="entity-link hover:underline font-mono break-words text-left"
+                                        >
+                                            {{ getEntityLabel(v) }}
+                                        </button>
+
+                                        <span v-else class="text-gray-800 font-mono break-words">{{ resolveValue(key, v) }}</span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Single Value -->
+                            <div v-else class="text-xs text-gray-800 bg-gray-50 p-2 rounded border border-gray-200 break-words leading-relaxed">
+                                <button 
+                                    v-if="isEntityRef(value)" 
+                                    @click.stop="navigateToRef(value)" 
+                                    class="entity-link hover:underline font-mono break-words text-left"
+                                >
+                                    {{ getEntityLabel(value) }}
+                                </button>
+                                <span v-else>{{ resolveValue(key, value) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Recursive Tree Component Template -->
+    <script type="text/x-template" id="tree-item-template">
+        <div class="select-none">
+            <div 
+                class="flex items-start gap-1 py-1 px-2 rounded cursor-pointer transition-colors text-xs mb-0.5"
+                :class="activeId === node.id ? 'bg-indigo-100 text-indigo-900 font-medium' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900'"
+                @click.stop="handleClick"
+            >
+                <!-- Toggle Icon -->
+                <span 
+                    class="mt-0.5 p-0.5 rounded hover:bg-black/10 text-gray-400 hover:text-gray-600 transition-colors w-4 h-4 flex items-center justify-center shrink-0"
+                    @click.stop="toggle"
+                    :class="{ 'invisible': !node.children || !node.children.length }"
+                >
+                    <i :data-lucide="isOpen ? 'chevron-down' : 'chevron-right'" class="w-3 h-3"></i>
+                </span>
+
+                <!-- Label -->
+                <span class="flex-1 leading-relaxed py-0.5" :title="node.fullLabel">
+                   {{ node.label }}
+                </span>
+            </div>
+
+            <!-- Children -->
+            <div v-if="isOpen && node.children && node.children.length" class="pl-3 ml-2 border-l border-gray-200">
+                <tree-item 
+                    v-for="child in node.children" 
+                    :key="child.id" 
+                    :node="child"
+                    :active-id="activeId"
+                    @navigate="$emit('navigate', $event)">
+                </tree-item>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        const { createApp, ref, computed, nextTick, watch, onUnmounted, onMounted } = Vue;
+
+        // Character mapping
+        const buildCpToCuMap = (s) => {
+            const map = [0];
+            let cu = 0;
+            for (const ch of s) {      // for..of iterates code points
+                cu += ch.length;       // 1 for BMP, 2 for astral (emoji)
+                map.push(cu);
+            }
+            return map; // map[cpIndex] = cuIndex
+        };
+
+        const remapAllSpansInPlace = (root, map) => {
+            const seen = new Set();
+            const walk = (v) => {
+                if (!v || typeof v !== "object") return;
+                if (seen.has(v)) return;
+                seen.add(v);
+
+                if (typeof v.start === "number" && typeof v.end === "number") {
+                    v.start = map[v.start] ?? v.start;
+                    v.end   = map[v.end]   ?? v.end;
+                }
+
+                for (const k in v) walk(v[k]);
+            };
+            walk(root);
+        };
+
+        // --- Recursive Tree Component ---
+        const TreeItem = {
+            name: 'TreeItem',
+            template: '#tree-item-template',
+            props: ['node', 'activeId'],
+            emits: ['navigate'],
+            setup(props, { emit }) {
+                const isOpen = ref(true); // Default open
+                const toggle = () => isOpen.value = !isOpen.value;
+                const handleClick = () => emit('navigate', props.node.id);
+
+                watch(isOpen, () => { nextTick(() => lucide.createIcons()); });
+
+                return { isOpen, toggle, handleClick };
+            }
+        };
+
+        createApp({
+            components: { TreeItem },
+            setup() {
+                // --- State ---
+                const doc = ref(null);
+                const error = ref('');
+                const isLoading = ref(false);
+
+                const selectedEntityId = ref(null);
+                const currentTab = ref('persons');
+                const activeSegmentId = ref(null); // Which segment is focused/scrolled to
+                const activeXrefRange = ref(null); // { start: number, end: number } (internal cross-reference highlight range)
+
+                // For Split Pane
+                const panePercentage = ref(40); // 40% height for list, rest for details
+                const isResizing = ref(false);
+
+                // For Sidebars (horizontal resize)
+                const leftSidebarWidth = ref(288);   // ~w-72
+                const rightSidebarWidth = ref(360);  // ~w-80 (slightly larger default)
+                const rightSidebarRef = ref(null);
+
+                const isResizingSidebar = ref(false);
+                const resizingSide = ref(null); // 'left' | 'right'
+                const resizeStartX = ref(0);
+                const resizeStartWidth = ref(0);
+
+                // Derived Data
+                const textTokens = ref([]);
+                const entityMap = ref(new Map()); // ID -> Object
+
+                const tabs = [
+                    { id: 'persons', label: 'People', icon: 'users' },
+                    { id: 'locations', label: 'Places', icon: 'map-pin' },
+                    { id: 'terms', label: 'Terms', icon: 'book-open' },
+                    { id: 'external_documents', label: 'Refs', icon: 'file-text' },
+                    { id: 'dates', label: 'Dates', icon: 'calendar' }
+                ];
+
+                // --- Load doc.json ---
+                const loadDoc = async () => {
+                    error.value = '';
+                    isLoading.value = true;
+                    try {
+                        const resp = await fetch('./doc.json?cache=' + Date.now(), { cache: 'no-store' });
+                        if (!resp.ok) {
+                            const msg = await resp.text().catch(() => '');
+                            throw new Error(`Load failed (${resp.status}): ${msg || resp.statusText}`);
+                        }
+                        const enriched = await resp.json();
+                        processInput(JSON.stringify(enriched));
+                    } catch (e) {
+                        console.error(e);
+                        error.value = e?.message ? String(e.message) : String(e);
+                    } finally {
+                        isLoading.value = false;
+                    }
+                };
+
+                onMounted(async () => {
+                    await loadDoc();
+                    nextTick(() => lucide.createIcons());
+                });
+
+                // --- Parsing & Initialization ---
+                const reset = async () => {
+                    doc.value = null;
+                    error.value = '';
+                    isLoading.value = false;
+                    textTokens.value = [];
+                    selectedEntityId.value = null;
+                    entityMap.value.clear();
+                    currentTab.value = 'persons';
+                    activeSegmentId.value = null;
+                    activeXrefRange.value = null;
+                    await loadDoc();
+                };
+
+                const processInput = (jsonString) => {
+                    try {
+                        const parsed = JSON.parse(jsonString);
+                        // Basic validation
+                        if (typeof parsed.text !== 'string' || !Array.isArray(parsed.segments)) {
+                            throw new Error("Invalid schema: Root must contain 'text' string and 'segments' array.");
+                        }
+
+                        doc.value = parsed;
+
+                        // Convert backend (Python code-point) offsets -> frontend (UTF-16) offsets
+                        const cpToCu = buildCpToCuMap(doc.value.text);
+                        remapAllSpansInPlace(doc.value, cpToCu);
+
+                        // Build Lookup Map for Relations
+                        const map = new Map();
+                        const addToMap = (arr) => (arr || []).forEach(x => { if (x && x.id) map.set(x.id, x); });
+                        addToMap(doc.value.persons);
+                        addToMap(doc.value.locations);
+                        addToMap(doc.value.terms);
+                        addToMap(doc.value.external_documents);
+                        addToMap(doc.value.segments);
+
+                        // Dates: give stable IDs and add to map for cross-linking + highlighting
+                        (doc.value.dates || []).forEach((d, idx) => {
+                            if (!d.id) d.id = `date:${idx}`;
+                            map.set(d.id, d);
+                        });
+
+                        // ILGS: contact nodes are root-level arrays; attach them onto Person for UI parity.
+                        const ensureArray = (obj, k) => { if (!Array.isArray(obj[k])) obj[k] = []; };
+                        const attachToPerson = (arr, field) => {
+                            (arr || []).forEach(item => {
+                                if (!item || !item.person) return;
+                                const p = map.get(item.person);
+                                if (!p) return;
+                                ensureArray(p, field);
+                                p[field].push(item);
+                            });
+                        };
+                        attachToPerson(doc.value.emails, 'emails');
+                        attachToPerson(doc.value.websites, 'websites');
+                        attachToPerson(doc.value.phone_numbers, 'phone_numbers');
+                        attachToPerson(doc.value.id_numbers, 'id_numbers');
+
+                        // Back-links: Person -> Dates (for easy navigation)
+                        (doc.value.dates || []).forEach(d => {
+                            if (d.person && map.has(d.person)) {
+                                const p = map.get(d.person);
+                                if (!Array.isArray(p.dates)) p.dates = [];
+                                p.dates.push(d.id);
+                            }
+                        });
+
+                        // Back-links: Quotes -> source entities (People / Refs)
+                        (doc.value.quotes || []).forEach(q => {
+                            if (!q || !q.span) return;
+                            const raw = doc.value.text.substring(q.span.start, q.span.end).replace(/\s+/g, ' ').trim();
+                            let snippet = raw;
+                            if (snippet.length > 70) snippet = snippet.slice(0, 67).trimEnd() + '…';
+
+                            const qObj = { snippet, amending: !!q.amending, start: q.span.start, end: q.span.end };
+
+                            const attach = (id) => {
+                                if (!id || !map.has(id)) return;
+                                const ent = map.get(id);
+                                if (!Array.isArray(ent.quotes)) ent.quotes = [];
+                                ent.quotes.push(qObj);
+                            };
+
+                            attach(q.source_document);
+                            attach(q.source_person);
+                        });
+
+                        entityMap.value = map;
+
+                        prepareView();
+                        nextTick(() => lucide.createIcons());
+                    } catch (e) {
+                        console.error(e);
+                        error.value = "Error parsing JSON: " + e.message;
+                    }
+                };
+
+                // --- Helper: Text Extraction ---
+                const getText = (spanObj) => {
+                    if (!spanObj || !doc.value) return '';
+                    if (typeof spanObj.start !== 'number' || typeof spanObj.end !== 'number') return '';
+                    return doc.value.text.substring(spanObj.start, spanObj.end);
+                };
+
+                // --- Segment Tree Builder ---
+                const segmentTree = computed(() => {
+                    if (!doc.value) return [];
+                    const segs = [...doc.value.segments];
+
+                    // Sort primarily by span length (desc) to ensure parents come before children
+                    segs.sort((a, b) => {
+                        if (a.span.start !== b.span.start) return a.span.start - b.span.start;
+                        return (b.span.end - b.span.start) - (a.span.end - a.span.start); 
+                    });
+
+                    // Build Label Logic
+                    const processNode = (s) => {
+                        s.children = [];
+
+                        const typeStr = s.type ? formatEnum(s.type) : null;
+                        const number = s.code ? getText(s.code) : null;
+                        const title = s.title ? getText(s.title) : null;
+
+                        let label = "";
+                        const parts = [typeStr, number, title].filter(x => x && x.trim());
+
+                        if (parts.length > 0) {
+                            label = parts.join(' ');
+                        } else {
+                            label = formatEnum(s.kind) || 'Segment';
+                        }
+
+                        // Add category tags to label where relevant
+                        const catRaw = s.category || '';
+                        const catLower = catRaw.toLowerCase();
+                        let catTag = null;
+                        if (catLower === 'front_matter') catTag = 'front';
+                        else if (catLower === 'back_matter') catTag = 'back';
+                        else if (catLower === 'annotation') catTag = 'annotation';
+                        else if (catRaw) catTag = catRaw; // keep as-is for other categories
+                        if (catTag) label = `${label} [${catTag}]`;
+
+                        s.label = label;
+                        s.fullLabel = label; // tooltip
+                        return s;
+                    };
+
+                    const roots = [];
+                    const stack = []; // Stack of parent nodes
+
+                    for (const rawSeg of segs) {
+                        const seg = processNode(rawSeg);
+
+                        // Pop from stack if current seg is not inside the stack top
+                        while (stack.length > 0) {
+                            const parent = stack[stack.length - 1];
+                            if (seg.span.start >= parent.span.end) {
+                                stack.pop();
+                            } else if (seg.span.end > parent.span.end) {
+                                stack.pop();
+                            } else {
+                                break;
+                            }
+                        }
+
+                        if (stack.length > 0) {
+                            stack[stack.length - 1].children.push(seg);
+                        } else {
+                            roots.push(seg);
+                        }
+                        stack.push(seg);
+                    }
+                    return roots;
+                });
+
+                // --- Core Text Rendering (Tokenization) ---
+                const prepareView = () => {
+                    if (!doc.value) return;
+                    const text = doc.value.text;
+                    const markers = new Set([0, text.length]);
+
+                    const addBounds = (span) => {
+                        if (!span) return;
+                        markers.add(span.start);
+                        markers.add(span.end);
+                    };
+
+                    const entLists = [
+                        { list: doc.value.persons, cat: 'person' },
+                        { list: doc.value.locations, cat: 'location' },
+                        { list: doc.value.terms, cat: 'term' },
+                        { list: doc.value.external_documents, cat: 'doc' },
+                        { list: doc.value.dates, cat: 'date' }
+                    ];
+
+                    entLists.forEach(({list, cat}) => {
+                        (list || []).forEach(e => {
+                            e._cat = cat; 
+                            (e.mentions || []).forEach(addBounds);
+
+                            // Persons: also bound contact details (emails, websites, phone numbers, id numbers)
+                            if (cat === 'person') {
+                                ['emails', 'websites', 'phone_numbers', 'id_numbers'].forEach(field => {
+                                    (e[field] || []).forEach(item => {
+                                        (item.mentions || []).forEach(addBounds);
+                                    });
+                                });
+                            }
+
+                            // Terms: also bound the canonical term name + definition span
+                            if (cat === 'term') {
+                                addBounds(e.name);
+                                addBounds(e.meaning);
+                            }
+
+                            // External documents: also bound pinpoint reference spans
+                            if (cat === 'doc') {
+                                const pins = e.pinpoints || e.pinpoint_references || e.pinpointReferences || [];
+                                (pins || []).forEach(addBounds);
+                            }
+                        });
+                    });
+
+                    // Quotes
+                    (doc.value.quotes || []).forEach(q => addBounds(q.span));
+
+                    (doc.value.crossreferences || []).forEach(x => addBounds(x.span));
+                    (doc.value.headings || []).forEach(addBounds);
+                    (doc.value.junk || []).forEach(addBounds);
+                    doc.value.segments.forEach(s => addBounds(s.span));
+
+                    const sortedMarkers = Array.from(markers).sort((a, b) => a - b);
+                    const tokens = [];
+
+                    for (let i = 0; i < sortedMarkers.length - 1; i++) {
+                        const start = sortedMarkers[i];
+                        const end = sortedMarkers[i+1];
+
+                        if (start === end) continue;
+
+                        const token = {
+                            text: text.substring(start, end),
+                            start, end,
+                            entities: [],
+                            xrefs: [],
+                            docPinpointId: null,
+                            isHeading: false,
+                            isJunk: false,
+                            anchorId: null,
+                            segmentIds: []
+                        };
+
+                        // Entities
+                        entLists.forEach(({list, cat}) => {
+                            (list || []).forEach(e => {
+                                // Terms: canonical name + definition area get a slightly different highlight shade
+                                if (cat === 'term') {
+                                    const inName = e.name && e.name.start <= start && e.name.end >= end;
+                                    const inMeaning = e.meaning && e.meaning.start <= start && e.meaning.end >= end;
+                                    if (inName || inMeaning) {
+                                        token.entities.push({ id: e.id, cat: 'term-special' });
+                                        return;
+                                    }
+                                }
+
+                                let mentioned = (e.mentions || []).some(m => m.start <= start && m.end >= end);
+
+                                // Persons: also treat contact details as mentions (emails, websites, phone numbers, id numbers)
+                                if (!mentioned && cat === 'person') {
+                                    const fields = ['emails', 'websites', 'phone_numbers', 'id_numbers'];
+                                    mentioned = fields.some(field =>
+                                        (e[field] || []).some(item =>
+                                            (item.mentions || []).some(m => m.start <= start && m.end >= end)
+                                        )
+                                    );
+                                }
+
+                                if (mentioned) {
+                                    if (!token.entities.some(x => x.id === e.id)) {
+                                        token.entities.push({ id: e.id, cat: e._cat });
+                                    }
+                                }
+                            });
+                        });
+
+                        // Quotes
+                        const quote = (doc.value.quotes || []).find(q => q.span && q.span.start <= start && q.span.end >= end);
+                        if (quote) token.quote = quote;
+
+                        // XRefs
+                        const xref = (doc.value.crossreferences || []).find(x => x.span.start <= start && x.span.end >= end);
+                        if (xref) token.xrefs.push(xref);
+
+                        // External document pinpoint references (e.g., "Article 6(1)")
+                        const docPin = (doc.value.external_documents || []).find(ed => {
+                            const pins = ed.pinpoints || ed.pinpoint_references || ed.pinpointReferences || [];
+                            return (pins || []).some(pr => pr && pr.start <= start && pr.end >= end);
+                        });
+                        if (docPin) token.docPinpointId = docPin.id;
+
+                        // Formatting
+                        if ((doc.value.headings || []).some(h => h.start <= start && h.end >= end)) token.isHeading = true;
+                        if ((doc.value.junk || []).some(j => j.start <= start && j.end >= end)) token.isJunk = true;
+
+                        // Segments
+                        doc.value.segments.forEach(s => {
+                            if (s.span.start === start) token.anchorId = s.id;
+                            if (s.span.start <= start && s.span.end >= end) {
+                                token.segmentIds.push(s.id);
+                            }
+                        });
+
+                        tokens.push(token);
+                    }
+                    textTokens.value = tokens;
+                };
+
+                // Group heading tokens so highlighted entities don't force line breaks
+                const renderBlocks = computed(() => {
+                    const blocks = [];
+                    let headingBuffer = null;
+
+                    (textTokens.value || []).forEach(t => {
+                        if (t.isHeading) {
+                            if (!headingBuffer) headingBuffer = [];
+                            headingBuffer.push(t);
+                        } else {
+                            if (headingBuffer) {
+                                blocks.push({ kind: 'heading', tokens: headingBuffer });
+                                headingBuffer = null;
+                            }
+                            blocks.push({ kind: 'token', token: t });
+                        }
+                    });
+
+                    if (headingBuffer) blocks.push({ kind: 'heading', tokens: headingBuffer });
+                    return blocks;
+                });
+
+                // --- Rendering Helpers ---
+                const getTokenClasses = (token, inHeadingGroup = false) => {
+                    const classes = [];
+
+                    if (token.isHeading && !inHeadingGroup) classes.push('style-heading');
+                    if (token.isJunk) classes.push('style-junk');
+
+                    // Pinpoint / Cross-references (link style only)
+                    if (token.xrefs.length > 0) {
+                        classes.push('style-xref');
+                    }
+
+                    // External document pinpoint references (same highlight as the reference document; dotted underline)
+                    if (token.docPinpointId) {
+                        classes.push('hl-doc');
+                        classes.push('style-xref-doc');
+                        if (selectedEntityId.value === token.docPinpointId) classes.push('active');
+                    }
+
+                    // Segment Highlight (tree selection vs cross-reference target range)
+                    if (activeXrefRange.value) {
+                        if (token.start >= activeXrefRange.value.start && token.end <= activeXrefRange.value.end) {
+                            classes.push('hl-segment-active');
+                        }
+                    } else if (activeSegmentId.value && token.segmentIds.includes(activeSegmentId.value)) {
+                        classes.push('hl-segment-active');
+                    }
+
+                    // Quotes
+                    if (token.quote) {
+                        classes.push(token.quote.amending ? 'hl-quote-amending' : 'hl-quote');
+                    }
+
+                    // Entities
+                    if (token.entities.length > 0) {
+                        const selected = token.entities.find(e => e.id === selectedEntityId.value);
+                        if (selected) {
+                            classes.push(`hl-${selected.cat} active`);
+                        } else {
+                            classes.push(`hl-${token.entities[0].cat}`);
+                        }
+                    }
+
+                    return classes.join(' ');
+                };
+
+                const handleTokenClick = (token) => {
+                    if (token.xrefs.length > 0) {
+                        handleCrossReference(token.xrefs[0]);
+                        return;
+                    }
+
+                    // External document pinpoint (e.g., "Article 6(1)") -> open the referenced external document
+                    if (token.docPinpointId) {
+                        navigateToRef(token.docPinpointId);
+                        return;
+                    }
+
+                    if (token.entities.length > 0) {
+                        const ent = token.entities[0];
+                        if (selectedEntityId.value === ent.id) {
+                            deselectEntity();
+                        } else {
+                            selectEntity(ent.id);
+                        }
+                    }
+                };
+
+                const handleCrossReference = (xref) => {
+                    if (!xref) return;
+
+                    const startId = xref.start;
+                    const endId = xref.end || xref.start;
+
+                    const startSeg = entityMap.value.get(startId);
+                    const endSeg = entityMap.value.get(endId);
+
+                    if (
+                        startSeg && startSeg.span &&
+                        endSeg && endSeg.span &&
+                        typeof startSeg.span.start === 'number' &&
+                        typeof endSeg.span.end === 'number'
+                    ) {
+                        const s = startSeg.span.start;
+                        const e = endSeg.span.end;
+                        const rangeStart = Math.min(s, e);
+                        const rangeEnd = Math.max(s, e);
+                        activeXrefRange.value = { start: rangeStart, end: rangeEnd };
+                    } else {
+                        activeXrefRange.value = null;
+                    }
+
+                    // Scroll to the start of the referenced range (and keep the range highlight)
+                    scrollToSegment(startId, 'xref');
+                };
+
+                const scrollToSegment = (id, origin = 'tree') => {
+                    if (!id) return;
+
+                    // Clear cross-reference range highlight unless we are navigating via an xref click
+                    if (origin !== 'xref') {
+                        activeXrefRange.value = null;
+                    }
+
+                    activeSegmentId.value = id;
+                    nextTick(() => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    });
+                };
+
+                const scrollToPosition = (pos) => {
+                    if (typeof pos !== 'number') return;
+                    nextTick(() => {
+                        const el = document.querySelector(`[data-pos="${pos}"]`);
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    });
+                };
+
+                const getFirstMentionStart = (ent) => {
+                    if (!ent) return null;
+                    const starts = [];
+
+                    // Term canonical name + definition
+                    if (ent.name && typeof ent.name.start === 'number') starts.push(ent.name.start);
+                    if (ent.meaning && typeof ent.meaning.start === 'number') starts.push(ent.meaning.start);
+
+                    // General mentions
+                    (ent.mentions || []).forEach(m => {
+                        if (m && typeof m.start === 'number') starts.push(m.start);
+                    });
+
+                    // Generic span (if present)
+                    if (ent.span && typeof ent.span.start === 'number') starts.push(ent.span.start);
+
+                    if (starts.length === 0) return null;
+                    return Math.min(...starts);
+                };
+
+                const navigateToFirstMention = (id) => {
+                    const ent = entityMap.value.get(id);
+                    if (!ent) return;
+                    const pos = getFirstMentionStart(ent);
+                    if (pos === null) return;
+                    scrollToPosition(pos);
+                };
+
+                // --- Sidebar Logic ---
+                const currentEntities = computed(() => {
+                    if (!doc.value) return [];
+                    return doc.value[currentTab.value] || [];
+                });
+
+                const selectedEntity = computed(() => {
+                    if (!selectedEntityId.value || !doc.value) return null;
+                    return entityMap.value.get(selectedEntityId.value);
+                });
+
+                const selectEntity = (id) => {
+                    selectedEntityId.value = id;
+                    const ent = entityMap.value.get(id);
+                    if (ent) {
+                        if (doc.value.persons.includes(ent)) currentTab.value = 'persons';
+                        else if (doc.value.locations.includes(ent)) currentTab.value = 'locations';
+                        else if (doc.value.terms.includes(ent)) currentTab.value = 'terms';
+                        else if (doc.value.external_documents.includes(ent)) currentTab.value = 'external_documents';
+                        else if (doc.value.dates && doc.value.dates.includes(ent)) currentTab.value = 'dates';
+                    }
+                };
+
+                const deselectEntity = () => {
+                    selectedEntityId.value = null;
+                };
+
+                // --- Cross-link Navigation Helpers ---
+                const isEntityRef = (val) => typeof val === 'string' && entityMap.value.has(val);
+                const getRefEntity = (id) => entityMap.value.get(id);
+
+                const isDateEntityRef = (val) => {
+                    if (typeof val !== 'string') return false;
+                    const ent = entityMap.value.get(val);
+                    return !!(ent && (typeof ent.date === 'string' || typeof ent.value === 'string'));
+                };
+
+                const hasMentions = (obj) => Array.isArray(obj && obj.mentions) && obj.mentions.some(m => m && typeof m.start === 'number');
+                const getFirstObjectMentionStart = (obj) => {
+                    if (!Array.isArray(obj && obj.mentions)) return null;
+                    const starts = obj.mentions.map(m => m && m.start).filter(x => typeof x === 'number');
+                    if (starts.length === 0) return null;
+                    return Math.min(...starts);
+                };
+
+                const getEntityLabel = (id) => {
+                    const ent = entityMap.value.get(id);
+                    return ent ? getEntityName(ent) : id;
+                };
+
+                const navigateToRef = (id) => {
+                    if (!id) return;
+                    const ent = entityMap.value.get(id);
+                    if (!ent) return;
+
+                    // If the ref is a segment, scroll the main viewer
+                    if (doc.value && Array.isArray(doc.value.segments) && doc.value.segments.includes(ent)) {
+                        scrollToSegment(id);
+                        return;
+                    }
+
+                    selectEntity(id);
+
+                    // Make sure it is visible in the active list
+                    nextTick(() => {
+                        const row = document.getElementById('entity-' + id);
+                        if (row) row.scrollIntoView({ block: 'nearest' });
+                    });
+                };
+
+                // --- Metadata Resolution ---
+                const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                const formatISODate = (iso) => {
+                    if (typeof iso !== 'string') return '';
+                    const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+                    if (m) {
+                        const year = Number(m[1]);
+                        const month = Number(m[2]);
+                        const day = Number(m[3]);
+                        if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+                            return `${day} ${MONTHS_SHORT[month - 1]} ${year}`;
+                        }
+                    }
+                    const d = new Date(iso);
+                    if (isNaN(d)) return iso;
+                    return `${d.getUTCDate()} ${MONTHS_SHORT[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+                };
+
+                const getEntityName = (e) => {
+                    if (!e) return '';
+
+                    // schema: Date entities (IMLGS: date, ILGS: value)
+                    if (typeof e.date === 'string') {
+                        const formatted = formatISODate(e.date);
+                        return formatted || e.date;
+                    }
+                    if (typeof e.value === 'string') {
+                        const formatted = formatISODate(e.value);
+                        return formatted || e.value;
+                    }
+
+                    // schema: Person/Location/ExternalDocument name is string (IMLGS) OR Span (ILGS)
+                    if (typeof e.name === 'string' && e.name.trim()) return e.name.trim();
+                    if (e.name && typeof e.name.start === 'number') {
+                        const txt = getText(e.name);
+                        if (txt && txt.trim()) return txt.trim();
+                    }
+
+                    // schema: Term.name is Span (works for both)
+                    if (e.name && typeof e.name.start === 'number') return getText(e.name);
+
+                    // fallback: prefer canonical mention if available
+                    if (Array.isArray(e.mentions) && e.mentions.length > 0) {
+                        const m = e.mentions.find(x => x && x.canonical) || e.mentions[0];
+                        return getText(m);
+                    }
+
+                    return e.id;
+                };
+
+                const getEntityPreviewText = (e) => {
+                    // Date entities: show the resolved person (if any)
+                    if (typeof e.date === 'string' || typeof e.value === 'string') {
+                        if (e.person) {
+                            const p = entityMap.value.get(e.person);
+                            return p ? getEntityName(p) : e.person;
+                        }
+                        return '';
+                    }
+
+                    if (e.role) return formatEnum(e.role);
+                    if (e.meaning) return "Def: " + getText(e.meaning).substring(0, 30) + "...";
+                    if (e.id_numbers && e.id_numbers.length) return "ID: " + e.id_numbers[0].number;
+                    if (e.parent) {
+                        const p = entityMap.value.get(e.parent);
+                        return "Child of: " + (p ? getEntityName(p) : e.parent);
+                    }
+                    return "";
+                };
+
+                // Filter logic for Selection Details
+                const filterMetadata = (e) => {
+                    const ignore = ['id', 'mentions', 'span', '_cat', 'type', 'name', 'children'];
+                    const res = {};
+                    Object.keys(e).forEach(k => {
+                        const val = e[k];
+                        if (ignore.includes(k)) return;
+
+                        // Dates: the 'date'/'value' field is already used as the title, so don't repeat it here
+                        if (typeof e.date === 'string' && k === 'date') return;
+                        if (typeof e.value === 'string' && k === 'value') return;
+
+                        // External docs: don't list pinpoints in Selection Details
+                        if (e._cat === 'doc' && (k === 'pinpoint_references' || k === 'pinpoints' || k === 'pinpointReferences')) return;
+
+                        if (val === null || val === undefined) return;
+                        if (typeof val === 'string' && val.trim() === '') return;
+                        if (Array.isArray(val) && val.length === 0) return;
+
+                        if (['parent', 'residence', 'person'].includes(k)) {
+                            const resolved = resolveValue(k, val);
+                            if (!resolved || (typeof resolved === 'string' && !resolved.trim())) return;
+                        }
+
+                        res[k] = val;
+                    });
+                    return res;
+                };
+
+                const filterSubObject = (obj) => {
+                    const res = {};
+                    Object.keys(obj).forEach(k => {
+                        if (k === 'mentions' || k === 'span' || k === 'person') return;
+                        res[k] = obj[k];
+                    });
+                    return res;
+                };
+
+                const isSingleValueObject = (obj) => {
+                    if (!obj || typeof obj !== 'object') return false;
+                    const entries = Object.entries(filterSubObject(obj)).filter(([k, v]) => {
+                        if (v === null || v === undefined) return false;
+                        if (typeof v === 'string' && v.trim() === '') return false;
+                        return true;
+                    });
+                    return entries.length === 1;
+                };
+
+                const getSingleObjectValue = (obj) => {
+                    const entries = Object.entries(filterSubObject(obj)).filter(([k, v]) => {
+                        if (v === null || v === undefined) return false;
+                        if (typeof v === 'string' && v.trim() === '') return false;
+                        return true;
+                    });
+                    if (entries.length === 0) return { key: '', value: '' };
+                    const [key, value] = entries[0];
+                    return { key, value };
+                };
+
+                const resolveValue = (key, val) => {
+                    // Date formatting (for Date entities)
+                    if ((key === 'date' || key === 'value') && typeof val === 'string') {
+                        const formatted = formatISODate(val);
+                        return formatted || val;
+                    }
+
+                    // Enum-like fields (human-friendly formatting)
+                    if (['role', 'reception'].includes(key) && typeof val === 'string') {
+                        return formatEnum(val);
+                    }
+
+                    // Span -> underlying document text
+                    if (val && typeof val.start === 'number' && typeof val.end === 'number') {
+                        return getText(val);
+                    }
+
+                    // Common cross-references (kept for backwards compatibility)
+                    if (['parent', 'residence', 'person'].includes(key) && typeof val === 'string') {
+                        const target = entityMap.value.get(val);
+                        if (target) return getEntityName(target);
+                        return val;
+                    }
+
+                    return val;
+                };
+
+                const formatEnum = (str) => {
+                    if (!str) return '';
+                    if (str.toUpperCase() === 'NON_PARTY') return 'Non-party';
+                    const s = str.replace(/_/g, ' ').toLowerCase();
+                    return s.charAt(0).toUpperCase() + s.slice(1);
+                };
+
+                const formatTypeLabel = (ent) => {
+                    if (!ent || !ent.type) return '';
+                    let t = ent.type;
+
+                    // Dates: drop the trailing "_date" in labels (e.g., "signature_date" -> "signature")
+                    if ((typeof ent.date === 'string' || typeof ent.value === 'string') && typeof t === 'string') {
+                        const tl = t.toLowerCase();
+                        if (tl.endsWith('_date')) t = t.slice(0, -5);
+                    }
+
+                    return formatEnum(t);
+                };
+
+                const formatKey = (str) => {
+                    return str.replace(/_/g, ' ');
+                };
+
+                // Color Coding Helpers
+                const getTypeBadgeClass = (typeStr) => {
+                    const t = String(typeStr).toUpperCase();
+                    const l = String(typeStr).toLowerCase();
+                    // Persons
+                    if (t === 'NATURAL') return 'bg-blue-50 text-blue-700 border-blue-200';
+                    if (t === 'CORPORATE') return 'bg-purple-50 text-purple-700 border-purple-200';
+                    if (t === 'POLITIC') return 'bg-red-50 text-red-700 border-red-200';
+                    if (t === 'NON_PARTY') return 'bg-gray-100 text-gray-600 border-gray-200';
+
+                    // Locations
+                    if (['CITY', 'ADDRESS'].includes(t)) return 'bg-green-50 text-green-700 border-green-200';
+                    if (['STATE', 'COUNTRY'].includes(t)) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+
+                    // Documents
+                    if (t === 'STATUTE') return 'bg-orange-50 text-orange-700 border-orange-200';
+                    if (t === 'REGULATION') return 'bg-amber-50 text-amber-700 border-amber-200';
+                    if (t === 'CONTRACT') return 'bg-slate-100 text-slate-700 border-slate-200';
+
+                    // Dates (support both *_date and non-suffixed)
+                    const dateMap = {
+                        'creation_date': 'bg-gray-100 text-gray-700 border-gray-200',
+                        'signature_date': 'bg-indigo-50 text-indigo-700 border-indigo-200',
+                        'effective_date': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                        'expiry_date': 'bg-rose-50 text-rose-700 border-rose-200',
+                        'payment_date': 'bg-amber-50 text-amber-700 border-amber-200',
+                        'renewal_date': 'bg-teal-50 text-teal-700 border-teal-200',
+                        'delivery_date': 'bg-sky-50 text-sky-700 border-sky-200',
+                        'birth_date': 'bg-blue-50 text-blue-700 border-blue-200',
+                        'death_date': 'bg-red-50 text-red-700 border-red-200',
+
+                        'creation': 'bg-gray-100 text-gray-700 border-gray-200',
+                        'signature': 'bg-indigo-50 text-indigo-700 border-indigo-200',
+                        'effective': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                        'expiry': 'bg-rose-50 text-rose-700 border-rose-200',
+                        'payment': 'bg-amber-50 text-amber-700 border-amber-200',
+                        'renewal': 'bg-teal-50 text-teal-700 border-teal-200',
+                        'delivery': 'bg-sky-50 text-sky-700 border-sky-200',
+                        'birth': 'bg-blue-50 text-blue-700 border-blue-200',
+                        'death': 'bg-red-50 text-red-700 border-red-200'
+                    };
+                    if (dateMap[l]) return dateMap[l];
+                    if (t.endsWith('_DATE')) return 'bg-cyan-50 text-cyan-700 border-cyan-200';
+
+                    // Default
+                    return 'bg-gray-100 text-gray-600 border-gray-200';
+                };
+
+                const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
+
+                // --- Sidebar (horizontal) Resize Logic ---
+                const startSidebarResize = (side, e) => {
+                    if (!side) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    isResizingSidebar.value = true;
+                    resizingSide.value = side;
+                    resizeStartX.value = e.clientX;
+                    resizeStartWidth.value = side === 'left' ? leftSidebarWidth.value : rightSidebarWidth.value;
+
+                    document.addEventListener('mousemove', handleSidebarResize);
+                    document.addEventListener('mouseup', stopSidebarResize);
+                    document.body.style.cursor = 'col-resize';
+                    document.body.style.userSelect = 'none';
+                };
+
+                const handleSidebarResize = (e) => {
+                    if (!isResizingSidebar.value) return;
+                    const dx = e.clientX - resizeStartX.value;
+
+                    if (resizingSide.value === 'left') {
+                        leftSidebarWidth.value = clamp(resizeStartWidth.value + dx, 220, 520);
+                    } else if (resizingSide.value === 'right') {
+                        // dragging left increases width
+                        rightSidebarWidth.value = clamp(resizeStartWidth.value - dx, 260, 640);
+                    }
+                };
+
+                const stopSidebarResize = () => {
+                    if (!isResizingSidebar.value) return;
+                    isResizingSidebar.value = false;
+                    resizingSide.value = null;
+                    document.removeEventListener('mousemove', handleSidebarResize);
+                    document.removeEventListener('mouseup', stopSidebarResize);
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                };
+
+                // --- Resize Logic ---
+                const startResize = (e) => {
+                    isResizing.value = true;
+                    document.addEventListener('mousemove', handleResize);
+                    document.addEventListener('mouseup', stopResize);
+                    document.body.style.cursor = 'row-resize';
+                    document.body.style.userSelect = 'none';
+                };
+
+                const handleResize = (e) => {
+                    if (!isResizing.value) return;
+                    const sidebar = rightSidebarRef.value;
+                    if (!sidebar) return;
+                    const rect = sidebar.getBoundingClientRect();
+                    const relativeY = e.clientY - rect.top;
+                    const percentage = (relativeY / rect.height) * 100;
+                    if (percentage > 20 && percentage < 80) {
+                        panePercentage.value = percentage;
+                    }
+                };
+
+                const stopResize = () => {
+                    isResizing.value = false;
+                    document.removeEventListener('mousemove', handleResize);
+                    document.removeEventListener('mouseup', stopResize);
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                };
+
+                const listHeight = computed(() => selectedEntityId.value ? `${panePercentage.value}%` : '100%');
+                const detailsHeight = computed(() => `${100 - panePercentage.value}%`);
+
+                onUnmounted(() => {
+                    // Safety cleanup if the user navigates away mid-drag
+                    stopResize();
+                    stopSidebarResize();
+                });
+
+                // Doc Headers
+                const docTitle = computed(() => doc.value && doc.value.title ? getText(doc.value.title) : 'Untitled document');
+                const docSubtitle = computed(() => doc.value && doc.value.subtitle ? getText(doc.value.subtitle) : '');
+
+                return {
+                    doc, error, isLoading, reset, loadDoc,
+                    segmentTree, activeSegmentId, scrollToSegment, navigateToFirstMention, scrollToPosition,
+
+                    // Sidebar sizing
+                    leftSidebarWidth, rightSidebarWidth, startSidebarResize, rightSidebarRef,
+
+                    // Main text rendering
+                    renderBlocks, getTokenClasses, handleTokenClick,
+
+                    // Right panel (entities)
+                    tabs, currentTab, currentEntities, selectedEntity, selectedEntityId, selectEntity, deselectEntity,
+                    isEntityRef, getRefEntity, isDateEntityRef, hasMentions, getFirstObjectMentionStart, navigateToRef, getEntityLabel,
+                    getEntityName, getEntityPreviewText, filterMetadata, filterSubObject, isSingleValueObject, getSingleObjectValue, resolveValue, 
+                    formatEnum, formatTypeLabel, formatKey, getTypeBadgeClass,
+
+                    // Header
+                    docTitle, docSubtitle,
+
+                    // Split pane (list/details)
+                    listHeight, detailsHeight, startResize,
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
