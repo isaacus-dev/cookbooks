@@ -1,0 +1,2 @@
+# Isaacus Legal Graph Schema (ILGS) Document Viewer Cookbook
+This Isaacus Cookbook demonstrates how you can render a single document enriched with [Isaacus' Kanon 2 Enricher model](https://docs.isaacus.com/models/introduction#enrichment) into the [Isaacus Legal Graph Schema (ILGS)](https://docs.isaacus.com/ilgs) using a HTML ILGS document viewer. To run this Cookbook, follow the instructions in the [Jupyter notebook](ilgs-viewer.ipynb) in this folder.
