@@ -2,3 +2,4 @@
 Welcome to the Isaacus Cookbooks! Below you will find a list of all available Cookbooks, each demonstrating how to use Isaacus AI models in practice to solve real problems.
 - [Isaacus Legal Graph Schema (ILGS) Document Viewer Cookbook](./ilgs-viewer/README.md): demonstrates how to render a single document enriched with Kanon 2 Enricher into the Isaacus Legal Graph Schema (ILGS) using a HTML ILGS document viewer.
 - [Semantic Legal Citation Graph Cookbook](./semantic-legal-citation-graph/README.md): teaches you how to extract citations from legal documents, classify them by treatment, cluster them by area of law, and then visualize the resulting knowledge graph interactively in 3D using Kanon 2 Enricher and Kanon 2 Embedder models.
+- [Tabular Review Cookbook](./tabular-review/README.md): shows how to build a state-of-the-art tabular review app from scratch in minutes leveraging Kanon 2 Enricher, Kanon 2 Embedder, and Kanon Answer Extractor.
