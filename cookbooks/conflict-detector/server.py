@@ -2,6 +2,7 @@ import re
 import sys
 import json
 import queue
+import hashlib
 import threading
 import unicodedata
 
@@ -32,13 +33,10 @@ ORIGINS = (
 SAMPLE_TITLES = {
     "08-disney-iger-employment-agreement-2022.md": "Disney / Robert A. Iger Employment Agreement (2022)",
     "09-disney-iger-amended-restated-employment-agreement-2011.md": "Disney / Robert A. Iger Amended and Restated Employment Agreement (2011)",
-    "03-common-paper-cloud-service-agreement.md": "Common Paper Cloud Service Agreement",
     "04-mistral-ai-terms-of-use.md": "Mistral AI Terms of Use",
-    "02-google-play-developer-distribution-agreement.md": "Google Play Developer Distribution Agreement",
-    "05-boeing-tmssequoia-corporate-software-license-agreement.md": "Boeing / TMSSequoia Corporate Software License Agreement",
+    "03-common-paper-cloud-service-agreement.md": "Common Paper Cloud Service Agreement",
     "06-common-paper-mutual-nda.md": "Common Paper Mutual Non-Disclosure Agreement",
     "07-intel-cloudera-confidentiality-agreement.md": "Intel / Cloudera Confidentiality Agreement",
-    "10-enron-frevert-executive-employment-agreement-1998.md": "Enron / Mark A. Frevert Executive Employment Agreement (1998)",
 }
 
 UPLOAD_SUFFIXES = (".md", ".markdown", ".txt")
@@ -133,11 +131,17 @@ def scan_document(path, origin, origin_label):
     return {"path": relative(path), "name": path.name, "origin": origin, "origin_label": origin_label, "title": document_title(path)}
 
 
+def listing_order(path):
+    titled = list(SAMPLE_TITLES)
+
+    return (titled.index(path.name), "") if path.name in titled else (len(titled), path.as_posix())
+
+
 def picker_payload():
     documents = [
         scan_document(p, origin, label)
         for origin, label, root in ORIGINS
-        for p in sorted(root.rglob("*"))
+        for p in sorted(root.rglob("*"), key=listing_order)
         if (root != SAMPLES_DIR or p.parent == SAMPLES_DIR)
         and p.is_file() and p.suffix.lower() in (".md", ".markdown") and p.name.lower() != "readme.md"
     ]
@@ -277,7 +281,6 @@ def bad_request(exc):
 
 
 @app.get("/")
-@app.get("/review.html")
 def index_page():
     return (ROOT / "viewer.html").read_text(encoding="utf-8")
 
@@ -365,14 +368,17 @@ def api_catalog():
 
 @app.get("/api/run")
 def api_run():
-    pair = pair_slug(*pair_paths(request.args))
+    paths = pair_paths(request.args)
+    pair = pair_slug(*paths)
     report = saved_report(REPORTS_DIR / pair)
     if report is None:
         return jsonify({"error": f"No cached run for {pair}"}), 404
 
     texts = {f"{side}_text": (read_json(DOCUMENTS_DIR / f"{(report.get(side) or {}).get('source_sha256')}.json") or {}).get("text", "") for side in SIDES}
 
-    return jsonify({"report": report, **texts})
+    sources = {f"{side}_markdown": path.read_text(encoding="utf-8") for side, path in zip(SIDES, paths, strict=True) if hashlib.sha256(path.read_bytes()).hexdigest() == (report.get(side) or {}).get("source_sha256")}
+
+    return jsonify({"report": report, **texts, **sources})
 
 
 @app.get("/api/reviews")
