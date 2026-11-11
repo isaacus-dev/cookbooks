@@ -840,7 +840,9 @@ to {
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
-  padding: 0.875rem 1rem;
+  box-sizing: border-box;
+  height: var(--site-header-height, 3.5rem);
+  padding: 0 0.75rem 0 1rem;
   border-bottom: 1px solid var(--demo-chrome-border);
 }
 
@@ -856,7 +858,7 @@ to {
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  padding: 1rem;
+  padding: 0.75rem 0.5rem 0.75rem 0.75rem;
   font-size: 0.8125rem;
 }
 
@@ -1077,6 +1079,12 @@ to {
   font: inherit;
   outline: none;
   box-shadow: none;
+}
+
+@media (pointer: coarse) {
+  .demo-picker__search input {
+    font-size: max(1rem, 16px);
+  }
 }
 
 .demo-picker__list {
@@ -1355,6 +1363,15 @@ mark[data-demo-tour-target] {
   min-height: 0;
   overflow-y: auto;
   padding-right: 0.5rem;
+}
+
+.demo-drawer .demo-outline {
+  margin-right: -0.5rem;
+  padding-right: 0.5rem;
+}
+
+.demo-drawer .demo-outline__item {
+  padding-right: 0.375rem;
 }
 
 .demo-outline nav {
@@ -1962,9 +1979,17 @@ background: color-mix(in oklch, var(--demo-mark-accent) 7%, transparent);
   --rd-bleed: 1.25rem;
   flex: 1 1 auto;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
   margin-right: calc(-1 * var(--rd-bleed));
   padding: 1.5rem calc(0.5rem + var(--rd-bleed)) 40vh 2.25rem;
+  overflow-wrap: anywhere;
+}
+
+.demo-split:not(.is-wide) .rd-body {
+  margin-right: 0;
+  padding-inline: 0.75rem;
 }
 
 .rd-body:focus-visible {
@@ -2179,7 +2204,8 @@ background: color-mix(in oklch, var(--demo-mark-accent) 7%, transparent);
 }
 
 .rd-focus[data-demo-tour-target] {
-  padding: 0.5rem 0.625rem 0.625rem;
+  margin: -0.5rem -0.5rem -0.5rem -0.25rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.25rem;
   outline-offset: -2px;
 }
 
@@ -2362,12 +2388,12 @@ background: color-mix(in oklch, var(--demo-mark-accent) 7%, transparent);
 }
 
 .rdoc-change.is-flash {
-  animation: rdoc-flash 1.6s ease-out;
+  animation: rdoc-flash 0.9s ease-out;
 }
 
 @keyframes rdoc-flash {
   0%,
-  30% {
+  20% {
     background: color-mix(in oklch, var(--rdoc-accent) 20%, transparent);
   }
 }
@@ -2756,6 +2782,13 @@ background: color-mix(in oklch, var(--demo-mark-accent) 7%, transparent);
   outline: none;
 }
 
+@media (pointer: coarse) {
+  .re-body .ProseMirror,
+  .re-raw {
+    font-size: max(1rem, 16px);
+  }
+}
+
 
 
 .rd-run {
@@ -2992,11 +3025,15 @@ function createTour({ frameEl, chrome, id, steps, panelLabel, onChange }) {
 		"aria-labelledby": "demo-tour-title",
 		hidden: true
 	}, skipBtn, titleEl, bodyEl, hintEl, h$1("footer", { className: "demo-tour__actions" }, progressEl, h$1("div", { className: "demo-tour__nav" }, backBtn, nextBtn)));
-	frameEl.querySelector(".demo-app").after(el);
+	const goHome = () => frameEl.querySelector(".demo-app").after(el);
+	goHome();
 	let index = null;
 	let target = null;
 	let frame = 0;
 	let stopWaiting = null;
+	let showing = 0;
+	let lastOpen = chrome.open;
+	let drawer = null;
 	const isVisible = (node) => node instanceof HTMLElement && node.getClientRects().length > 0;
 	function hasSeen() {
 		try {
@@ -3017,7 +3054,7 @@ function createTour({ frameEl, chrome, id, steps, panelLabel, onChange }) {
 		}
 	}
 	function place() {
-		const bounds = frameEl.getBoundingClientRect();
+		const bounds = (drawer ?? frameEl).getBoundingClientRect();
 		const rect = target.getBoundingClientRect();
 		const card = el.getBoundingClientRect();
 		const top = rect.top - bounds.top;
@@ -3040,7 +3077,9 @@ function createTour({ frameEl, chrome, id, steps, panelLabel, onChange }) {
 		stopWaiting = null;
 		target?.removeAttribute(ACTIVE_ATTR);
 		target = null;
+		drawer = null;
 		el.classList.remove("is-placed");
+		if (el.parentNode !== frameEl) goHome();
 	}
 	function close() {
 		if (index === null) return;
@@ -3053,14 +3092,15 @@ function createTour({ frameEl, chrome, id, steps, panelLabel, onChange }) {
 		onChange?.(false);
 	}
 	async function show(i, direction = 1) {
+		const run = ++showing;
 		release();
 		index = i;
 		onChange?.(true);
 		const step = steps[i];
-		chrome.close();
+		if (!step.panel || chrome.open !== step.panel) chrome.close();
 		await step.enter?.();
 		const node = await findTarget(step);
-		if (index !== i) return;
+		if (index !== i || run !== showing) return;
 		if (!node) {
 			const skipTo = i + direction;
 			if (skipTo < 0 || skipTo >= steps.length) close();
@@ -3084,6 +3124,8 @@ function createTour({ frameEl, chrome, id, steps, panelLabel, onChange }) {
 		nextBtn.disabled = waits;
 		nextBtn.setAttribute("aria-label", isLast ? "Finish tour" : "Next step");
 		nextBtn.title = waits ? "Do the step above to continue" : isLast ? "Finish tour" : "Next step";
+		drawer = node.closest("dialog[open]");
+		if (drawer) drawer.append(el);
 		el.hidden = false;
 		if (typeof step.target !== "function") node.scrollIntoView({
 			block: "nearest",
@@ -3111,6 +3153,11 @@ function createTour({ frameEl, chrome, id, steps, panelLabel, onChange }) {
 		});
 		if (frameEl.contains(document.activeElement)) nextBtn.focus({ preventScroll: true });
 	}
+	chrome.subscribe(() => {
+		if (chrome.open === lastOpen) return;
+		lastOpen = chrome.open;
+		if (index !== null && !chrome.isWide && steps[index].panel) show(index);
+	});
 	skipBtn.onclick = close;
 	backBtn.onclick = () => index !== null && void show(index - 1, -1);
 	nextBtn.onclick = () => index !== null && advance();
@@ -3184,7 +3231,8 @@ function createEmbed({ chrome, panels, headerExtraEl, actionsExtraEl, onUpload, 
 	const drawerEl = h$1("dialog", {
 		className: "demo-drawer demo-drawer--left",
 		"aria-labelledby": "demo-drawer-title",
-		onclose: () => chrome.close()
+		onclose: () => chrome.close(),
+		onclick: (event) => event.target === drawerEl && chrome.close()
 	});
 	const appEl = h$1("div", { className: `demo-app ${className}` }, headerEl, splitEl);
 	const frameEl = h$1("div", { className: "demo-frame" }, appEl, h$1("div", {
@@ -34644,6 +34692,13 @@ function createRewriteEditor({ value, label, onChange, onReset }) {
 		className: "re",
 		onclick: (event) => event.stopPropagation()
 	}, barEl, bodyEl);
+	el.addEventListener("focusin", () => {
+		const viewport = window.visualViewport;
+		if (!viewport) return;
+		const onResize = () => el.scrollIntoView({ block: "nearest" });
+		viewport.addEventListener("resize", onResize, { once: true });
+		setTimeout(() => viewport.removeEventListener("resize", onResize), 1e3);
+	});
 	const marks = {};
 	let emitted = value;
 	let raw = false;
@@ -35738,8 +35793,9 @@ function scrollTo(container, target, offset, smooth) {
 		behavior: smooth && !far && !reducedMotion() ? "smooth" : "instant"
 	});
 }
-async function flash(container, els) {
+async function flash(container, els, stillWanted = () => true) {
 	await whenScrollSettles(container);
+	if (!stillWanted()) return;
 	for (const el of els) {
 		restartAnimation(el, "is-flash");
 		el.addEventListener("animationend", () => el.classList.remove("is-flash"), { once: true });
@@ -35771,7 +35827,8 @@ async function select(change, from = "keys") {
 	focusBox?.el.focus({ preventScroll: true });
 	const el = doc.passage(change.key);
 	scrollTo(bodyEl, el, 64, true);
-	if (el) flash(bodyEl, [el]);
+	for (const lit of bodyEl.querySelectorAll(".is-flash")) lit.classList.remove("is-flash");
+	if (el) flash(bodyEl, [el], () => ui.currentKey === change.key);
 }
 function step(by) {
 	const list = visibleList();
