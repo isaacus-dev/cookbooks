@@ -1,9 +1,0 @@
-{
-  "imports": {
-    "isaacus": "npm:isaacus@^0.22.0",
-    "dotenv": "npm:dotenv@^16.4.5",
-    "@anthropic-ai/sdk": "npm:@anthropic-ai/sdk@^0.126.0",
-    "openai": "npm:openai@^7.15.0",
-    "@google/genai": "npm:@google/genai@^1.0.0"
-  }
-}

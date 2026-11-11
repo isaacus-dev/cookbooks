@@ -4,15 +4,13 @@ import sys
 import json
 import shutil
 import hashlib
-import argparse
 import subprocess
 
 from pathlib import Path
 from functools import partial
 from concurrent.futures import as_completed, ThreadPoolExecutor
 
-from document_index import DOCUMENTS_DIR
-from document_analysis import read_json, comparison_dir_for, document_paths_from_args
+DOCUMENTS_DIR = Path(__file__).resolve().parent / "results" / "documents"
 
 MODEL = "claude-cli-opus"
 MAX_TOKENS = 32000
@@ -91,6 +89,14 @@ Include each of those finding ids once, and every party id in each.
 {findings}
 </findings>"""
 )
+
+
+def read_json(path):
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+
+    except (OSError, ValueError):
+        return None
 
 
 def call_model(prompt: str, *, model: str, api_key: str | None, timeout=TIMEOUT_SECONDS) -> str:
@@ -302,7 +308,7 @@ def read_run(run_dir) -> tuple[Path, dict]:
     path = Path(run_dir) / "report.json"
 
     if (report := read_json(path)) is None:
-        sys.exit(f"No saved run in {run_dir}: run document_analysis.py on this pair first")
+        sys.exit(f"No saved run in {run_dir}: run the comparison in the notebook first")
 
     return path, report
 
@@ -348,7 +354,7 @@ def generate_run(run_dir, *, model: str = MODEL, api_key: str | None = None, use
         sys.exit(
             f"No client for {model}: "
             + (
-                "`claude` is not on PATH — install Claude Code, or add the launcher in README.md"
+                "`claude` is not on PATH: install Claude Code, or use an API model"
                 if cli
                 else f"pass api_key, or set {key} in .env"
             )
@@ -362,7 +368,7 @@ def generate_run(run_dir, *, model: str = MODEL, api_key: str | None = None, use
         text = (read_json(DOCUMENTS_DIR / f"{identity.get('source_sha256')}.json") or {}).get("text")
 
         if text is None or hashlib.sha256(text.encode("utf-8")).hexdigest() != identity.get("text_sha256"):
-            sys.exit(f"The documents behind {run_dir} have changed: run document_analysis.py on this pair again")
+            sys.exit(f"The documents behind {run_dir} have changed: run the comparison in the notebook again")
 
         texts[side] = text
 
@@ -482,17 +488,3 @@ def generate_run(run_dir, *, model: str = MODEL, api_key: str | None = None, use
     )
 
     return report
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--reference", required=True)
-    parser.add_argument("--input", required=True)
-    parser.add_argument("--no-cache", action="store_true")
-
-    args = parser.parse_args()
-    generate_run(comparison_dir_for(*document_paths_from_args(args)), use_cache=not args.no_cache)
-
-
-if __name__ == "__main__":
-    main()

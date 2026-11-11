@@ -1,29 +1,27 @@
-import os
 import re
 import sys
 import json
-import time
 import queue
-import shutil
-import argparse
 import threading
-import subprocess
 import unicodedata
 
 from pathlib import Path
 from datetime import UTC, datetime
-
-import yaml
+from urllib.parse import urlencode
 
 from flask import Flask, jsonify, request, Response, stream_with_context
+from werkzeug.serving import make_server
 
-WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
-sys.path.append(str(WORKSPACE_ROOT))
+import generation
 
-from document_analysis import SCHEMA, REPORTS_DIR, read_json, pair_slug, comparison_dir_for
-from document_index import REPO_ROOT, SAMPLES_DIR, DOCUMENTS_DIR
+from generation import read_json, DOCUMENTS_DIR
 
+ROOT = Path(__file__).resolve().parent
+SAMPLES_DIR = ROOT / "samples"
 UPLOADS_DIR = SAMPLES_DIR / "uploads"
+REPORTS_DIR = ROOT / "results" / "reports"
+
+SCHEMA = "doc-compare/2"
 
 SIDES = ("reference", "input")
 ORIGINS = (
@@ -46,36 +44,93 @@ SAMPLE_TITLES = {
 UPLOAD_SUFFIXES = (".md", ".markdown", ".txt")
 MAX_UPLOAD_BYTES = 8 * 1024 * 1024
 MAX_UPLOAD_FILES = 20
-ANALYSIS_TIMEOUT_SECONDS = 60 * 60
 
-app = Flask(__name__, static_folder=str(WORKSPACE_ROOT / "web" / "client"), static_url_path="")
+app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES * MAX_UPLOAD_FILES
 
+_pipeline = {"run_comparison": None, "client": None, "model": generation.MODEL, "api_key": None}
 _analysis = {"state": "idle", "progress": None, "message": None, "run_id": None, "reference": None, "input": None, "label": None, "cached": None, "started_at": None}
 _reviewing = threading.Lock()
+_server = None
+
+
+def slug(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")[:60] or "document"
+
+
+def pair_slug(reference_path, input_path) -> str:
+    return f"{slug(Path(reference_path).stem)}__{slug(Path(input_path).stem)}"
+
+
+class ThreadOutput:
+    def __init__(self, fallback):
+        self.fallback = fallback
+        self.local = threading.local()
+
+    def write(self, text):
+        sink = getattr(self.local, "sink", None)
+        if sink is None:
+            return self.fallback.write(text)
+
+        self.local.buffer = getattr(self.local, "buffer", "") + text
+        *lines, self.local.buffer = self.local.buffer.split("\n")
+        for line in lines:
+            sink(line)
+
+        return len(text)
+
+    def flush(self):
+        self.fallback.flush()
+
+    def __getattr__(self, name):
+        return getattr(self.fallback, name)
+
+
+def capture_output(on_line):
+    if not isinstance(sys.stdout, ThreadOutput):
+        sys.stdout = ThreadOutput(sys.stdout)
+
+    sys.stdout.local.sink, sys.stdout.local.buffer = on_line, ""
+
+
+def release_output():
+    if isinstance(sys.stdout, ThreadOutput):
+        sys.stdout.local.sink = None
+
+
+def line_handler(emit, suffix="", **extra):
+    def on_line(line):
+        line = line.rstrip()
+        if line.startswith("STAGE: "):
+            emit({"type": "status", "message": line[7:] + suffix})
+
+        elif (match := re.search(r"(\d+)/(\d+)", line)) and int(match[2]) > 0:
+            emit({"type": "progress", "done": int(match[1]), "total": int(match[2]), **extra})
+
+    return on_line
+
+
+def call(step, *args, **kwargs):
+    try:
+        return step(*args, **kwargs)
+
+    except SystemExit as exc:
+        raise RuntimeError(str(exc.code)) from None
 
 
 def relative(path):
-    return Path(path).resolve().relative_to(REPO_ROOT).as_posix()
+    return Path(path).resolve().relative_to(ROOT).as_posix()
+
+
+def document_title(path):
+    match = re.match(r"---(.*?)---", path.read_text(encoding="utf-8", errors="replace")[:4096], re.S)
+    title = match and re.search(r"^title:\s*[\"']?(.+?)[\"']?\s*$", match[1], re.M)
+
+    return (title and title[1]) or SAMPLE_TITLES.get(path.name) or path.stem.replace("-", " ").title()
 
 
 def scan_document(path, origin, origin_label):
-    match = re.match(r"---(.*?)---", path.read_text(encoding="utf-8", errors="replace")[:4096], re.S)
-    try:
-        fm = yaml.safe_load(match[1]) if match else None
-
-    except yaml.YAMLError:
-        fm = None
-
-    title = fm.get("title") if isinstance(fm, dict) else None
-
-    return {
-        "path": relative(path),
-        "name": path.name,
-        "origin": origin,
-        "origin_label": origin_label,
-        "title": title or SAMPLE_TITLES.get(path.name) or path.stem.replace("-", " ").title(),
-    }
+    return {"path": relative(path), "name": path.name, "origin": origin, "origin_label": origin_label, "title": document_title(path)}
 
 
 def picker_payload():
@@ -84,18 +139,18 @@ def picker_payload():
         for origin, label, root in ORIGINS
         for p in sorted(root.rglob("*"))
         if (root != SAMPLES_DIR or p.parent == SAMPLES_DIR)
-        and p.is_file() and p.suffix.lower() in (".md", ".markdown") and p.name.lower() not in ("theme.yaml", "readme.md")
+        and p.is_file() and p.suffix.lower() in (".md", ".markdown") and p.name.lower() != "readme.md"
     ]
 
     return {"upload": {"accept": list(UPLOAD_SUFFIXES), "max_bytes": MAX_UPLOAD_BYTES}, **{side: {"documents": documents} for side in SIDES}}
 
 
-def resolve_side_path(raw, _side, what):
+def resolve_side_path(raw, what):
     if not raw:
         raise ValueError(f"{what} is required")
 
     roots = [root.resolve() for *_, root in ORIGINS]
-    options = [REPO_ROOT / raw] + [root / raw for root in roots]
+    options = [ROOT / raw] + [root / raw for root in roots]
     resolved = next((option for option in options if option.is_file()), options[0]).resolve()
     if not any(resolved.is_relative_to(root) for root in roots):
         raise ValueError(f"{what} must be inside {' or '.join(relative(root) for root in roots)}")
@@ -107,7 +162,7 @@ def resolve_side_path(raw, _side, what):
 
 
 def pair_paths(args, suffix=""):
-    return [resolve_side_path(args.get(side + suffix), side, f"{side.title()} document") for side in SIDES]
+    return [resolve_side_path(args.get(side + suffix), f"{side.title()} document") for side in SIDES]
 
 
 def saved_report(folder):
@@ -115,42 +170,6 @@ def saved_report(folder):
     valid = isinstance(report, dict) and report.get("schema") == SCHEMA and isinstance(report.get("summary"), dict)
 
     return report if valid else None
-
-
-def committed(folder, since=0):
-    try:
-        return (folder / "params.json").stat().st_mtime >= since and saved_report(folder) is not None
-
-    except OSError:
-        return False
-
-
-def run_script(name, reference_path, input_path, *extra):
-    return subprocess.Popen(
-        [sys.executable, str(WORKSPACE_ROOT / name), "--reference", str(reference_path), "--input", str(input_path), *extra],
-        cwd=WORKSPACE_ROOT,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        bufsize=1,
-        env={**os.environ, "PYTHONUNBUFFERED": "1"},
-    )
-
-
-def relay(proc, emit, suffix="", **extra):
-    lines = []
-    for line in proc.stdout:
-        line = line.rstrip()
-        if line:
-            lines.append(line)
-
-        if line.startswith("STAGE: "):
-            emit({"type": "status", "message": line[7:] + suffix})
-
-        elif (match := re.search(r"(\d+)/(\d+)", line)) and int(match[2]) > 0:
-            emit({"type": "progress", "done": int(match[1]), "total": int(match[2]), **extra})
-
-    return "\n".join(lines[-8:]).strip()
 
 
 def run_document_analysis(emit, reference_path, input_path, label, refresh):
@@ -168,57 +187,30 @@ def run_document_analysis(emit, reference_path, input_path, label, refresh):
         emit(event)
 
     try:
-        dest = comparison_dir_for(reference_path, input_path)
+        dest = REPORTS_DIR / pair_slug(reference_path, input_path)
         emit({"type": "started", "reference": reference_name, "input": input_name})
-        cached = not refresh and committed(dest)
+        cached = not refresh and saved_report(dest) is not None
         if cached:
             record({"type": "status", "message": "Reused this pair's cached run"})
 
         else:
             record({"type": "status", "message": f"Comparing {input_name} against {reference_name}…"})
-            existed_before = dest.exists()
-            started = time.time()
-            deadline = time.monotonic() + ANALYSIS_TIMEOUT_SECONDS
-            proc = run_script("document_analysis.py", reference_path, input_path, "--label", label, *(["--no-cache"] if refresh else []))
-            tail = []
-            reader = threading.Thread(target=lambda: tail.append(relay(proc, record, "…", document=input_name)), daemon=True)
-            reader.start()
+            capture_output(line_handler(record, "…", document=input_name))
             try:
-                while True:
-                    if committed(dest, started):
-                        proc.kill()
-                        break
+                call(_pipeline["run_comparison"], _pipeline["client"], reference_path, input_path, use_cache=not refresh, label=label)
 
-                    try:
-                        rc = proc.wait(timeout=0.5)
+            finally:
+                release_output()
 
-                    except subprocess.TimeoutExpired:
-                        if time.monotonic() < deadline:
-                            continue
-
-                        proc.kill()
-                        raise RuntimeError(f"document_analysis.py exceeded {ANALYSIS_TIMEOUT_SECONDS}s and was stopped") from None
-
-                    reader.join(timeout=5)
-                    if rc != 0:
-                        raise RuntimeError("".join(tail) or "document_analysis.py failed")
-
-                    if not committed(dest):
-                        raise RuntimeError(f"Analysis wrote no readable run to {relative(dest)}")
-
-                    break
-
-            except Exception:
-                if not existed_before:
-                    shutil.rmtree(dest, ignore_errors=True)
-
-                raise
+            if saved_report(dest) is None:
+                raise RuntimeError(f"Analysis wrote no readable run to {relative(dest)}")
 
             record({"type": "status", "message": "Summarizing and recommending…"})
-            proc = run_script("generation.py", reference_path, input_path)
-            output = proc.communicate()[0]
-            if proc.returncode != 0:
-                print(f"generation.py failed; the run keeps summaries: null\n{output[-2000:]}", file=sys.stderr)
+            try:
+                call(generation.generate_run, dest, model=_pipeline["model"], api_key=_pipeline["api_key"])
+
+            except Exception as exc:
+                print(f"Generation failed; the run keeps summaries: null\n{exc}", file=sys.stderr)
 
             record({"type": "status", "message": "Analysis complete"})
 
@@ -239,12 +231,11 @@ def run_reviews(emit, reference_path, input_path):
 
     try:
         emit({"type": "status", "message": "Starting"})
-        proc = run_script("generation.py", reference_path, input_path)
-        tail = relay(proc, emit)
-        if proc.wait() != 0:
-            raise RuntimeError(tail or "generation.py failed")
+        capture_output(line_handler(emit))
+        call(generation.generate_run, REPORTS_DIR / pair_slug(reference_path, input_path), model=_pipeline["model"], api_key=_pipeline["api_key"])
 
     finally:
+        release_output()
         _reviewing.release()
 
 
@@ -286,8 +277,9 @@ def bad_request(exc):
 
 
 @app.get("/")
+@app.get("/review.html")
 def index_page():
-    return app.send_static_file("index.html")
+    return (ROOT / "viewer.html").read_text(encoding="utf-8")
 
 
 @app.get("/api/analysis/status")
@@ -306,7 +298,7 @@ def api_upload():
 
     saved, errors = [], []
     for side, storage in targets:
-        name = storage.filename
+        name = storage.filename or "upload"
         try:
             if Path(name).suffix.lower() not in UPLOAD_SUFFIXES:
                 raise ValueError(f"{name} is not a supported type ({', '.join(UPLOAD_SUFFIXES)})")
@@ -345,9 +337,7 @@ def api_upload():
     return jsonify({"uploaded": saved, **picker_payload()}), 201
 
 
-@app.get("/api/catalog")
-def api_catalog():
-    payload = picker_payload()
+def saved_pairs(payload):
     pairs = {}
     for ref in payload["reference"]["documents"]:
         for inc in payload["input"]["documents"]:
@@ -363,7 +353,14 @@ def api_catalog():
                     "summary": report["summary"],
                 }
 
-    return jsonify({**payload, "pairs": pairs})
+    return pairs
+
+
+@app.get("/api/catalog")
+def api_catalog():
+    payload = picker_payload()
+
+    return jsonify({**payload, "pairs": saved_pairs(payload)})
 
 
 @app.get("/api/run")
@@ -403,9 +400,26 @@ def api_analyze_stream():
     return sse(run_document_analysis, *paths, body.get("label") or "Server run", bool(body.get("refresh")))
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Pairwise document comparison server")
-    parser.add_argument("--port", type=int, default=5000)
-    parser.add_argument("--host", default="127.0.0.1")
-    args = parser.parse_args()
-    app.run(debug=True, host=args.host, port=args.port, use_reloader=False)
+def serve(run_comparison, client, *, model: str = generation.MODEL, api_key: str | None = None, host="127.0.0.1", port=5000):
+    global _server
+
+    if _server is not None:
+        _server.shutdown()
+
+    _pipeline.update(run_comparison=run_comparison, client=client, model=model, api_key=api_key)
+    _server = make_server(host, port, app, threaded=True)
+    threading.Thread(target=_server.serve_forever, daemon=True).start()
+    latest = max(saved_pairs(picker_payload()).values(), key=lambda pair: str(pair["created_at"]), default=None)
+    query = f"?{urlencode({'reference': latest['reference_path'], 'input': latest['input_path']})}" if latest else ""
+    print(f"Viewer running at http://{host}:{port}/{query}")
+    print("Run server.stop() when you're done.")
+
+    return _server
+
+
+def stop():
+    global _server
+
+    if _server is not None:
+        _server.shutdown()
+        _server = None
